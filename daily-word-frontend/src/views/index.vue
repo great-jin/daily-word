@@ -7,7 +7,7 @@
       <h1>Daily Word</h1>
       <h3>
         Welcome to the Daily Word! To the
-        <router-link to="/home" style="color: dodgerblue">
+        <router-link to="/home" style="color: deepskyblue">
           home
         </router-link>
       </h3>
@@ -25,6 +25,7 @@ html, body{
 }
 
 header {
+  width: 100%; /* 宽度占满父元素 */
   height: calc(100vh);
   background-color: #72C1F2; /* 淡蓝色背景 */
   color: white;
@@ -33,6 +34,9 @@ header {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-image: url('@/asset/bg.png'); /* 替换为你的图片路径 */
+  background-size: cover; /* 自适应并覆盖整个 div */
+  background-position: center; /* 图片居中 */
 }
 
 .logo-container {
