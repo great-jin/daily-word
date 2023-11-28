@@ -1,4 +1,5 @@
 import HomeView from "@/views/index.vue";
+import Login from "@/views/login/index.vue";
 import MainView from "@/views/home/index.vue";
 import DailyPlan from "@/views/dailyPlan/index.vue";
 import Competition from "@/views/competition/index.vue";
@@ -11,6 +12,10 @@ export const pathArray=[
         name: 'home',
         component: HomeView
     }, {
+        path: '/login',
+        name: 'login',
+        component: Login
+    },  {
         path: '/home',
         name: 'main',
         component: MainView,

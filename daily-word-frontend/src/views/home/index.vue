@@ -21,7 +21,7 @@
               <el-menu-item index="3" class="head-banner">积分中心</el-menu-item>
               <el-menu-item index="4" class="head-banner">个人中心</el-menu-item>
               <el-menu-item index="5" class="head-banner" style="margin-left: auto;">
-                首  页
+                退  出
               </el-menu-item>
             </el-menu>
           </el-col>
@@ -78,6 +78,7 @@ function handleSelect(index) {
       router.push("/personalCenter");
       break
     case '5':
+      localStorage.removeItem('token')
       backHome()
       break
   }

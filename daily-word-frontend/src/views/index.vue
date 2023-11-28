@@ -7,7 +7,7 @@
       <h1>Daily Word</h1>
       <h3>
         Welcome to the Daily Word! To the
-        <router-link to="/home" style="color: deepskyblue">
+        <router-link to="/login" style="color: deepskyblue">
           home
         </router-link>
       </h3>
@@ -18,12 +18,7 @@
 <script setup>
 </script>
 
-<style>
-html, body{
-  margin: 0;
-  padding: 0;
-}
-
+<style scoped>
 header {
   width: 100%; /* 宽度占满父元素 */
   height: calc(100vh);
