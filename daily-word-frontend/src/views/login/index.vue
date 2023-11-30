@@ -4,7 +4,7 @@
       <el-aside class="login-aside">
         <img
             class="aside-bg"
-            src="@/asset/mountain.jpg"
+            src="../../assets/mountain.jpg"
         />
       </el-aside>
 

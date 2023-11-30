@@ -29,7 +29,7 @@ header {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-image: url('@/asset/bg.png'); /* 替换为你的图片路径 */
+  background-image: url('@/assets/bg.png'); /* 替换为你的图片路径 */
   background-size: cover; /* 自适应并覆盖整个 div */
   background-position: center; /* 图片居中 */
 }
