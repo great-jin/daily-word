@@ -79,6 +79,7 @@ function handleSelect(index) {
       break
     case '5':
       localStorage.removeItem('token')
+      localStorage.removeItem('auth')
       backHome()
       break
   }

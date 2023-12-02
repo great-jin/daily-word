@@ -16,7 +16,6 @@ import java.util.List;
  * @author makejava
  * @since 2023-01-31 14:31:28
  */
-@Data
 public class AuthUser implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 213034465413641992L;
@@ -80,6 +79,80 @@ public class AuthUser implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return this.isEnabled != null && this.isEnabled == 1;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    public Integer getAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(Integer accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public Integer getAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(Integer accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public Integer getCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(Integer credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public Integer getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(Integer isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return "TbUser{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 }
 

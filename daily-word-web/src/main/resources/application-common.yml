@@ -8,10 +8,10 @@ auth:
   host:
     cors: http://localhost:8080,http://127.0.0.1:8080
   api:
-    verify: /api/auth/verify
-    free: /api/auth/login,/api/auth/verify,/api/test/**,/api/file/**,/api/sysUser/**
-    user: /api/resource/user/**
-    admin: /api/resource/admin/**
+    login: /api/auth/login
+    free: /api/auth/login,/api/auth/register,/api/auth/forgot
+    user: /api/word/translation
+    admin: /api/word/translation
 
 # 绑定 MyBatis
 mybatis:

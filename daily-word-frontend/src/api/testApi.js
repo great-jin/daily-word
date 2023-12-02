@@ -1,4 +1,4 @@
-import request from './axios';
+import request from './core/axios';
 
 export function testApi() {
     return request({

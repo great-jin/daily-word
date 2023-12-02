@@ -3,21 +3,18 @@ package xyz.ibudai.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import xyz.ibudai.common.ResultData;
 import xyz.ibudai.entity.AuthUser;
@@ -28,7 +25,6 @@ import xyz.ibudai.util.TokenUtil;
 import xyz.ibudai.util.encrypt.AESEncoder;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -37,20 +33,17 @@ import java.util.concurrent.TimeUnit;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
-
-    @Value("${auth.api.verify}")
-    private String verifyAPI;
+    @Value("${auth.api.login}")
+    private String loginAPI;
 
     @Value("${auth.api.free}")
-    private String freeAPI;
+    private String freeAPIs;
 
     @Value("${auth.api.user}")
-    private String userAPI;
+    private String userAPIs;
 
     @Value("${auth.api.admin}")
-    private String adminAPI;
+    private String adminAPIs;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -84,45 +77,26 @@ public class SecurityConfig {
      * Security 2.x 通过继承 WebSecurityConfigurerAdapter 并重写 configure(HttpSecurity) 实现
      */
     @Bean
+    @SuppressWarnings("deprecated")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 解析配置接口名单
-        String[] freeUrls = freeAPI.trim().split(",");
-        String[] userUrls = userAPI.trim().split(",");
-        String[] adminUrls = adminAPI.trim().split(",");
-        if (!StringUtils.isBlank(contextPath)) {
-            if (freeUrls.length > 0) {
-                freeUrls = Arrays.stream(freeUrls)
-                        .map(it -> contextPath + "/" + it)
-                        .toArray(String[]::new);
-            }
-            if (userUrls.length > 0) {
-                userUrls = Arrays.stream(userUrls)
-                        .map(it -> contextPath + "/" + it)
-                        .toArray(String[]::new);
-            }
-            if (adminUrls.length > 0) {
-                adminUrls = Arrays.stream(adminUrls)
-                        .map(it -> contextPath + "/" + it)
-                        .toArray(String[]::new);
-            }
-        }
+        String[] freeUrls = freeAPIs.trim().split(",");
+        String[] userUrls = userAPIs.trim().split(",");
+        String[] adminUrls = adminAPIs.trim().split(",");
 
         // 配置 security 作用规则
-        final String[] freeResource = freeUrls;
-        final String[] userResource = userUrls;
-        final String[] adminResource = adminUrls;
         http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(freeResource).permitAll();
+                    auth.requestMatchers(freeUrls).permitAll();
                     // 为不同权限分配不同资源
-                    auth.requestMatchers(userResource).hasRole("USER");
-                    auth.requestMatchers(adminResource).hasRole("ADMIN");
+                    auth.requestMatchers(userUrls).hasRole("USER");
+                    auth.requestMatchers(adminUrls).hasRole("ADMIN");
                     // 默认无定义资源都需认证
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(form -> {
                     // 配置登录接口
-                    form.loginProcessingUrl(verifyAPI).permitAll();
+                    form.loginProcessingUrl(loginAPI).permitAll();
                     // 登录成功处理逻辑
                     form.successHandler(this::successHandle);
                     // 登录失败处理逻辑
@@ -189,7 +163,7 @@ public class SecurityConfig {
      */
     private void unAuthHandle(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         // 无认证信息则提示进行登录
-        String msg = "Please login and try again.";
+        String msg = "Authorization failure, please login and try again.";
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(203);
         ResultData<Object> result = new ResultData<>(203, msg, null);

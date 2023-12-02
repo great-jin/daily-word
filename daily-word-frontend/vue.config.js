@@ -9,13 +9,13 @@ module.exports = defineConfig({
     port: 8080,
     https: false,
     proxy: {
-      '/api': {
+      '/daily-word': {
         // 后端地址端口
         target: 'http://localhost:9090/',
         ws: true,
         changOrigin: true,
         pathRewrite: {
-          '^/api': '/dailyWord'
+          '^/daily-word': '/dailyWord'
         }
       }
     },

@@ -20,12 +20,17 @@ public class AuthController {
     /**
      * Security 登录请求接口
      */
-    @PostMapping("verify")
-    public void authVerify(AuthUser user) {
+    @PostMapping("login")
+    public void login(AuthUser user) {
     }
 
-    @PostMapping("login")
-    public boolean login(AuthUser user) throws Exception {
+    @PostMapping("forgot")
+    public boolean forgot(@RequestBody AuthUser user) throws Exception {
         return authUserService.login(user);
+    }
+
+    @PostMapping("test")
+    public boolean test() {
+        return true;
     }
 }

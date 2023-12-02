@@ -34,33 +34,28 @@ public class AuthFilter implements Filter {
         int status;
         String msg;
         String token = req.getHeader("Token");
-        if (false) {
-            filterChain.doFilter(req, servletResponse);
-            return;
-        } else {
-            if (Objects.nonNull(token) && !token.isBlank()) {
-                boolean isExpired = false;
-                try {
-                    TokenUtil.parseJWT(token);
-                } catch (ExpiredJwtException e) {
-                    isExpired = true;
-                }
-                if (!isExpired) {
-                    filterChain.doFilter(req, servletResponse);
-                    return;
-                } else {
-                    status = 203;
-                    msg = "Login expired.";
-                }
+        if (Objects.nonNull(token) && !token.isBlank()) {
+            boolean isExpired = false;
+            try {
+                TokenUtil.parseJWT(token);
+            } catch (ExpiredJwtException e) {
+                isExpired = true;
+            }
+            if (!isExpired) {
+                filterChain.doFilter(req, servletResponse);
+                return;
             } else {
                 status = 203;
-                msg = "Please login and try again.";
+                msg = "Login expired.";
             }
-            response.setContentType("application/json;charset=UTF-8");
-            response.setStatus(status);
-            ResultData<Object> result = new ResultData<>(status, msg, null);
-            response.getWriter().write(objectMapper.writeValueAsString(result));
+        } else {
+            status = 203;
+            msg = "Please login and try again.";
         }
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(status);
+        ResultData<Object> result = new ResultData<>(status, msg, null);
+        response.getWriter().write(objectMapper.writeValueAsString(result));
     }
 
     @Override
