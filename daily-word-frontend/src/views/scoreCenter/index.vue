@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <h1>积分中心</h1>
+  <div style="background-color: white; height: 100%">
+    积分中心
   </div>
 </template>
 
 <script setup>
 </script>
 
-<style>
+<style scoped>
 </style>

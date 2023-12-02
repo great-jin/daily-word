@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>个人中心</h1>
+  <div style="background-color: white; height: 100%">
+    个人中心
   </div>
 </template>
 

@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Word {
 
+    private boolean existed;
+
     private String value;
 
     List<WordDescribe> describeList;
