@@ -39,7 +39,7 @@
           </h2>
           <br/>
           <h2 style="color: white; font-weight: normal; padding: 0; margin: 0;">
-            Feel free to contact us, Email: great__jin@163.com
+            Feel free to contact us, Email: ibudai56@163.com
           </h2>
         </div>
       </el-footer>
