@@ -29,8 +29,9 @@
           <el-col :span="6" style="display: flex; align-items: center; padding-left: 10px">
             <el-button
                 style="width: 100%"
+                :disabled="countDown > 0"
                 @click="sendMail"
-            >发送</el-button>
+            >{{ countDown > 0 ? `${countDown} s` : '发送' }}</el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -71,6 +72,8 @@ export default {
     return {
       operate: '',
       dialogVisible: false,
+      countDown: 0,
+      timer: null,
       registerForm: {
         username: '',
         mail: '',
@@ -97,13 +100,45 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    // 组件销毁时清除计时器
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  },
   methods: {
     show(operate) {
       this.operate = operate
       this.dialogVisible = true
     },
     sendMail() {
-      this.$message.success('发送邮件')
+      this.$refs.regForm.validateField('mail', (valid) => {
+        if (valid) {
+          // 验证未通过
+          this.$message.success('发送邮件')
+
+          // 按钮倒计时
+          this.startCountDown()
+        }
+      });
+    },
+    startCountDown() {
+      // 如果倒计时已经开始，则直接返回
+      if (this.countDown > 0) {
+        return;
+      }
+      this.countDown = 60;
+
+      // 启动计时器，每秒减少一秒
+      this.timer = setInterval(() => {
+        if (this.countDown > 0) {
+          this.countDown -= 1;
+        } else {
+          // 倒计时结束时清除计时器
+          clearInterval(this.timer);
+          this.timer = null;
+        }
+      }, 1000);
     },
     clickOption(type) {
       if (type === 'ok') {

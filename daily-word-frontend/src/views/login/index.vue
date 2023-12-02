@@ -56,33 +56,37 @@
               </el-button>
             </el-form-item>
             <el-form-item>
-                <el-button
-                    type="primary"
-                    style="width: 100%"
-                    @click="clickOption('login')"
-                >登录</el-button>
+              <el-button
+                  type="primary"
+                  style="width: 100%"
+                  @click="clickOption('login')"
+              >登录
+              </el-button>
             </el-form-item>
             <el-form-item>
-              <el-row  type="flex" justify="space-between" style="width: 100%">
+              <el-row type="flex" justify="space-between" style="width: 100%">
                 <el-col :span="8">
                   <el-button
                       type="text"
                       @click="clickOption('register')"
                       style="float: left; z-index: 0"
-                  >注册</el-button>
+                  >注册
+                  </el-button>
                 </el-col>
                 <el-col :span="8" style="display: flex; align-items: center;">
                   <el-checkbox
                       v-model="radioValue"
                       @click="clickOption('compact')"
-                  >用户协议</el-checkbox>
+                  >用户协议
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
                   <el-button
                       type="text"
                       @click="clickOption('forgot')"
                       style="float: right; z-index: 0"
-                  >忘记密码</el-button>
+                  >忘记密码
+                  </el-button>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -100,6 +104,8 @@
 <script>
 import RegisterModal from './register.vue';
 import CompactModal from './compact.vue';
+import {login} from "@/api/authUser";
+import {Encrypt} from '@/util/AES.js';
 
 export default {
   components: {
@@ -117,13 +123,13 @@ export default {
       captchaUrl: '',
       rules: {
         username: [
-          { required: true, message: '用户名不能为空', trigger: 'blur' },
+          {required: true, message: '用户名不能为空', trigger: 'blur'},
         ],
         password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' },
+          {required: true, message: '密码不能为空', trigger: 'blur'},
         ],
         captcha: [
-          { required: true, message: '验证码不能为空', trigger: 'blur' },
+          {required: true, message: '验证码不能为空', trigger: 'blur'},
         ],
       }
     }
@@ -132,15 +138,40 @@ export default {
     clickOption(value) {
       switch (value) {
         case 'login':
+          if (!this.radioValue) {
+            this.$message.warning('请勾选同意用户协议')
+            break
+          }
+
           this.$refs.loginForm.validate(valid => {
             if (valid) {
               // 表单验证通过，执行提交逻辑
-              this.$message.success('登陆')
-              const token = {
-                flag: true
+              const user = {
+                username: this.loginForm.username,
+                password: Encrypt(this.loginForm.password),
               }
-              localStorage.setItem('token', JSON.stringify(token))
-              this.$router.push('/home')
+              login(user).then(res => {
+                console.log(res)
+                const data = res.data
+                if (data.code === 200) {
+                  this.$notify({
+                    type: 'success',
+                    title: '登录成功',
+                    message: 'Welcome to Daily Word'
+                  });
+                  // 保存认证登录信息
+                  const auth = res.headers['auth']
+                  const token = res.headers['token']
+                  localStorage.setItem("auth", auth)
+                  localStorage.setItem("token", token)
+                  this.$router.push('/home')
+                } else {
+                  this.$notify.error({
+                    title: '登录失败',
+                    message: res.data.msg
+                  });
+                }
+              })
             } else {
               // 表单验证失败
               this.$message.error('表单验证失败')
@@ -152,7 +183,7 @@ export default {
           break
         case 'compact':
           this.radioValue = this.radioValue === true;
-          if(!this.radioValue) {
+          if (!this.radioValue) {
             this.$refs.compactModal.show();
           }
           break
