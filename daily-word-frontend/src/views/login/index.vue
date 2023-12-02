@@ -151,7 +151,6 @@ export default {
                 password: Encrypt(this.loginForm.password),
               }
               login(user).then(res => {
-                console.log(res)
                 const data = res.data
                 if (data.code === 200) {
                   this.$notify({

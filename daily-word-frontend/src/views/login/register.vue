@@ -147,7 +147,6 @@ export default {
             // 表单验证通过，执行提交逻辑
             // 处理注册逻辑
             this.$message.success(this.operate)
-            console.log(this.operate, this.registerForm);
           } else {
             // 表单验证失败
             this.$message.error('表单验证失败')

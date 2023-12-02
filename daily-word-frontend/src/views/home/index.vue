@@ -62,19 +62,15 @@ function backHome() {
 function handleSelect(index) {
   switch (index) {
     case '1':
-      console.log('今日计划')
       router.push("/dailyPlan");
       break
     case '2':
-      console.log('好友竞赛')
       router.push("/competition");
       break
     case '3':
-      console.log('积分中心')
       router.push("/scoreCenter");
       break
     case '4':
-      console.log('个人中心')
       router.push("/personalCenter");
       break
     case '5':

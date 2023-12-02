@@ -1,5 +1,6 @@
-import Vue from 'vue';
 import axios from 'axios';
+import {ElNotification} from 'element-plus';
+import router from '@/router/index'
 
 function request(axiosConfig) {
     const service = axios.create({
@@ -24,6 +25,19 @@ function request(axiosConfig) {
 
     // 响应拦截
     service.interceptors.response.use(res => {
+        console.log('1111', res)
+        const code = res.data.code
+        if (res.status === 203 || code === 403) {
+            ElNotification({
+                title: '登录过期',
+                message: '登录过期, 请重新登录',
+                type: 'warning'
+            })
+            localStorage.removeItem('auth')
+            localStorage.removeItem('token')
+            router.push('/')
+            return;
+        }
         if (axiosConfig.url === '/api/auth/login') {
             // 登录页需返回请求头
             return res
@@ -33,10 +47,11 @@ function request(axiosConfig) {
     }, err => {
         // 请求信息弹窗提示
         const errorBody = err.response.data
-        Vue.prototype.$notify.error({
-            message: 'Internal Server Error',
-            description: errorBody.error,
-        });
+        ElNotification({
+            title: 'Internal Server Error',
+            message: errorBody,
+            type: 'error'
+        })
     })
 
     return service(axiosConfig)
