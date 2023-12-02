@@ -9,5 +9,6 @@
     </parent>
 
     <artifactId>daily-word-frontend</artifactId>
+    <packaging>pom</packaging>
 
 </project>

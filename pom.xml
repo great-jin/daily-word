@@ -7,9 +7,30 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
     <modules>
         <module>daily-word-frontend</module>
+        <module>daily-word-bom</module>
+        <module>daily-word-parent</module>
+        <module>daily-word-basic</module>
+        <module>daily-word-auth</module>
         <module>daily-word-backend</module>
+        <module>daily-word-web</module>
     </modules>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

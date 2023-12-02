@@ -9,6 +9,6 @@
         <relativePath>../daily-word-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>daily-word-backend</artifactId>
+    <artifactId>daily-word-basic</artifactId>
 
 </project>
