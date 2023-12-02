@@ -3,6 +3,7 @@ package xyz.ibudai.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import xyz.ibudai.util.TokenUtil;
 import xyz.ibudai.util.encrypt.AESEncoder;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +34,9 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @Value("${auth.api.login}")
     private String loginAPI;
@@ -77,20 +82,39 @@ public class SecurityConfig {
      * Security 2.x 通过继承 WebSecurityConfigurerAdapter 并重写 configure(HttpSecurity) 实现
      */
     @Bean
-    @SuppressWarnings("deprecated")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 解析配置接口名单
         String[] freeUrls = freeAPIs.trim().split(",");
         String[] userUrls = userAPIs.trim().split(",");
         String[] adminUrls = adminAPIs.trim().split(",");
+        if (!StringUtils.isBlank(contextPath)) {
+            if (freeUrls.length > 0) {
+                freeUrls = Arrays.stream(freeUrls)
+                        .map(it -> contextPath + "/" + it)
+                        .toArray(String[]::new);
+            }
+            if (userUrls.length > 0) {
+                userUrls = Arrays.stream(userUrls)
+                        .map(it -> contextPath + "/" + it)
+                        .toArray(String[]::new);
+            }
+            if (adminUrls.length > 0) {
+                adminUrls = Arrays.stream(adminUrls)
+                        .map(it -> contextPath + "/" + it)
+                        .toArray(String[]::new);
+            }
+        }
 
         // 配置 security 作用规则
+        final String[] freeResource = freeUrls;
+        final String[] userResource = userUrls;
+        final String[] adminResource = adminUrls;
         http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(freeUrls).permitAll();
+                    auth.requestMatchers(freeResource).permitAll();
                     // 为不同权限分配不同资源
-                    auth.requestMatchers(userUrls).hasRole("USER");
-                    auth.requestMatchers(adminUrls).hasRole("ADMIN");
+                    auth.requestMatchers(userResource).hasRole("USER");
+                    auth.requestMatchers(adminResource).hasRole("ADMIN");
                     // 默认无定义资源都需认证
                     auth.anyRequest().authenticated();
                 })
@@ -108,7 +132,8 @@ public class SecurityConfig {
                     handle.authenticationEntryPoint(this::unAuthHandle);
                 })
                 // 关闭跨站攻击
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic();
         return http.build();
     }
 
