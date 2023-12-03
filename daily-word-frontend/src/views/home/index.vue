@@ -2,7 +2,7 @@
   <div>
     <el-container>
       <el-header>
-        <el-row style="height: 100%; width: 100%" >
+        <el-row style="height: 100%; width: 100%">
           <el-col :span="4" @click="backHome()">
             <h1 style="color: white">Daily Word</h1>
           </el-col>
@@ -16,12 +16,13 @@
                 active-text-color="#ffd04b"
                 style="height: 100%; width: 100%;"
             >
-              <el-menu-item index="1" class="head-banner">今日计划</el-menu-item>
-              <el-menu-item index="2" class="head-banner">好友竞赛</el-menu-item>
-              <el-menu-item index="3" class="head-banner">积分中心</el-menu-item>
-              <el-menu-item index="4" class="head-banner">个人中心</el-menu-item>
-              <el-menu-item index="5" class="head-banner" style="margin-left: auto;">
-                退  出
+              <el-menu-item index="1" class="head-banner">字典查询</el-menu-item>
+              <el-menu-item index="2" class="head-banner">今日计划</el-menu-item>
+              <el-menu-item index="3" class="head-banner">好友竞赛</el-menu-item>
+              <el-menu-item index="4" class="head-banner">积分中心</el-menu-item>
+              <el-menu-item index="5" class="head-banner">个人中心</el-menu-item>
+              <el-menu-item index="6" class="head-banner" style="margin-left: auto;">
+                退 出
               </el-menu-item>
             </el-menu>
           </el-col>
@@ -45,7 +46,7 @@
       </el-footer>
     </el-container>
   </div>
-  </template>
+</template>
 
 <script setup="context">
 import {onMounted} from "vue";
@@ -62,18 +63,21 @@ function backHome() {
 function handleSelect(index) {
   switch (index) {
     case '1':
-      router.push("/dailyPlan");
+      router.push("/dictionary");
       break
     case '2':
-      router.push("/competition");
+      router.push("/dailyPlan");
       break
     case '3':
-      router.push("/scoreCenter");
+      router.push("/competition");
       break
     case '4':
-      router.push("/personalCenter");
+      router.push("/scoreCenter");
       break
     case '5':
+      router.push("/personalCenter");
+      break
+    case '6':
       localStorage.removeItem('token')
       localStorage.removeItem('auth')
       backHome()
@@ -97,7 +101,7 @@ function handleSelect(index) {
 .head-banner {
   font-weight: bold;
   font-size: 16px;
-  height: calc(100vh /4);
+  height: calc(100vh / 4);
   padding: 0 50px;
 }
 

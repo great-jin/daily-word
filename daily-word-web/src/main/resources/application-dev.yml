@@ -13,3 +13,7 @@ spring:
       max-wait: 10000
       # SQL防火墙
       filters: stat, wall
+
+
+dictionary:
+  path: E:\Temporary\word\dic.json

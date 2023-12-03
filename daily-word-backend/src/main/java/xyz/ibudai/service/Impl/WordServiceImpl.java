@@ -10,6 +10,7 @@ import xyz.ibudai.service.WordService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 @Service
@@ -21,11 +22,16 @@ public class WordServiceImpl implements WordService {
         boolean existed;
         List<WordDescribe> describeList = new ArrayList<>();
         try {
-            JsonNode node = DicPreHeat.catalogueMap.get(target);
-            if (Objects.nonNull(node)) {
+            String targetLowCase = target.toLowerCase(Locale.ROOT);
+            List<JsonNode> nodeList = DicPreHeat.catalogueMap.get(targetLowCase);
+            if (Objects.nonNull(nodeList)) {
                 existed = true;
-                String name = node.get("name").asText();
-                if (name.equals(target)) {
+                for (JsonNode node : nodeList) {
+                    String name = node.get("name").asText();
+                    if (!name.equalsIgnoreCase(targetLowCase)) {
+                        continue;
+                    }
+
                     for (JsonNode jsonNode : node.get("describerList")) {
                         String type = jsonNode.get("type").asText();
                         String describe = jsonNode.get("describe").toString();

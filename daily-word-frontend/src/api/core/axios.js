@@ -25,7 +25,6 @@ function request(axiosConfig) {
 
     // 响应拦截
     service.interceptors.response.use(res => {
-        console.log('1111', res)
         const code = res.data.code
         if (res.status === 203 || code === 403) {
             ElNotification({
@@ -36,7 +35,6 @@ function request(axiosConfig) {
             localStorage.removeItem('auth')
             localStorage.removeItem('token')
             router.push('/')
-            return;
         }
         if (axiosConfig.url === '/api/auth/login') {
             // 登录页需返回请求头
