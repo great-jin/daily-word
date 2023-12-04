@@ -16,14 +16,20 @@
                 active-text-color="#ffd04b"
                 style="height: 100%; width: 100%;"
             >
-              <el-menu-item index="1" class="head-banner">字典查询</el-menu-item>
-              <el-menu-item index="2" class="head-banner">今日计划</el-menu-item>
-              <el-menu-item index="3" class="head-banner">好友竞赛</el-menu-item>
-              <el-menu-item index="4" class="head-banner">积分中心</el-menu-item>
-              <el-menu-item index="5" class="head-banner">个人中心</el-menu-item>
-              <el-menu-item index="6" class="head-banner" style="margin-left: auto;">
-                退 出
-              </el-menu-item>
+              <el-menu-item index="dictionary" class="head-banner">字典查询</el-menu-item>
+              <el-menu-item index="dailyPlan" class="head-banner">今日计划</el-menu-item>
+              <el-menu-item index="competition" class="head-banner">好友竞赛</el-menu-item>
+              <el-menu-item index="scoreCenter" class="head-banner">积分中心</el-menu-item>
+              <el-sub-menu index="personal" style="margin-left: auto;">
+                <template #title>
+                  <div style="font-weight: bold; font-size: 16px;">
+                    个人中心
+                  </div>
+                </template>
+                <el-menu-item index="quit" style="text-align:center;">
+                  &nbsp;&nbsp;&nbsp;退 出
+                </el-menu-item>
+              </el-sub-menu>
             </el-menu>
           </el-col>
         </el-row>
@@ -54,7 +60,7 @@ import router from "@/router/index.js";
 import {clearToken} from "@/util/authUtil";
 
 onMounted(() => {
-  handleSelect('1')
+  handleSelect('dictionary')
 });
 
 function backHome() {
@@ -63,22 +69,22 @@ function backHome() {
 
 function handleSelect(index) {
   switch (index) {
-    case '1':
+    case 'dictionary':
       router.push("/dictionary");
       break
-    case '2':
+    case 'dailyPlan':
       router.push("/dailyPlan");
       break
-    case '3':
+    case 'competition':
       router.push("/competition");
       break
-    case '4':
+    case 'scoreCenter':
       router.push("/scoreCenter");
       break
-    case '5':
+    case 'personal':
       router.push("/personalCenter");
       break
-    case '6':
+    case 'quit':
       clearToken()
       backHome()
       break
@@ -117,5 +123,9 @@ function handleSelect(index) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.el-menu--collapse .el-menu .el-submenu, .el-menu--popup {
+  min-width: 100px !important;
 }
 </style>

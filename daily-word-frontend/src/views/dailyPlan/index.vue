@@ -50,6 +50,7 @@ export default {
           this.inputs.forEach(it => {
             _data += it.value
           })
+          speakEn(_data)
           this.$message.success(_data)
           break
         case 'set':
