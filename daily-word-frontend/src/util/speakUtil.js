@@ -15,7 +15,6 @@ export function speakEn(text, country) {
         countryNum === 'US' ? 4 : 5
     }
     // 选择第一个语音
-    console.log('11', countryNum)
     utterance.voice = voices[countryNum];
     // 设置速率
     utterance.rate = 0.8;
@@ -31,7 +30,6 @@ export function speakZh(text, country) {
     } else {
         countryNum === 'HK' ? 20 : 19
     }
-    console.log('222', countryNum)
     utterance.voice = voices[countryNum];
     // 设置速率
     utterance.rate = 0.8;
