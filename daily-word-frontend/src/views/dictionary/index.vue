@@ -77,7 +77,7 @@ export default {
       })
     },
     randomizePosition() {
-      if (this.num >= 5) {
+      if (this.num >= 3) {
         this.$message.success({
           message: '使用回车确认输入哦！',
           center: true,
@@ -95,16 +95,16 @@ export default {
       this.buttonStyle = {
         ...this.buttonStyle,
         top: randomTop,
-        left: randomLeft,
-      };
+        left: randomLeft
+      }
     },
     clearCount() {
       this.buttonStyle = {
         ...this.buttonStyle,
         top: '40%', // 初始位置
         left: '46%', // 初始位置
-      };
-      this.num = 0;
+      }
+      this.num = 0
     }
   }
 }

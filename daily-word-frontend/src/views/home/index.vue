@@ -51,6 +51,7 @@
 <script setup="context">
 import {onMounted} from "vue";
 import router from "@/router/index.js";
+import {clearToken} from "@/util/authUtil";
 
 onMounted(() => {
   handleSelect('1')
@@ -78,8 +79,7 @@ function handleSelect(index) {
       router.push("/personalCenter");
       break
     case '6':
-      localStorage.removeItem('token')
-      localStorage.removeItem('auth')
+      clearToken()
       backHome()
       break
   }

@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import {pathArray} from "@/router/component";
+import {getToken} from "@/util/authUtil";
 
 const routes = pathArray
 
@@ -15,8 +16,8 @@ router.beforeEach((to, from, next) => {
     }
 
     // 状态判断
-    const token = localStorage.getItem('token')
-    const isLogin = !(token == null)
+    const token = getToken()[0]
+    const isLogin = !(token == null || token === '' )
     // 是否访问登录页
     if (to.path === '/login') {
         // 已登录则回主页，未登录放行

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {ElNotification} from 'element-plus';
 import router from '@/router/index'
+import {getToken, clearToken} from "@/util/authUtil";
 
 function request(axiosConfig) {
     const service = axios.create({
@@ -32,8 +33,7 @@ function request(axiosConfig) {
                 message: '登录过期, 请重新登录',
                 type: 'warning'
             })
-            localStorage.removeItem('auth')
-            localStorage.removeItem('token')
+            clearToken()
             router.push('/')
         }
         if (axiosConfig.url === '/api/auth/login') {
@@ -56,15 +56,3 @@ function request(axiosConfig) {
 }
 
 export default request;
-
-function getToken() {
-    let token = localStorage.getItem('token')
-    if (token === undefined || token === null) {
-        token = ''
-    }
-    let auth = localStorage.getItem('auth')
-    if (auth === undefined || auth === null) {
-        auth = ''
-    }
-    return [token, auth]
-}

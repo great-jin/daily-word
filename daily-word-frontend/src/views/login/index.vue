@@ -106,6 +106,7 @@ import RegisterModal from './register.vue';
 import CompactModal from './compact.vue';
 import {login} from "@/api/authUser";
 import {Encrypt} from '@/util/AES.js';
+import {setToken} from "@/util/authUtil";
 
 export default {
   components: {
@@ -159,10 +160,7 @@ export default {
                     message: 'Welcome to Daily Word'
                   });
                   // 保存认证登录信息
-                  const auth = res.headers['auth']
-                  const token = res.headers['token']
-                  localStorage.setItem("auth", auth)
-                  localStorage.setItem("token", token)
+                  setToken(res.headers['auth'], res.headers['token'])
                   this.$router.push('/home')
                 } else {
                   this.$notify.error({
@@ -194,13 +192,13 @@ export default {
     refreshCaptcha() {
       // 在这里刷新验证码
       this.captchaUrl = 'https://via.placeholder.com/150x40'; // 示例中使用了一个占位图片
-    },
+    }
   },
   mounted() {
     // 页面加载时刷新验证码
     this.refreshCaptcha();
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
