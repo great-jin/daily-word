@@ -58,7 +58,7 @@ export default {
   methods: {
     clickOption() {
       if (this.searchText === '') {
-        this.$message.warning('请输入单词')
+        this.$message.warning('请先输入单词')
         return
       }
 
@@ -77,6 +77,11 @@ export default {
       })
     },
     randomizePosition() {
+      if (this.searchText === '') {
+        this.$message.warning('请先输入单词')
+        return
+      }
+
       if (this.num >= 3) {
         this.$message.success({
           message: '使用回车确认输入哦！',

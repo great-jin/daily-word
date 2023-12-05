@@ -106,7 +106,7 @@ import RegisterModal from './register.vue';
 import CompactModal from './compact.vue';
 import {login} from "@/api/authUser";
 import {Encrypt} from '@/util/AES.js';
-import {setToken} from "@/util/authUtil";
+import {setToken} from "@/util/AuthUtil";
 
 export default {
   components: {

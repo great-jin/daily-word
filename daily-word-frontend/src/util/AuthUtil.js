@@ -11,6 +11,8 @@ export function getToken() {
     let auth = sessionStorage.getItem('USER_AUTH')
     if (auth === undefined || auth === null) {
         auth = ''
+    } else {
+        auth = 'Basic ' + auth
     }
     return [token, auth]
 }

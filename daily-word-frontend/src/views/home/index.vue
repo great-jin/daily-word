@@ -23,11 +23,23 @@
               <el-sub-menu index="personal" style="margin-left: auto;">
                 <template #title>
                   <div style="font-weight: bold; font-size: 16px;">
-                    个人中心
+                    <el-icon size="22">
+                      <Setting/>
+                    </el-icon>
+                    设置
                   </div>
                 </template>
+                <el-menu-item index="personal">
+                  <el-icon>
+                    <User/>
+                  </el-icon>
+                  个人中心
+                </el-menu-item>
                 <el-menu-item index="quit" style="text-align:center;">
-                  &nbsp;&nbsp;&nbsp;退 出
+                  <el-icon>
+                    <SwitchButton/>
+                  </el-icon>
+                  退 出
                 </el-menu-item>
               </el-sub-menu>
             </el-menu>
@@ -36,7 +48,8 @@
       </el-header>
 
       <el-main>
-        <router-view/>
+        <!-- isRouterAlive: 用于控制局部刷新 -->
+        <router-view v-if="isRouterAlive"/>
       </el-main>
 
       <el-footer class="footer-copyright">
@@ -54,42 +67,57 @@
   </div>
 </template>
 
-<script setup="context">
-import {onMounted} from "vue";
-import router from "@/router/index.js";
-import {clearToken} from "@/util/authUtil";
+<script>
+import {clearToken} from "@/util/AuthUtil";
 
-onMounted(() => {
-  handleSelect('dictionary')
-});
-
-function backHome() {
-  router.push("/");
-}
-
-function handleSelect(index) {
-  switch (index) {
-    case 'dictionary':
-      router.push("/dictionary");
-      break
-    case 'dailyPlan':
-      router.push("/dailyPlan");
-      break
-    case 'competition':
-      router.push("/competition");
-      break
-    case 'scoreCenter':
-      router.push("/scoreCenter");
-      break
-    case 'personal':
-      router.push("/personalCenter");
-      break
-    case 'quit':
-      clearToken()
-      backHome()
-      break
+export default {
+  provide() { // 父组件中返回要传给下级的数据
+    return {
+      reload: this.reload
+    }
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    }
+  },
+  mounted() {
+    this.handleSelect('dictionary')
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
+    },
+    backHome() {
+      this.$router.push("/");
+    },
+    handleSelect(index) {
+      switch (index) {
+        case 'dictionary':
+          this.$router.push("/dictionary");
+          break
+        case 'dailyPlan':
+          this.$router.push("/dailyPlan");
+          break
+        case 'competition':
+          this.$router.push("/competition");
+          break
+        case 'scoreCenter':
+          this.$router.push("/scoreCenter");
+          break
+        case 'personal':
+          this.$router.push("/personalCenter");
+          break
+        case 'quit':
+          clearToken()
+          this.backHome()
+          break
+      }
+    }
   }
-
 }
 </script>
 

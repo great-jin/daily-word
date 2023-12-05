@@ -10,8 +10,8 @@ auth:
   api:
     login: /api/auth/login
     free: /api/auth/login,/api/auth/register,/api/auth/forgot
-    user: /api/word/translation
-    admin: /api/word/translation
+    user: /api/word/**
+    admin: /api/word/**
 
 # 绑定 MyBatis
 mybatis:

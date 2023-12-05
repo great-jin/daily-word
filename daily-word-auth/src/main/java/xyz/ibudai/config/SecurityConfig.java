@@ -159,7 +159,7 @@ public class SecurityConfig {
         // 将 Token 写入响应的请求头返回
         response.addHeader("token", token);
         String auth = user.getUsername() + ":" + user.getPassword();
-        response.addHeader("auth", "Basic " + Base64.getEncoder().encodeToString(auth.getBytes()));
+        response.addHeader("auth", Base64.getEncoder().encodeToString(auth.getBytes()));
         response.setContentType("application/json;charset=UTF-8");
         ResultData<Object> result = new ResultData<>(200, "success.", true);
         response.getWriter().write(objectMapper.writeValueAsString(result));

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {ElNotification} from 'element-plus';
 import router from '@/router/index'
-import {getToken, clearToken} from "@/util/authUtil";
+import {getToken, clearToken} from "@/util/AuthUtil";
 
 function request(axiosConfig) {
     const service = axios.create({
