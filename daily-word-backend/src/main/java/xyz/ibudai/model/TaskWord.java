@@ -10,13 +10,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Word {
+public class TaskWord {
 
-    private boolean existed;
+    private Integer offset;
 
     private String value;
 
-    List<WordDescribe> describeList;
+    private List<String> translation;
 
     private Catalogue catalogue;
+
 }

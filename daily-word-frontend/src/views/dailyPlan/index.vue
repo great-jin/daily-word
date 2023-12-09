@@ -2,17 +2,27 @@
   <div class="container">
     <el-row style="height: 100%; padding: 20px 25px">
       <el-col :span="18">
-        <el-row>
+        <el-row :style="{marginTop: '20px'}">
           <el-col :span="15">
-            <el-input
-                v-model="text"
-                @keyup.enter="clickOption('set')"
-            />
+            <el-button type="primary" @click="getPlanData">开始</el-button>
+            <el-button type="primary" @click="choose('back')">上一题</el-button>
+            <el-button type="primary" @click="choose('next')">下一题</el-button>
+            <el-button type="primary" @click="clickOption('refresh')">刷新</el-button>
           </el-col>
-          <el-col :span="9">
-            <el-button @click="speak">朗读</el-button>
-            <el-button @click="clickOption('refresh')">刷新</el-button>
-          </el-col>
+        </el-row>
+
+        <el-row :style="{marginTop: '20px'}">
+          <div
+              v-if="planData.length > 0"
+              style="margin-right: 20px;text-align: center"
+          >
+            <span
+                v-for="item in planData[currentDataIndex].translation"
+                style="width: 100%"
+            >
+              {{ item }}
+            </span>
+          </div>
         </el-row>
 
         <el-row :style="{marginTop: '20px'}">
@@ -27,8 +37,8 @@
               @keyup.enter="clickOption('enter')"
               class="input-word"
           />
-          <el-button @click="clickOption('clear')">清空</el-button>
-          <el-button @click="clickOption('ok')">确认</el-button>
+          <el-button type="primary" @click="clickOption('hit')">提示</el-button>
+          <el-button type="primary" @click="clickOption('clear')">清空</el-button>
         </el-row>
       </el-col>
 
@@ -49,6 +59,7 @@
 </template>
 
 <script>
+import {getTaskContent} from "@/api/wordApi";
 import {speakEn} from "@/util/SpeakUtil";
 
 export default {
@@ -60,9 +71,42 @@ export default {
       textLength: 0,
       checkboxItems: [],
       checkedItems: [],
+      planData: [],
+      currentDataIndex: 0,
     }
   },
   methods: {
+    async getPlanData() {
+      this.clearData()
+      const params = {
+        size: 5,
+        offset: 10
+      }
+      await getTaskContent(params).then(res => {
+        this.planData = res.data
+        for (let i = 1; i <= this.planData.length; i++) {
+          this.checkboxItems.push(`第 ${i} 题`)
+        }
+      })
+      console.log('aaa', this.planData)
+      this.currentDataIndex = 0
+      this.setSingleWord(this.planData[0].value)
+    },
+    choose(type) {
+      const index = this.currentDataIndex
+      if (type === 'back') {
+        if (index <= 0) {
+          return
+        }
+        this.currentDataIndex--
+      } else {
+        if (index >= this.planData.length - 1) {
+          return
+        }
+        this.currentDataIndex++
+      }
+      this.setSingleWord(this.planData[this.currentDataIndex].value)
+    },
     clickOption(type) {
       switch (type) {
         case 'enter':
@@ -70,30 +114,49 @@ export default {
           if (fillLen < this.textLength) {
             return
           }
-          this.clickOption('ok')
-          break
-        case 'ok':
+
+          // 读取输入
           let _data = '';
           this.inputValues.forEach(it => {
             _data += it.value
           })
-          speakEn(_data)
-          this.$message.success(_data)
+          if (_data === this.planData[this.currentDataIndex].value) {
+            speakEn(_data)
+            this.$message.success(_data)
+          } else {
+            console.log('_data', _data)
+            console.log('_data_value', this.planData[this.currentDataIndex].value)
+            this.$message.error('拼接不正确')
+          }
           break
-        case 'set':
-          this.textLength = this.text.length
-          this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
-          for (let i = 1; i <= this.textLength; i++) {
-            this.checkboxItems.push(i)
+        case 'hit':
+          if (this.planData.length > 0) {
+            this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
+            const index = this.currentDataIndex
+            const words = this.planData[index].value.split('')
+            if (words.length > 2) {
+              this.inputValues[0].value = words[0]
+              this.inputValues[1].value = words[1]
+            }
+          } else {
+            this.$message.info('请先选择开始')
           }
           break
         case 'clear':
-          this.inputValues = []
+          this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
           break
         case 'refresh':
           this.reload()
           break
       }
+    },
+    setSingleWord(word) {
+      this.textLength = word.length
+      this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
+    },
+    clearData() {
+      this.checkboxItems = []
+      this.planData = []
     },
     handleInput(index) {
       // 处理输入事件，例如可以在这里进行一些验证
@@ -117,9 +180,6 @@ export default {
         // 将光标自动定位到前一个输入框
         this.$refs.inputRefs[index - 1].focus();
       }
-    },
-    speak() {
-      speakEn(this.text, 'US')
     }
   }
 }

@@ -4,17 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.cache.DicPreHeat;
+import xyz.ibudai.model.TaskWord;
 import xyz.ibudai.model.Word;
 import xyz.ibudai.model.WordDescribe;
 import xyz.ibudai.service.WordService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
-@Service
 @Slf4j
+@Service
 public class WordServiceImpl implements WordService {
 
     @Override
@@ -52,5 +50,26 @@ public class WordServiceImpl implements WordService {
         word.setValue(target);
         word.setDescribeList(describeList);
         return word;
+    }
+
+    @Override
+    public List<TaskWord> getTaskContent(Integer size, Integer offset) {
+        if (Objects.isNull(size) || size <= 0) {
+            size = 20;
+        }
+
+        try {
+            Collection<TaskWord> values = DicPreHeat.cet4Cache.values();
+            if (Objects.isNull(offset) || offset <= 0 || offset > values.size()) {
+                throw new IllegalAccessException("Offset is illegal");
+            }
+
+            return values.stream()
+                    .filter(it -> it.getOffset() >= offset)
+                    .limit(size)
+                    .toList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
