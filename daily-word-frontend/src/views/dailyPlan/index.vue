@@ -61,7 +61,7 @@
             </el-select>
             数量: &nbsp;
             <el-select
-                v-model="wordRequest.batchSize"
+                v-model="wordRequest.size"
                 placeholder="选择数量"
                 style="margin-right: 25px"
             >
@@ -168,7 +168,7 @@ export default {
       text: '',
       wordRequest: {
         catalogue: 'CET4',
-        batchSize: 10,
+        size: 10,
         offset: 0,
       },
       inputValues: [], // 用于存储输入框的数据
