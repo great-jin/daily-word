@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.model.TaskWord;
 import xyz.ibudai.model.common.Catalogue;
@@ -20,37 +21,70 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class DicPreHeat implements ApplicationRunner {
 
-    @Value("${dictionary.path.dict}")
-    private String dictPath;
-    @Value("${dictionary.path.cet4}")
-    private String cet4Path;
-
     @Autowired
     private ObjectMapper objectMapper;
 
     public static final Map<String, List<JsonNode>> catalogueMap = new ConcurrentHashMap<>();
 
-    public static final Map<String, TaskWord> cet4Cache = new ConcurrentHashMap<>();
+    public static final Map<Integer, TaskWord> cet4Cache = new ConcurrentHashMap<>();
+
+    public static final Map<Integer, TaskWord> cet6Cache = new ConcurrentHashMap<>();
+
+    public static final Map<Integer, TaskWord> greCache = new ConcurrentHashMap<>();
+
+    public static final Map<Integer, TaskWord> graduateCache = new ConcurrentHashMap<>();
+
+    public static final Map<Integer, TaskWord> oxfordCache = new ConcurrentHashMap<>();
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         try {
-            this.preheatDict();
+            String path = "dict\\Dictionary.json";
+            this.preheatDict(path);
         } catch (Exception e) {
-            log.error("预热字典缓存数据异常");
+            log.error("预热字典缓存数据异常", e);
         }
 
         try {
-            this.preheatCET4();
+            String path = "dict\\CET4.json";
+            this.preheatData(Catalogue.CET4, path, cet4Cache);
         } catch (Exception e) {
-            log.error("预热 CET4 缓存数据异常");
+            log.error("预热 CET4 缓存数据异常", e);
+        }
+
+        try {
+            String path = "dict\\CET6.json";
+            this.preheatData(Catalogue.CET6, path, cet6Cache);
+        } catch (Exception e) {
+            log.error("预热 CET6 缓存数据异常", e);
+        }
+
+        try {
+            String path = "dict\\GRE.json";
+            this.preheatData(Catalogue.GRE, path, greCache);
+        } catch (Exception e) {
+            log.error("预热 GRE 缓存数据异常", e);
+        }
+
+        try {
+            String path = "dict\\Graduate.json";
+            this.preheatData(Catalogue.Graduate, path, graduateCache);
+        } catch (Exception e) {
+            log.error("预热 Graduate 缓存数据异常", e);
+        }
+
+        try {
+            String path = "dict\\Oxford.json";
+            this.preheatData(Catalogue.Oxford, path, oxfordCache);
+        } catch (Exception e) {
+            log.error("预热 Oxford 缓存数据异常", e);
         }
     }
 
-    private void preheatDict() throws Exception {
-        File file = new File(dictPath);
+    private void preheatDict(String path) throws Exception {
+        File file = new ClassPathResource(path).getFile();
         if (!file.exists() || !file.isFile()) {
-            log.error("字典文件不存在，请检查配置。");
+            log.error("字典 {} 文件不存在，请检查配置。", path);
             return;
         }
 
@@ -70,10 +104,10 @@ public class DicPreHeat implements ApplicationRunner {
         }
     }
 
-    private void preheatCET4() throws Exception {
-        File file = new File(cet4Path);
+    private void preheatData(Catalogue type, String path, Map<Integer, TaskWord> cache) throws Exception {
+        File file = new ClassPathResource(path).getFile();
         if (!file.exists() || !file.isFile()) {
-            log.error("CET4 文件不存在，请检查配置。");
+            log.error("预热数据文件 {} 不存在，请检查文件路径。", path);
             return;
         }
 
@@ -90,8 +124,8 @@ public class DicPreHeat implements ApplicationRunner {
                 translationList.add(tran.asText());
             }
             word.setTranslation(translationList);
-            word.setCatalogue(Catalogue.CET4);
-            cet4Cache.put(name, word);
+            word.setCatalogue(type);
+            cache.put(i, word);
         }
     }
 }

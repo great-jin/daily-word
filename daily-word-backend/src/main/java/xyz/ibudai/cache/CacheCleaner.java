@@ -13,6 +13,8 @@ public class CacheCleaner implements ApplicationListener<ContextClosedEvent> {
     public void onApplicationEvent(ContextClosedEvent event) {
         try {
             DicPreHeat.catalogueMap.clear();
+            DicPreHeat.cet4Cache.clear();
+            DicPreHeat.cet6Cache.clear();
         } catch (Exception e) {
             log.error("缓存清除异常", e);
         }

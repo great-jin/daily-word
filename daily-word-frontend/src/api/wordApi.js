@@ -10,7 +10,7 @@ export function translate(params) {
 export function getTaskContent(params) {
     return request({
         url: `/api/word/getTaskContent`,
-        method: 'get',
-        params:params
+        method: 'post',
+        data: params
     })
 }

@@ -2,12 +2,10 @@ package xyz.ibudai.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.config.Task;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.model.TaskWord;
 import xyz.ibudai.model.Word;
+import xyz.ibudai.model.WordRequest;
 import xyz.ibudai.service.WordService;
 
 import java.util.List;
@@ -24,9 +22,8 @@ public class WordController {
         return wordService.translation(word);
     }
 
-    @GetMapping("getTaskContent")
-    public List<TaskWord> getTaskContent(@RequestParam("size") Integer size,
-                                         @RequestParam("offset") Integer offset) {
-        return wordService.getTaskContent(size, offset);
+    @PostMapping("getTaskContent")
+    public List<TaskWord> getTaskContent(@RequestBody WordRequest wordRequest) {
+        return wordService.getTaskContent(wordRequest);
     }
 }

@@ -7,6 +7,8 @@ import xyz.ibudai.cache.DicPreHeat;
 import xyz.ibudai.model.TaskWord;
 import xyz.ibudai.model.Word;
 import xyz.ibudai.model.WordDescribe;
+import xyz.ibudai.model.WordRequest;
+import xyz.ibudai.model.common.Catalogue;
 import xyz.ibudai.service.WordService;
 
 import java.util.*;
@@ -53,13 +55,24 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public List<TaskWord> getTaskContent(Integer size, Integer offset) {
+    public List<TaskWord> getTaskContent(WordRequest wordRequest) {
+        Integer size = wordRequest.getSize();
+        Integer offset = wordRequest.getOffset();
         if (Objects.isNull(size) || size <= 0) {
             size = 20;
         }
 
         try {
-            Collection<TaskWord> values = DicPreHeat.cet4Cache.values();
+            Collection<TaskWord> values;
+            Catalogue catalogue = wordRequest.getCatalogue();
+            switch (catalogue) {
+                case CET4 -> values = DicPreHeat.cet4Cache.values();
+                case CET6 -> values = DicPreHeat.cet6Cache.values();
+                case GRE -> values = DicPreHeat.greCache.values();
+                case Graduate -> values = DicPreHeat.graduateCache.values();
+                case Oxford -> values = DicPreHeat.oxfordCache.values();
+                default -> throw new IllegalAccessException("字典类型不存在");
+            }
             if (Objects.isNull(offset) || offset <= 0 || offset > values.size()) {
                 throw new IllegalAccessException("Offset is illegal");
             }

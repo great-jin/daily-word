@@ -1,58 +1,130 @@
 <template>
   <div class="container">
-    <el-row style="height: 100%; padding: 20px 25px">
-      <el-col :span="18">
+    <el-row :gutter="20" style="width: 100%; padding: 20px 25px">
+      <el-col :span="6">
+        <el-card class="box-card" style="float: left">
+          <template #header>
+            <div class="card-header">
+              <span>今日计划</span>
+            </div>
+          </template>
+          <div v-for="o in 2" :key="o" class="text item">{{ 'List item ' + o }}</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="box-card" style="float: left">
+          <template #header>
+            <div class="card-header">
+              <span>复习计划</span>
+            </div>
+          </template>
+          <div v-for="o in 2" :key="o" class="text item">{{ 'List item ' + o }}</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="box-card" style="float: left">
+          <template #header>
+            <div class="card-header">
+              <span>历史单词</span>
+            </div>
+          </template>
+          <div v-for="o in 2" :key="o" class="text item">{{ 'List item ' + o }}</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="box-card" style="float: left">
+          <template #header>
+            <div class="card-header">
+              <span>我的积分</span>
+            </div>
+          </template>
+          <div v-for="o in 2" :key="o" class="text item">{{ 'List item ' + o }}</div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <el-row style="padding: 20px 25px">
+      <el-col :span="24">
         <el-row :style="{marginTop: '20px'}">
-          <el-col :span="15">
+          <el-col :span="24">
+            词典: &nbsp;
+            <el-select
+                v-model="wordRequest.catalogue"
+                placeholder="选择字典"
+                style="margin-right: 25px"
+            >
+              <el-option label="CET4" value="CET4"/>
+              <el-option label="CET6" value="CET6"/>
+              <el-option label="CET6" value="GRE"/>
+              <el-option label="考研词典" value="Graduate"/>
+              <el-option label="牛津词典" value="Oxford"/>
+            </el-select>
+            数量: &nbsp;
+            <el-select
+                v-model="wordRequest.batchSize"
+                placeholder="选择数量"
+                style="margin-right: 25px"
+            >
+              <el-option
+                  v-for="it in [10, 20, 30, 50]"
+                  :label="`${it}个/组`"
+                  :value="it"
+              />
+            </el-select>
+            偏移量: &nbsp;
+            <el-input-number
+                v-model="wordRequest.offset"
+                :min="1"
+                style="margin-right: 25px"
+            />
             <el-button type="primary" @click="getPlanData">开始</el-button>
-            <el-button type="primary" @click="choose('back')">上一题</el-button>
-            <el-button type="primary" @click="choose('next')">下一题</el-button>
             <el-button type="primary" @click="clickOption('refresh')">刷新</el-button>
           </el-col>
         </el-row>
 
+        <el-row :style="{marginTop: '20px'}" v-if="this.planData.length > 0">
+          <el-col :span="24">
+            <el-button type="primary" @click="choose('back')">上一题</el-button>
+            <el-button type="primary" @click="choose('next')">下一题</el-button>
+          </el-col>
+        </el-row>
+
         <el-row :style="{marginTop: '20px'}">
-          <div
-              v-if="planData.length > 0"
-              style="margin-right: 20px;text-align: center"
-          >
-            <span
+          <div v-if="planData.length > 0" style="width: 100%; text-align: center;">
+            <p
                 v-for="item in planData[currentDataIndex].translation"
-                style="width: 100%"
+                style="width: 100%; font-weight: bold"
             >
               {{ item }}
-            </span>
+            </p>
           </div>
         </el-row>
 
         <el-row :style="{marginTop: '20px'}">
-          <el-input
-              ref="inputRefs"
-              v-for="(input, index) in inputValues"
-              :key="index"
-              v-model="inputValues[index].value"
-              :maxlength="1"
-              @input="handleInput(index)"
-              @keydown="handleKeyDown(index)"
-              @keyup.enter="clickOption('enter')"
-              class="input-word"
-          />
-          <el-button type="primary" @click="clickOption('hit')">提示</el-button>
-          <el-button type="primary" @click="clickOption('clear')">清空</el-button>
+          <el-col :span="24">
+            <el-input
+                ref="inputRefs"
+                v-for="(input, index) in inputValues"
+                :key="index"
+                v-model="inputValues[index].value"
+                :maxlength="1"
+                @input="handleInput(index)"
+                @keydown="handleKeyDown(index)"
+                @keyup.enter="clickOption('enter')"
+                :border="false"
+                class="input-word"
+            />
+          </el-col>
         </el-row>
-      </el-col>
 
-      <el-col :span="6" style="background-color: #FB9891">
-        <div style="padding: 20px 25px">
-          <el-checkbox
-              v-for="(item, index) in checkboxItems"
-              :key="index"
-              v-model="checkedItems[index]"
-              size="large"
-          >
-            {{ item }}
-          </el-checkbox>
-        </div>
+        <el-row :style="{marginTop: '20px'}" v-if="this.planData.length > 0">
+          <el-col :span="24">
+            <el-button type="primary" @click="clickOption('hit')">提示</el-button>
+            <el-button type="primary" @click="clickOption('speak')">朗读</el-button>
+            <el-button type="primary" @click="clickOption('answer')">答案</el-button>
+            <el-button type="primary" @click="clickOption('clear')">清空</el-button>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
   </div>
@@ -67,6 +139,11 @@ export default {
   data() {
     return {
       text: '',
+      wordRequest: {
+        catalogue: 'CET4',
+        batchSize: 10,
+        offset: 0,
+      },
       inputValues: [], // 用于存储输入框的数据
       textLength: 0,
       checkboxItems: [],
@@ -78,34 +155,35 @@ export default {
   methods: {
     async getPlanData() {
       this.clearData()
-      const params = {
-        size: 5,
-        offset: 10
-      }
-      await getTaskContent(params).then(res => {
+      await getTaskContent(this.wordRequest).then(res => {
         this.planData = res.data
         for (let i = 1; i <= this.planData.length; i++) {
           this.checkboxItems.push(`第 ${i} 题`)
         }
       })
-      console.log('aaa', this.planData)
       this.currentDataIndex = 0
       this.setSingleWord(this.planData[0].value)
     },
     choose(type) {
       const index = this.currentDataIndex
-      if (type === 'back') {
-        if (index <= 0) {
-          return
-        }
-        this.currentDataIndex--
-      } else {
-        if (index >= this.planData.length - 1) {
-          return
-        }
-        this.currentDataIndex++
+      switch (type) {
+        case 'back':
+          if (index <= 0) {
+            this.$message.info('已经是第一题了哦')
+            return
+          }
+          this.currentDataIndex--
+          this.setSingleWord(this.planData[this.currentDataIndex].value)
+          break
+        case 'next':
+          if (index >= this.planData.length - 1) {
+            this.$message.info('已经是最后一题了哦')
+            return
+          }
+          this.currentDataIndex++
+          this.setSingleWord(this.planData[this.currentDataIndex].value)
+          break
       }
-      this.setSingleWord(this.planData[this.currentDataIndex].value)
     },
     clickOption(type) {
       switch (type) {
@@ -120,13 +198,20 @@ export default {
           this.inputValues.forEach(it => {
             _data += it.value
           })
-          if (_data === this.planData[this.currentDataIndex].value) {
-            speakEn(_data)
-            this.$message.success(_data)
+          let word = this.planData[this.currentDataIndex].value
+          word = word.replace(' ', '')
+          if (_data === word) {
+            if (this.currentDataIndex >= this.planData.length - 1) {
+              this.$message.success('恭喜你已完成本次测试')
+              this.reload()
+              return
+            } else {
+              this.$message.success('回答正常')
+              this.choose('next')
+              this.$refs.inputRefs[0].focus();
+            }
           } else {
-            console.log('_data', _data)
-            console.log('_data_value', this.planData[this.currentDataIndex].value)
-            this.$message.error('拼接不正确')
+            this.$message.error('输入不正确请检查')
           }
           break
         case 'hit':
@@ -142,6 +227,12 @@ export default {
             this.$message.info('请先选择开始')
           }
           break
+        case 'speak':
+          speakEn(this.planData[this.currentDataIndex].value)
+          break
+        case 'answer':
+          this.$message.success(this.planData[this.currentDataIndex].value)
+          break
         case 'clear':
           this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
           break
@@ -151,6 +242,7 @@ export default {
       }
     },
     setSingleWord(word) {
+      word = word.replace(' ', '')
       this.textLength = word.length
       this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
     },
@@ -185,16 +277,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   height: 100%;
   background-color: white;
 }
 
-.input-word {
-  width: 30px;
-  margin-right: 10px;
-  text-align: center;
-  border-bottom: 1px solid #409EFF;
+.input-word  {
+  width: 35px;
+}
+
+.box-card {
+  width: 100%;
 }
 </style>
