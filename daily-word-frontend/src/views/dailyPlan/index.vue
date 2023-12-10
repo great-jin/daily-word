@@ -55,7 +55,7 @@
             >
               <el-option label="CET4" value="CET4"/>
               <el-option label="CET6" value="CET6"/>
-              <el-option label="CET6" value="GRE"/>
+              <el-option label="GRE" value="GRE"/>
               <el-option label="考研词典" value="Graduate"/>
               <el-option label="牛津词典" value="Oxford"/>
             </el-select>
