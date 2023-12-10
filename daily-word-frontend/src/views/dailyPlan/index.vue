@@ -82,14 +82,7 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: '20px'}" v-if="this.planData.length > 0">
-          <el-col :span="24">
-            <el-button type="primary" @click="choose('back')">上一题</el-button>
-            <el-button type="primary" @click="choose('next')">下一题</el-button>
-          </el-col>
-        </el-row>
-
-        <el-row :style="{marginTop: '20px'}" v-if="this.planData.length > 0">
+        <el-row :style="{marginTop: '40px', minHeight: '30%'}" v-if="this.planData.length > 0">
           <div style="width: 100%; text-align: center;">
             <p
                 v-for="item in planData[currentDataIndex].translation"
@@ -100,7 +93,7 @@
           </div>
         </el-row>
 
-        <el-row :style="{marginTop: '20px'}">
+        <el-row :style="{marginTop: '20px'}" v-if="this.planData.length > 0">
           <el-col :span="24">
             <el-input
                 ref="inputRefs"
@@ -116,7 +109,13 @@
             />
 
             <p style="text-align: center; color: grey">
-              第 {{this.currentDataIndex+1}} / {{ this.planData.length}} 题
+              <el-icon @click="choose('back')" style="vertical-align: middle;">
+                <CaretLeft/>
+              </el-icon>
+              第 {{ this.currentDataIndex + 1 }} / {{ this.planData.length }} 题
+              <el-icon @click="choose('next')" style="vertical-align: middle;">
+                <CaretRight/>
+              </el-icon>
             </p>
           </el-col>
         </el-row>
@@ -127,6 +126,30 @@
             <el-button type="primary" @click="clickOption('speak')">朗读</el-button>
             <el-button type="primary" @click="clickOption('answer')">答案</el-button>
             <el-button type="primary" @click="clickOption('clear')">清空</el-button>
+          </el-col>
+        </el-row>
+
+
+        <el-row :gutter=20 :style="{marginTop: '20px'}" v-if="this.planData.length > 0">
+          <el-col :span="12">
+            <el-button
+                type="primary"
+                style="float: right"
+                @click="choose('back')"
+            >
+              <el-icon><ArrowLeftBold /></el-icon>
+              &nbsp;上一题
+            </el-button>
+          </el-col>
+          <el-col :span="12">
+            <el-button
+                type="primary"
+                style="float: left"
+                @click="choose('next')"
+            >
+              下一题 &nbsp;
+              <el-icon><ArrowRightBold /></el-icon>
+            </el-button>
           </el-col>
         </el-row>
       </el-col>
@@ -239,6 +262,7 @@ export default {
           break
         case 'clear':
           this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
+          this.$refs.inputRefs[0].focus();
           break
         case 'refresh':
           this.reload()
@@ -287,7 +311,7 @@ export default {
   background-color: white;
 }
 
-.input-word  {
+.input-word {
   width: 35px;
 }
 
