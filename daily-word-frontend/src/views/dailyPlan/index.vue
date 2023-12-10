@@ -1,4 +1,4 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <div class="container">
     <el-row :gutter="20" style="width: 100%; padding: 20px 25px">
       <el-col :span="6">
@@ -89,8 +89,8 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: '20px'}">
-          <div v-if="planData.length > 0" style="width: 100%; text-align: center;">
+        <el-row :style="{marginTop: '20px'}" v-if="this.planData.length > 0">
+          <div style="width: 100%; text-align: center;">
             <p
                 v-for="item in planData[currentDataIndex].translation"
                 style="width: 100%; font-weight: bold"
@@ -114,6 +114,10 @@
                 :border="false"
                 class="input-word"
             />
+
+            <p style="text-align: center; color: grey">
+              第 {{this.currentDataIndex+1}} / {{ this.planData.length}} 题
+            </p>
           </el-col>
         </el-row>
 
