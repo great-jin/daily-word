@@ -9,7 +9,7 @@
         <relativePath>../daily-word-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>daily-word-web</artifactId>
+    <artifactId>daily-word-application</artifactId>
 
     <dependencies>
         <dependency>
@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-backend</artifactId>
+            <artifactId>daily-word-business</artifactId>
             <version>${project.version}</version>
         </dependency>
 

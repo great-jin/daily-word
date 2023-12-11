@@ -13,7 +13,7 @@ import java.util.Collections;
 @Configuration
 public class FilterConfig {
 
-    @Value("${auth.api.login}")
+    @Value("${auth.filter.login}")
     private String loginApi;
 
     @Value("${server.servlet.context-path}")

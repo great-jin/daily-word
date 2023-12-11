@@ -6,6 +6,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.common.ResultData;
 import xyz.ibudai.util.TokenUtil;
@@ -15,6 +16,12 @@ import java.util.Objects;
 
 @Component
 public class AuthFilter implements Filter {
+
+    @Value("${auth.filter.websocket}")
+    private String websocketApi;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -31,6 +38,11 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+        if (isWebSocketPath(req.getRequestURI())) {
+            filterChain.doFilter(req, servletResponse);
+            return;
+        }
+
         int status;
         String msg;
         String token = req.getHeader("Token");
@@ -61,5 +73,10 @@ public class AuthFilter implements Filter {
     @Override
     public void destroy() {
         Filter.super.destroy();
+    }
+
+    private boolean isWebSocketPath(String path) {
+        String whitelist = contextPath + websocketApi;
+        return path.startsWith(whitelist);
     }
 }

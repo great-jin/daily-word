@@ -13,6 +13,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,9 @@ public class SecurityConfig {
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
+
+    @Value("${auth.api.ignore}")
+    private String ignoredAPI;
 
     @Value("${auth.api.login}")
     private String loginAPI;
@@ -79,6 +83,16 @@ public class SecurityConfig {
     }
 
     /**
+     * 配置忽略的地址
+     */
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        String[] ignoredApis = ignoredAPI.split(",");
+        return (web) -> web.ignoring()
+                .requestMatchers(ignoredApis);
+    }
+
+    /**
      * Security 3.x 通过注入 SecurityFilterChain 对象配置规则
      * Security 2.x 通过继承 WebSecurityConfigurerAdapter 并重写 configure(HttpSecurity) 实现
      */
@@ -91,17 +105,17 @@ public class SecurityConfig {
         if (!StringUtils.isBlank(contextPath)) {
             if (freeUrls.length > 0) {
                 freeUrls = Arrays.stream(freeUrls)
-                        .map(it -> contextPath + "/" + it)
+                        .map(it -> contextPath + it)
                         .toArray(String[]::new);
             }
             if (userUrls.length > 0) {
                 userUrls = Arrays.stream(userUrls)
-                        .map(it -> contextPath + "/" + it)
+                        .map(it -> contextPath + it)
                         .toArray(String[]::new);
             }
             if (adminUrls.length > 0) {
                 adminUrls = Arrays.stream(adminUrls)
-                        .map(it -> contextPath + "/" + it)
+                        .map(it -> contextPath + it)
                         .toArray(String[]::new);
             }
         }
@@ -116,9 +130,11 @@ public class SecurityConfig {
                     // 为不同权限分配不同资源
                     auth.requestMatchers(userResource).hasRole("USER");
                     auth.requestMatchers(adminResource).hasRole("ADMIN");
+
                     // 默认无定义资源都需认证
                     auth.anyRequest().authenticated();
                 })
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> {
                     // 配置登录接口
                     form.loginProcessingUrl(loginAPI).permitAll();
@@ -134,7 +150,8 @@ public class SecurityConfig {
                 })
                 // 关闭跨站攻击
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults());
+                // 允许跨域
+                .cors(Customizer.withDefaults());
         return http.build();
     }
 

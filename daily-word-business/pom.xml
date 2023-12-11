@@ -9,6 +9,12 @@
         <relativePath>../daily-word-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>daily-word-backend</artifactId>
+    <artifactId>daily-word-business</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+    </dependencies>
 </project>

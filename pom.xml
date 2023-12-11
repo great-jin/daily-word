@@ -17,8 +17,8 @@
         <module>daily-word-parent</module>
         <module>daily-word-basic</module>
         <module>daily-word-auth</module>
-        <module>daily-word-backend</module>
-        <module>daily-word-web</module>
+        <module>daily-word-business</module>
+        <module>daily-word-application</module>
     </modules>
 
     <build>
