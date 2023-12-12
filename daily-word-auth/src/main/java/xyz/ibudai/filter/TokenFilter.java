@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Component
-public class AuthFilter implements Filter {
+public class TokenFilter implements Filter {
 
     @Value("${auth.filter.websocket}")
     private String websocketApi;

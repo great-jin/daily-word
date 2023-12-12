@@ -8,12 +8,12 @@ auth:
   host:
     cors: http://localhost:8080,http://127.0.0.1:8080
   filter:
-    login: /api/auth/login,/websocket
+    excludes: /api/auth/login
     websocket: /websocket
   api:
     ignore: /websocket/**
     login: /api/auth/login
-    free: /api/auth/login,/api/auth/register,/api/auth/forgot
+    free: /api/auth/*
     user: /api/word/**
     admin: /api/word/**
 
