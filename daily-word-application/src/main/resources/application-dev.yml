@@ -17,5 +17,5 @@ spring:
 
 dictionary:
   path:
-    dict: D:\Temporary\word\Dictionary.json
-    cet4: src\main\resources\CET4_T.json
+    dict: D:\dict\Dictionary.json
+    vocabularyDir: D:\vocabulary

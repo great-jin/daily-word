@@ -34,7 +34,6 @@ import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
     @Value("${server.servlet.context-path}")

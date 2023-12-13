@@ -34,4 +34,23 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <resources>
+            <!-- 只在项目打包时添加，本地启动时注释该部分 -->
+            <resource>
+                <directory>src\main\resources</directory>
+                <excludes>
+                    <exclude>application-common.yml</exclude>
+                    <exclude>application-dev.yml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
 </project>

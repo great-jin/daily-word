@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import {backendHost, backendPort} from "@/common/Details";
+
 export default {
   inject: ['reload'],
   data() {
@@ -13,7 +15,7 @@ export default {
     }
   },
   created() {
-    const url = 'ws://localhost:9090/dailyWord/websocket?userId=1'
+    const url = `ws://${backendHost}:${backendPort}/dailyWord/websocket?userId=1```
     const socket = new WebSocket(url);
 
     // 添加WebSocket事件监听器

@@ -63,16 +63,8 @@ public class WordServiceImpl implements WordService {
         }
 
         try {
-            Collection<TaskWord> values;
             Catalogue catalogue = wordRequest.getCatalogue();
-            switch (catalogue) {
-                case CET4 -> values = DicPreHeat.cet4Cache.values();
-                case CET6 -> values = DicPreHeat.cet6Cache.values();
-                case GRE -> values = DicPreHeat.greCache.values();
-                case Graduate -> values = DicPreHeat.graduateCache.values();
-                case Oxford -> values = DicPreHeat.oxfordCache.values();
-                default -> throw new IllegalAccessException("字典类型不存在");
-            }
+            Collection<TaskWord> values = DicPreHeat.dictCache.get(catalogue).values();
             if (Objects.isNull(offset) || offset <= 0 || offset > values.size()) {
                 throw new IllegalAccessException("Offset is illegal");
             }

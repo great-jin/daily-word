@@ -6,6 +6,7 @@ server:
 # 认证配置
 auth:
   host:
+    # deploy to server need config to "*"
     cors: http://localhost:8080,http://127.0.0.1:8080
   filter:
     excludes: /api/auth/login
