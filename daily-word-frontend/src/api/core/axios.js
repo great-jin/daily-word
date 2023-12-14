@@ -5,7 +5,7 @@ import {getToken, clearToken} from "@/util/AuthUtil";
 
 function request(axiosConfig) {
     const service = axios.create({
-        baseURL: '/daily-word',        // 设置统一的请求前缀
+        baseURL: `${process.env.VUE_APP_API_BASE_PREFIX}`,        // 设置统一的请求前缀
         timeout: 60000,         // 设置统一的超时时长, 60s
     });
 

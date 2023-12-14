@@ -1,27 +1,22 @@
 const { defineConfig } = require('@vue/cli-service')
 
-const frontendHost = '119.3.153.62'
-const frontendPort = 8080
-
-const backendHost = '119.3.153.62'
-const backendPort = 9090
-
 module.exports = defineConfig({
   devServer: {
     // 跨越配置
     open: true,
-    // 前端地址端口
-    host: frontendHost,
-    port: frontendPort,
+    // frontend server host and port
+    host: process.env.VUE_APP_API_HOST,
+    port: process.env.VUE_APP_API_PORT,
     https: false,
     proxy: {
-      '/daily-word': {
-        // 后端地址端口
-        target: `http://${backendHost}:${backendPort}/`,
+      [process.env.VUE_APP_API_BASE_PREFIX]: {
+        // backend server url
+        target: process.env.VUE_APP_API_BASE_URL,
         ws: true,
         changOrigin: true,
         pathRewrite: {
-          '^/daily-word': '/dailyWord'
+          // Rewrite path prefix to backend "servlet:context-path"
+          [`^${process.env.VUE_APP_API_SERLET_PREFIX}`]: `${process.env.VUE_APP_API_SERLET_PREFIX}`
         }
       }
     },
