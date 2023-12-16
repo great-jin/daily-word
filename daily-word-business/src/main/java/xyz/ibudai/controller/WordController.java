@@ -2,6 +2,7 @@ package xyz.ibudai.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.model.DictDetail;
 import xyz.ibudai.model.TaskWord;
 import xyz.ibudai.model.Word;
 import xyz.ibudai.model.WordRequest;
@@ -15,6 +16,11 @@ public class WordController {
 
     @Autowired
     private WordService wordService;
+
+    @GetMapping("getDictDetail")
+    public List<DictDetail> getDictDetail() {
+        return wordService.getDictDetail();
+    }
 
     @GetMapping("translation")
     public Word translation(@RequestParam("word") String word) {

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.cache.DicPreHeat;
-import xyz.ibudai.model.TaskWord;
-import xyz.ibudai.model.Word;
-import xyz.ibudai.model.WordDescribe;
-import xyz.ibudai.model.WordRequest;
+import xyz.ibudai.model.*;
 import xyz.ibudai.model.common.Catalogue;
 import xyz.ibudai.service.WordService;
 
@@ -16,6 +13,18 @@ import java.util.*;
 @Slf4j
 @Service
 public class WordServiceImpl implements WordService {
+
+    @Override
+    public List<DictDetail> getDictDetail() {
+        List<DictDetail> detailList = new ArrayList<>();
+        for (Map.Entry<Catalogue, Map<Integer, TaskWord>> Catalogue : DicPreHeat.dictCache.entrySet()) {
+            Catalogue catalogue = Catalogue.getKey();
+            int wordCount = Catalogue.getValue().size();
+            DictDetail detail = new DictDetail(catalogue, wordCount);
+            detailList.add(detail);
+        }
+        return detailList;
+    }
 
     @Override
     public Word translation(String target) {
