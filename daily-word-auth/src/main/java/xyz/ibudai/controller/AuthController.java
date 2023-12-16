@@ -12,11 +12,6 @@ public class AuthController {
     @Autowired
     private AuthUserService authUserService;
 
-    @PostMapping("register")
-    public boolean register(@RequestBody AuthUser user) throws Exception {
-        return authUserService.login(user);
-    }
-
     /**
      * Security 登录请求接口
      */
@@ -24,13 +19,18 @@ public class AuthController {
     public void login(AuthUser user) {
     }
 
-    @PostMapping("forgot")
-    public boolean forgot(@RequestBody AuthUser user) throws Exception {
-        return authUserService.login(user);
+    @GetMapping("sendMail")
+    public Boolean sendMail(@RequestParam("mail") String address) {
+        return authUserService.sendMail(address);
     }
 
-    @PostMapping("test")
-    public boolean test() {
-        return true;
+    @PostMapping("register")
+    public Boolean register(@RequestBody AuthUser user) {
+        return authUserService.register(user);
+    }
+
+    @PostMapping("forgot")
+    public Boolean forgot(@RequestBody AuthUser user) {
+        return authUserService.forgot(user);
     }
 }

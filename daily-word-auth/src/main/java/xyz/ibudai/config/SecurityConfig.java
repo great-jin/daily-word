@@ -45,8 +45,8 @@ public class SecurityConfig {
     @Value("${auth.api.login}")
     private String loginAPI;
 
-    @Value("${auth.api.free}")
-    private String freeAPIs;
+    @Value("${auth.api.common}")
+    private String commonAPIs;
 
     @Value("${auth.api.user}")
     private String userAPIs;
@@ -98,12 +98,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 解析配置接口名单
-        String[] freeUrls = freeAPIs.trim().split(",");
+        String[] commonUrls = commonAPIs.trim().split(",");
         String[] userUrls = userAPIs.trim().split(",");
         String[] adminUrls = adminAPIs.trim().split(",");
         if (!StringUtils.isBlank(contextPath)) {
-            if (freeUrls.length > 0) {
-                freeUrls = Arrays.stream(freeUrls)
+            if (commonUrls.length > 0) {
+                commonUrls = Arrays.stream(commonUrls)
                         .map(it -> contextPath + it)
                         .toArray(String[]::new);
             }
@@ -120,12 +120,13 @@ public class SecurityConfig {
         }
 
         // 配置 security 作用规则
-        final String[] freeResource = freeUrls;
+        final String[] commonResource = commonUrls;
         final String[] userResource = userUrls;
         final String[] adminResource = adminUrls;
         http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(freeResource).permitAll();
+                    // permitAll(): 任意角色都可访问
+                    auth.requestMatchers(commonResource).permitAll();
                     // 为不同权限分配不同资源
                     auth.requestMatchers(userResource).hasRole("USER");
                     auth.requestMatchers(adminResource).hasRole("ADMIN");

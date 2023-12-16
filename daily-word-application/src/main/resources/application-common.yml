@@ -9,14 +9,13 @@ auth:
     # deploy to server need config to "*"
     cors: http://localhost:8080,http://127.0.0.1:8080
   filter:
-    excludes: /api/auth/login
-    websocket: /websocket
+    excludes: /api/auth/login,/api/auth/sendMail,/api/auth/register,/api/auth/forgot
   api:
-    ignore: /websocket/**
+    ignore: /websocket/**,/api/auth/*
     login: /api/auth/login
-    free: /api/auth/*
-    user: /api/word/**
-    admin: /api/word/**
+    common: /api/auth/*
+    user: /api/business/**
+    admin: /api/business/**
 
 # 绑定 MyBatis
 mybatis:

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.ibudai.dao.UserFriendDao">
+
+    <resultMap type="xyz.ibudai.entity.UserFriend" id="UserFriendMap">
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="friendName" column="friend_name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="userName" useGeneratedKeys="true">
+        insert into daily_word.user_friend(friend_name, create_time, deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.friendName}, #{entity.createTime}, #{entity.deleted})
+        </foreach>
+    </insert>
+
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="userName" useGeneratedKeys="true">
+        insert into daily_word.user_friend(friend_name, create_time, deleted)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.friendName}, #{entity.createTime}, #{entity.deleted})
+        </foreach>
+        on duplicate key update
+        friend_name = values(friend_name) , create_time = values(create_time) , deleted = values(deleted)
+    </insert>
+</mapper>
+

@@ -42,8 +42,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <resources>
-            <!-- 只在项目打包时添加，本地启动时注释该部分 -->
+        <!--<resources>
+            &lt;!&ndash; 只在项目打包时添加，本地启动时注释该部分 &ndash;&gt;
             <resource>
                 <directory>src\main\resources</directory>
                 <excludes>
@@ -51,6 +51,6 @@
                     <exclude>application-dev.yml</exclude>
                 </excludes>
             </resource>
-        </resources>
+        </resources>-->
     </build>
 </project>

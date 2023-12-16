@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.ibudai.websocket.WebSocketSender;
 
 @RestController
-@RequestMapping("/api/word/websocket")
+@RequestMapping("/api/business/websocket")
 public class WebSocketController {
 
     @Autowired

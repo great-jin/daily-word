@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,13 +13,19 @@ import xyz.ibudai.common.ResultData;
 import xyz.ibudai.util.TokenUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 @Component
 public class TokenFilter implements Filter {
 
-    @Value("${auth.filter.websocket}")
-    private String websocketApi;
+    private static final Map<String, String> urlMap = new ConcurrentHashMap<>();
+
+    @Value("${auth.filter.excludes}")
+    private String excludesApi;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -38,7 +45,7 @@ public class TokenFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        if (isWebSocketPath(req.getRequestURI())) {
+        if (excludesUrl(req.getRequestURI())) {
             filterChain.doFilter(req, servletResponse);
             return;
         }
@@ -75,8 +82,20 @@ public class TokenFilter implements Filter {
         Filter.super.destroy();
     }
 
-    private boolean isWebSocketPath(String path) {
-        String whitelist = contextPath + websocketApi;
-        return path.startsWith(whitelist);
+    private boolean excludesUrl(String path) {
+        if (urlMap.isEmpty()) {
+            String[] excludesResource = excludesApi.split(",");
+            if (!StringUtils.isBlank(contextPath)) {
+                if (excludesResource.length > 0) {
+                    excludesResource = Arrays.stream(excludesResource)
+                            .map(it -> contextPath + it)
+                            .toArray(String[]::new);
+                }
+            }
+            for (String url : excludesResource) {
+                urlMap.put(url, url);
+            }
+        }
+        return StringUtils.isNoneBlank(urlMap.get(path));
     }
 }

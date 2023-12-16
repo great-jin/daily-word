@@ -7,3 +7,26 @@ export function login(params) {
         params: params
     })
 }
+
+export function sendMail(params) {
+    return request({
+        url: `/api/auth/sendMail?mail=${params}`,
+        method: 'get',
+    })
+}
+
+export function register(params) {
+    return request({
+        url: '/api/auth/register',
+        method: 'post',
+        data: params
+    })
+}
+
+export function forgot(params) {
+    return request({
+        url: '/api/auth/forgot',
+        method: 'post',
+        data: params
+    })
+}

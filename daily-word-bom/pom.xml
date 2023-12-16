@@ -13,7 +13,8 @@
 
     <properties>
         <lombok.version>1.18.30</lombok.version>
-        <mysql.version>8.0.31</mysql.version>
+        <mysql.version>8.0.33</mysql.version>
+        <mybatis-plus.version>3.5.0</mybatis-plus.version>
         <commons-codec.version>1.8</commons-codec.version>
         <jwt.version>0.9.0</jwt.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -32,9 +33,15 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
-            <!-- 认证加密 -->
+            <!-- JWT认证加密 -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
@@ -45,18 +52,17 @@
                 <artifactId>org.apache.commons.codec</artifactId>
                 <version>${commons-codec.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
-            </dependency>
-
             <!-- JDK 17 需单独引入解决 JWT 生成 -->
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>${jaxb-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

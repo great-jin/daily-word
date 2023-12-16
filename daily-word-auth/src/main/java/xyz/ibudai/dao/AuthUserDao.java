@@ -1,5 +1,6 @@
 package xyz.ibudai.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import xyz.ibudai.entity.AuthUser;
 
@@ -10,7 +11,7 @@ import xyz.ibudai.entity.AuthUser;
  * @since 2023-01-31 14:31:28
  */
 @Mapper
-public interface AuthUserDao {
+public interface AuthUserDao extends BaseMapper<AuthUser> {
 
     /**
      * 通过ID查询单条数据

@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import {backendHost, backendPort} from "@/common/Details";
 
 export default {
   inject: ['reload'],
@@ -15,7 +14,9 @@ export default {
     }
   },
   created() {
-    const url = `ws://${backendHost}:${backendPort}/dailyWord/websocket?userId=1```
+    const host = process.env.VUE_APP_API_BACKEND_HOST
+    const port = process.env.VUE_APP_API_BACKEND_PORT
+    const url = `ws://${host}:${port}/dailyWord/websocket?userId=1`
     const socket = new WebSocket(url);
 
     // 添加WebSocket事件监听器

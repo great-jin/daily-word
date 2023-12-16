@@ -16,8 +16,10 @@ router.beforeEach((to, from, next) => {
     }
 
     // 状态判断
+    const auth = getToken()[1]
     const token = getToken()[0]
-    const isLogin = !(token == null || token === '')
+    const isAuth = !(auth == null || auth === '')
+    const isLogin = isAuth && !(token == null || token === '')
     // 是否访问登录页
     if (to.path === '/login') {
         // 已登录则回主页，未登录放行
