@@ -5,10 +5,12 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import xyz.ibudai.common.ResultData;
 import xyz.ibudai.util.TokenUtil;
 
@@ -19,12 +21,13 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+@Slf4j
 @Component
 public class TokenFilter implements Filter {
 
-    private static final Map<String, String> urlMap = new ConcurrentHashMap<>();
+    private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    @Value("${auth.filter.excludes}")
+    @Value("${auth.filter.ignored}")
     private String excludesApi;
 
     @Value("${server.servlet.context-path}")
@@ -83,7 +86,8 @@ public class TokenFilter implements Filter {
     }
 
     private boolean excludesUrl(String path) {
-        if (urlMap.isEmpty()) {
+        boolean isMarch = false;
+        try {
             String[] excludesResource = excludesApi.split(",");
             if (!StringUtils.isBlank(contextPath)) {
                 if (excludesResource.length > 0) {
@@ -92,10 +96,16 @@ public class TokenFilter implements Filter {
                             .toArray(String[]::new);
                 }
             }
-            for (String url : excludesResource) {
-                urlMap.put(url, url);
+
+            for (String pattern : excludesResource) {
+                isMarch = pathMatcher.match(pattern, path);
+                if (isMarch) {
+                    break;
+                }
             }
+        } catch (Exception e) {
+            log.error("Verify path failed", e);
         }
-        return StringUtils.isNoneBlank(urlMap.get(path));
+        return isMarch;
     }
 }

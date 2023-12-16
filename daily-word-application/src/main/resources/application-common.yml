@@ -9,9 +9,10 @@ auth:
     # deploy to server need config to "*"
     cors: http://localhost:8080,http://127.0.0.1:8080
   filter:
-    excludes: /api/auth/login,/api/auth/sendMail,/api/auth/register,/api/auth/forgot
+    excludes: /api/auth/login
+    ignored: /api/auth/*,/websocket/**
   api:
-    ignore: /websocket/**,/api/auth/*
+    ignore: /websocket/**,/api/auth/sendMail,/api/auth/register,/api/auth/forgot
     login: /api/auth/login
     common: /api/auth/*
     user: /api/business/**
