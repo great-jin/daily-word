@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.model.TaskWord;
 import xyz.ibudai.model.common.Catalogue;
@@ -19,11 +20,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class DicPreHeat implements ApplicationRunner {
 
-    @Value("${dictionary.path.dict}")
-    private String dictPath;
+    @Value("classpath:dict/Dictionary.json")
+    private Resource dictResource;
 
-    @Value("${dictionary.path.vocabularyDir}")
-    private String vocabularyDir;
+    @Value("classpath:vocabulary")
+    private Resource vocabularyResource;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -35,19 +36,19 @@ public class DicPreHeat implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         try {
-            this.preheatDict(dictPath);
+            this.preheatDict(dictResource);
         } catch (Exception e) {
-            log.error("Preheat dictionary of [{}] failed.", dictPath, e);
+            log.error("Preheat dictionary data failed.", e);
         }
 
-        File file = new File(vocabularyDir);
-        if (!file.exists()) {
-            log.error("The directory [{}] is not exists", vocabularyDir);
+        if (!vocabularyResource.exists()) {
+            log.error("The directory [{}] is not exists", vocabularyResource.getFilename());
             return;
         }
+        File file = new File(vocabularyResource.getURI());
         File[] vocabularyFiles = file.listFiles();
         if (Objects.isNull(vocabularyFiles)) {
-            log.error("The directory of [{}] is empty", vocabularyDir);
+            log.error("The directory of [{}] is empty", vocabularyResource.getFilename());
             return;
         }
 
@@ -67,14 +68,8 @@ public class DicPreHeat implements ApplicationRunner {
         }
     }
 
-    private void preheatDict(String path) throws Exception {
-        File file = new File(path);
-        if (!file.exists() || !file.isFile()) {
-            log.error("Dictionary of [{}] not existed", path);
-            return;
-        }
-
-        JsonNode node = objectMapper.readTree(file);
+    private void preheatDict(Resource resource) throws Exception {
+        JsonNode node = objectMapper.readTree(resource.getInputStream());
         for (int i = 0; i < node.size(); i++) {
             String name = node.get(i)
                     .get("name")

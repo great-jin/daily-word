@@ -42,8 +42,3 @@ spring:
           auth: true
           starttls.enable: true
           starttls.required: true
-
-dictionary:
-  path:
-    dict: D:\dict\Dictionary.json
-    vocabularyDir: D:\vocabulary
