@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="xyz.ibudai.dao.UserDetailDao">
+<mapper namespace="xyz.ibudai.dailyword.dao.UserDetailDao">
 
-    <resultMap type="xyz.ibudai.entity.UserDetail" id="UserDetailMap">
+    <resultMap type="xyz.ibudai.dailyword.entity.UserDetail" id="UserDetailMap">
         <result property="userName" column="user_name" jdbcType="VARCHAR"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="score" column="score" jdbcType="INTEGER"/>

@@ -1,6 +1,6 @@
 import request from './core/axios';
 
-const apiPrefix = "/api/business/wordPlan"
+const apiPrefix = "/api/server/wordPlan"
 
 export function selectOne(params) {
     return request({

@@ -16,6 +16,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId> org.springframework.boot </groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>xyz.ibudai</groupId>
+            <artifactId>daily-word-basic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- JWT -->
         <dependency>

@@ -1,0 +1,26 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /dailyWord
+
+# 认证配置
+auth:
+  host:
+    # deploy to server need config to "*"
+    cors: http://localhost:8080,http://127.0.0.1:8080
+  filter:
+    excludes: /api/auth/*,/websocket/**
+  api:
+    excludes: /websocket/**,/api/auth/*
+    loginApi: /api/auth/login
+    commonApi: /api/auth/*
+    userApi: /api/business/**
+    adminApi: /api/business/**
+
+# 绑定 MyBatis
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: xyz.ibudai.dailyword.entity
+  # 控制台打印 sql 语句
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

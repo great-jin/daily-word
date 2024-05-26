@@ -1,6 +1,6 @@
 import request from './core/axios';
 
-const apiPrefix = "/api/business/word"
+const apiPrefix = "/api/server/word"
 
 export function translate(params) {
     return request({
