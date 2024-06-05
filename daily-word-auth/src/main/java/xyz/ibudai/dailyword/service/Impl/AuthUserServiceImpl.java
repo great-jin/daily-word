@@ -1,10 +1,11 @@
 package xyz.ibudai.dailyword.service.Impl;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,8 +33,6 @@ import java.util.regex.Pattern;
 @Service
 public class AuthUserServiceImpl implements AuthUserService {
 
-    private final String PREFIX = "dailyWord:login:mailCode";
-
     @Value("${spring.mail.username}")
     private String emailFrom;
 
@@ -43,8 +42,12 @@ public class AuthUserServiceImpl implements AuthUserService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final static Cache<String, String> verifyCode = Caffeine.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .initialCapacity(100)
+            .maximumSize(1000)
+            .build();
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -81,18 +84,13 @@ public class AuthUserServiceImpl implements AuthUserService {
         }
 
         String mailCode;
-        String key = PREFIX + UUID.nameUUIDFromBytes(address.getBytes());
-        Boolean hasKey = redisTemplate.hasKey(key);
-        if (Objects.nonNull(hasKey) && hasKey) {
-            String value = redisTemplate.opsForValue().get(key);
-            if (Objects.isNull(value) || StringUtils.isBlank(value)) {
-                value = generateCode();
-                redisTemplate.opsForValue().set(key, value, 10, TimeUnit.MINUTES);
-            }
-            mailCode = value;
+        String key = UUID.nameUUIDFromBytes(address.getBytes()).toString();
+        String code = verifyCode.getIfPresent(key);
+        if (!StringUtils.isBlank(code)) {
+            mailCode = code;
         } else {
             mailCode = generateCode();
-            redisTemplate.opsForValue().set(key, mailCode, 10, TimeUnit.MINUTES);
+            verifyCode.put(key, mailCode);
         }
 
         boolean success;
