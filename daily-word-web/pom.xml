@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>daily-word-frontend</artifactId>
+    <artifactId>daily-word-web</artifactId>
     <packaging>pom</packaging>
 
 </project>
