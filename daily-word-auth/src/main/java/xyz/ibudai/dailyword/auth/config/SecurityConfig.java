@@ -17,8 +17,8 @@ import xyz.ibudai.dailyword.auth.config.handler.AuthExceptionHandler;
 import xyz.ibudai.dailyword.auth.config.handler.LoginFailureHandler;
 import xyz.ibudai.dailyword.auth.config.handler.LoginSuccessHandler;
 import xyz.ibudai.dailyword.auth.encrypt.AESEncoder;
-import xyz.ibudai.dailyword.auth.model.ApiProperties;
 import xyz.ibudai.dailyword.auth.filter.TokenFilter;
+import xyz.ibudai.dailyword.auth.model.ApiProperties;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 
 import java.util.Arrays;
@@ -37,6 +37,9 @@ public class SecurityConfig {
 
     @Autowired
     private AuthenticService authenticService;
+
+    @Autowired
+    private TokenFilter tokenFilter;
 
     @Autowired
     private LoginSuccessHandler loginSuccessHandler;
@@ -87,13 +90,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 解析接口名单
         String[] freeResource = Arrays.stream(apiProperties.getFreeApi().trim().split(COMMA))
-                .map(it -> contextPath + it)
                 .toArray(String[]::new);
         String[] userResource = Arrays.stream(apiProperties.getUserApi().trim().split(COMMA))
-                .map(it -> contextPath + it)
                 .toArray(String[]::new);
         String[] adminResource = Arrays.stream(apiProperties.getAdminApi().trim().split(COMMA))
-                .map(it -> contextPath + it)
                 .toArray(String[]::new);
 
         // 配置 security 作用规则
@@ -122,7 +122,7 @@ public class SecurityConfig {
                     handle.authenticationEntryPoint(authExceptionHandler);
                 })
                 // 优先认证登录
-                .addFilterBefore(new TokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                 // 关闭跨站攻击
                 .csrf(AbstractHttpConfigurer::disable)
                 // 允许跨域
