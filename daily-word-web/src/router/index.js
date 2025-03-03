@@ -10,6 +10,10 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    if (true) {
+        next()
+    }
+
     // 首页访问不做拦截
     if (to.path === '/') {
         next()

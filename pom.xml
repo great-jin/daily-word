@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>xyz.ibudai</groupId>
     <artifactId>daily-word</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -16,8 +16,8 @@
         <module>daily-word-bom</module>
         <module>daily-word-parent</module>
         <module>daily-word-basic</module>
+        <module>daily-word-repository</module>
         <module>daily-word-auth</module>
-        <module>daily-word-business</module>
         <module>daily-word-server</module>
     </modules>
 

@@ -1,18 +1,10 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /dailyWord
+
+
 spring:
-  # MySQL 数据库
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.21:3306/daily_word?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: root
-    password: 123456
-    # 阿里连接池配置
-    druid:
-      initial-size: 5
-      max-active: 30
-      min-idle: 5
-      max-wait: 10000
-      # SQL防火墙
-      filters: stat, wall
   # 邮件配置, For register send mail
   mail:
     host: smtp.163.com

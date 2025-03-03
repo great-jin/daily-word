@@ -17,9 +17,7 @@
                 style="height: 100%; width: 100%;"
             >
               <el-menu-item index="dictionary" class="head-banner">字典查询</el-menu-item>
-              <el-menu-item index="dailyPlan" class="head-banner">今日计划</el-menu-item>
               <el-menu-item index="competition" class="head-banner">好友竞赛</el-menu-item>
-              <el-menu-item index="scoreCenter" class="head-banner">积分中心</el-menu-item>
               <el-sub-menu index="personal" style="margin-left: auto;">
                 <template #title>
                   <div style="font-weight: bold; font-size: 16px;">
@@ -99,14 +97,8 @@ export default {
         case 'dictionary':
           this.$router.push("/dictionary");
           break
-        case 'dailyPlan':
-          this.$router.push("/dailyPlan");
-          break
         case 'competition':
           this.$router.push("/competition");
-          break
-        case 'scoreCenter':
-          this.$router.push("/scoreCenter");
           break
         case 'personal':
           this.$router.push("/personalCenter");
