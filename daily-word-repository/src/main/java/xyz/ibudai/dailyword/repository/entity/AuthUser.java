@@ -29,7 +29,7 @@ public class AuthUser implements Serializable, UserDetails {
     @DatabaseField(id = true)
     private String id;
 
-    @DatabaseField(columnName = "username")
+    @DatabaseField(columnName = "user_name")
     private String username;
 
     @DatabaseField(columnName = "password")

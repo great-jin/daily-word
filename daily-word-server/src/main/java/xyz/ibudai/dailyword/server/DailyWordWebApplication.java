@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
         "xyz.ibudai.dailyword",
         "xyz.ibudai.dailyword.auth",
         "xyz.ibudai.dailyword.repository",
-        "xyz.ibudai.dailyword.server",
+        "xyz.ibudai.dailyword.server"
 
 })
 public class DailyWordWebApplication {

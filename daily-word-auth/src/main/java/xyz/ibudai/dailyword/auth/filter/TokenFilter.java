@@ -84,7 +84,7 @@ public class TokenFilter implements Filter {
         Filter.super.destroy();
     }
 
-    public boolean excludesUrl(String path) {
+    private boolean excludesUrl(String path) {
         boolean isMarch = false;
         try {
             String[] excludesResource = Arrays.stream(excludesApi.split(","))
