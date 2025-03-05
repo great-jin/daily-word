@@ -4,6 +4,18 @@
       <el-col :span="18">
         <el-row :style="{marginTop: '20px'}">
           <el-col :span="15">
+            <el-select
+                v-model="reqParams.catalogue"
+                placeholder="Select dictionary"
+                style="width: 160px; margin-right: 20px"
+            >
+              <el-option
+                  v-for="item in catalogues"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+              />
+            </el-select>
             <el-button type="primary" @click="getPlanData">开始</el-button>
             <el-button type="primary" @click="choose('back')">上一题</el-button>
             <el-button type="primary" @click="choose('next')">下一题</el-button>
@@ -73,16 +85,18 @@ export default {
       checkedItems: [],
       planData: [],
       currentDataIndex: 0,
+      reqParams: {
+        catalogue: 'CET4',
+        size: 5,
+        offset: 10
+      },
+      catalogues: ['CET4', 'CET6', 'GRE', 'Graduate', 'Oxford']
     }
   },
   methods: {
     async getPlanData() {
       this.clearData()
-      const params = {
-        size: 5,
-        offset: 10
-      }
-      await getTaskContent(params).then(res => {
+      await getTaskContent(this.reqParams).then(res => {
         this.planData = res.data
         for (let i = 1; i <= this.planData.length; i++) {
           this.checkboxItems.push(`第 ${i} 题`)
@@ -96,11 +110,17 @@ export default {
       const index = this.currentDataIndex
       if (type === 'back') {
         if (index <= 0) {
+          if (this.planData.length === 0) {
+            this.$message.warning('请先开始')
+          } else {
+            this.$message.warning('已经到第一题了')
+          }
           return
         }
         this.currentDataIndex--
       } else {
         if (index >= this.planData.length - 1) {
+          this.$message.warning('已经到最后一题了')
           return
         }
         this.currentDataIndex++
@@ -124,8 +144,6 @@ export default {
             speakEn(_data)
             this.$message.success(_data)
           } else {
-            console.log('_data', _data)
-            console.log('_data_value', this.planData[this.currentDataIndex].value)
             this.$message.error('拼接不正确')
           }
           break

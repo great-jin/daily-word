@@ -6,9 +6,8 @@ auth:
   filter:
     excludes: /api/auth/*,/websocket/**
   api:
-    excludes: /websocket/**,/api/auth/*
+    excludes: /websocket/**
     loginApi: /api/auth/login
     freeApi: /api/auth/*
     userApi: /api/business/**
     adminApi: /api/business/**
-

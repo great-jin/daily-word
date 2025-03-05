@@ -47,7 +47,7 @@ function request(axiosConfig) {
         const errorBody = err.response.data
         ElNotification({
             title: 'Internal Server Error',
-            message: errorBody,
+            message: errorBody.message,
             type: 'error'
         })
     })

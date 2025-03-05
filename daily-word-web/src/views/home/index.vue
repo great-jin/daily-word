@@ -69,7 +69,7 @@
 import {clearToken} from "@/util/AuthUtil";
 
 export default {
-  provide() { // 父组件中返回要传给下级的数据
+  provide() {
     return {
       reload: this.reload
     }
@@ -92,8 +92,8 @@ export default {
     backHome() {
       this.$router.push("/");
     },
-    handleSelect(index) {
-      switch (index) {
+    handleSelect(tab) {
+      switch (tab) {
         case 'dictionary':
           this.$router.push("/dictionary");
           break

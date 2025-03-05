@@ -1,7 +1,6 @@
 package xyz.ibudai.dailyword.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
@@ -29,9 +28,6 @@ public class SecurityConfig {
 
     private static final String COMMA = ",";
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
-
     @Autowired
     private ApiProperties apiProperties;
 
@@ -51,16 +47,14 @@ public class SecurityConfig {
     private AuthExceptionHandler authExceptionHandler;
 
 
-    /**
-     * Security 3.x: authenticationManager() + authenticationProvider()
-     * <p>
-     * Security 2.x: configure(AuthenticationManagerBuilder auth)
-     */
     @Bean
     protected AuthenticationManager authenticationManager() {
         return new ProviderManager(Collections.singletonList(authenticationProvider()));
     }
 
+    /**
+     * 创建用户认证提供者
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         // 创建一个用户认证提供者
@@ -78,16 +72,14 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         String[] ignoredApis = apiProperties.getExcludes().split(COMMA);
-        return (web) -> web.ignoring()
-                .requestMatchers(ignoredApis);
+        return (web) -> web.ignoring().requestMatchers(ignoredApis);
     }
 
     /**
-     * Security 3.x 通过注入 SecurityFilterChain 对象配置规则
-     * Security 2.x 通过继承 WebSecurityConfigurerAdapter 并重写 configure(HttpSecurity) 实现
+     * Security 链路配置
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // 解析接口名单
         String[] freeResource = Arrays.stream(apiProperties.getFreeApi().trim().split(COMMA))
                 .toArray(String[]::new);

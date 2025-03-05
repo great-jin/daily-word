@@ -76,5 +76,4 @@ public class TokenUtil {
                 .signWith(algorithm, secretKey)
                 .setExpiration(expDate);
     }
-
 }

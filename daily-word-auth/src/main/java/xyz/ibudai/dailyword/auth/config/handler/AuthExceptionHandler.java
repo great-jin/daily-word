@@ -27,7 +27,7 @@ public class AuthExceptionHandler implements AuthenticationEntryPoint {
         // 无认证信息则提示进行登录
         String msg = LoginStatus.NOT_AUTH.getMsg();
         response.setContentType(ContentType.JSON.getVal());
-        response.setStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         ResponseData result = ResponseData.denied(msg);
         response.getWriter().write(objectMapper.writeValueAsString(result));
     }

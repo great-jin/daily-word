@@ -37,7 +37,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         }
 
         response.setContentType(ContentType.JSON.getVal());
-        response.setStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         ResponseData result = ResponseData.denied(msg);
         response.getWriter().write(objectMapper.writeValueAsString(result));
     }

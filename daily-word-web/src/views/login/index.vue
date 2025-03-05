@@ -153,7 +153,7 @@ export default {
               }
               login(user).then(res => {
                 const data = res.data
-                if (data.code === 200) {
+                if (data.data != null && data.data) {
                   this.$notify({
                     type: 'success',
                     title: '登录成功',
