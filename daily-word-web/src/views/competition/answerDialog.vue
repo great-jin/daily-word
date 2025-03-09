@@ -45,11 +45,17 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: '50px'}">
+        <el-row :style="{marginTop: '20px'}">
+          <el-col :span="24">
+            <el-button @click="clickOption('hit')">提示</el-button>
+            <el-button @click="clickOption('read')">朗读</el-button>
+            <el-button @click="clickOption('clear')">清空</el-button>
+          </el-col>
+        </el-row>
+
+        <el-row :style="{marginTop: '20px'}">
           <el-col :span="24">
             <el-button type="primary" @click="choose('back')">上一题</el-button>
-            <el-button @click="clickOption('hit')">提示</el-button>
-            <el-button @click="clickOption('clear')">清空</el-button>
             <el-button type="primary" @click="choose('next')">下一题</el-button>
             <el-button key="submit" type="primary" @click="finish">提交</el-button>
           </el-col>
@@ -152,10 +158,14 @@ export default {
           })
           if (_data === this.planData[this.currentDataIndex].value) {
             speakEn(_data)
-            this.$message.success(_data)
+            this.choose('next')
           } else {
             this.$message.error('拼接不正确')
           }
+          break
+        case 'read':
+          // TODO 次数限制
+          speakEn(this.planData[this.currentDataIndex].value)
           break
         case 'hit':
           if (this.planData.length > 0) {
