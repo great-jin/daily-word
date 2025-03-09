@@ -2,7 +2,8 @@
   <el-dialog
       v-model="visible"
       title="答题"
-      width="50%"
+      width="56%"
+      @close="clearData"
   >
     <el-row style="height: 100%; padding: 20px 25px">
       <el-col :span="18">
@@ -10,7 +11,7 @@
           <el-col :span="24">
             <div
                 v-if="planData.length > 0"
-                style="margin-right: 20px; text-align: center"
+                style="text-align: center"
             >
             <span
                 v-for="item in planData[currentDataIndex].translation"
@@ -35,6 +36,12 @@
                 @keyup.enter="clickOption('enter')"
                 class="input-word"
             />
+          </el-col>
+        </el-row>
+
+        <el-row :style="{marginTop: '30px'}">
+          <el-col :span="24">
+           <span>{{ currentDataIndex + 1}} / {{planData.length}}</span>
           </el-col>
         </el-row>
 
@@ -95,7 +102,9 @@ export default {
       this.setSingleWord(this.planData[0].value)
     },
     clearData() {
+      this.currentDataIndex = 0
       this.checkboxItems = []
+      this.checkedItems = []
       this.planData = []
     },
     finish() {
@@ -204,7 +213,7 @@ export default {
 }
 
 .input-word {
-  width: 30px;
+  width: 34px;
   margin-right: 10px;
   text-align: center;
   border-bottom: 1px solid #409EFF;
