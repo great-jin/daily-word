@@ -9,7 +9,6 @@
     <div class="user-agreement-content">
       <p>欢迎使用我们的服务。</p>
       <p>1. 本服务的所有权和运作权归每日一词所有。</p>
-      <!-- 其他协议内容 -->
     </div>
   </el-dialog>
 </template>

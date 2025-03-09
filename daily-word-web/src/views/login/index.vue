@@ -159,9 +159,10 @@ export default {
                     title: '登录成功',
                     message: 'Welcome to Daily Word'
                   });
+
                   // 保存认证登录信息
                   setToken(res.headers['auth'], res.headers['token'])
-                  this.$router.push('/home')
+                  this.$router.push('/')
                 } else {
                   this.$notify.error({
                     title: '登录失败',

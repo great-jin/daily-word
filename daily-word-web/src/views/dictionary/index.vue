@@ -12,13 +12,13 @@
           v-model="searchText"
           placeholder="请输入搜索内容"
           class="search-input"
-          @keyup.enter="clickOption"
+          @keyup.enter="translateWord"
       />
 
       <el-button
           @click="randomizePosition"
           :style="buttonStyle"
-      >{{ num === 0 ? `翻  译` : buttonInfo }}
+      >{{ randomCount === 0 ? `翻  译` : buttonInfo }}
       </el-button>
     </div>
 
@@ -36,7 +36,7 @@ import {translate} from "@/api/wordApi";
 export default {
   data() {
     return {
-      num: 0,
+      randomCount: 0,
       buttonInfo: '翻译',
       searchText: '',
       describeInfo: [],
@@ -56,7 +56,7 @@ export default {
     }
   },
   methods: {
-    clickOption() {
+    translateWord() {
       if (this.searchText === '') {
         this.$message.warning('请先输入单词')
         return
@@ -64,14 +64,14 @@ export default {
 
       this.clearCount()
       translate(this.searchText).then(res => {
-        const existed = res.data.existed
-        if (existed) {
+        if (res.data.existed) {
           const describeList = res.data.describeList
           this.describeInfo = []
           describeList.forEach(it => {
             this.describeInfo.push(it.type + ' ' + it.describe)
           })
         } else {
+          this.describeInfo = []
           this.$message.warning('未检索到单词，请检查是否拼写错误.')
         }
       })
@@ -81,26 +81,23 @@ export default {
         this.$message.warning('请先输入单词')
         return
       }
+      const randomInt = Math.floor(Math.random() * 101)
+      if (this.randomCount === 0 && randomInt !== 56) {
+        this.translateWord()
+        return
+      }
 
-      if (this.num >= 3) {
-        this.$message.success({
-          message: '使用回车确认输入哦！',
-          center: true,
-          duration: 4000
-        })
+      if (this.randomCount >= 3) {
         this.clearCount()
+        this.translateWord()
         return;
       }
       this.buttonInfo = '我在这'
-      this.num++
-
-      const randomTop = Math.floor(Math.random() * (window.innerHeight - 65)) + 'px';
-      const randomLeft = Math.floor(Math.random() * (window.innerWidth - 65)) + 'px';
-
+      this.randomCount++
       this.buttonStyle = {
         ...this.buttonStyle,
-        top: randomTop,
-        left: randomLeft
+        top:  Math.floor(Math.random() * (window.innerHeight - 65)) + 'px',
+        left: Math.floor(Math.random() * (window.innerWidth - 65)) + 'px'
       }
     },
     clearCount() {
@@ -109,7 +106,7 @@ export default {
         top: '40%', // 初始位置
         left: '46%', // 初始位置
       }
-      this.num = 0
+      this.randomCount = 0
     }
   }
 }
