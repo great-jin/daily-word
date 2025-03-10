@@ -1,14 +1,17 @@
+const userAuth = 'USER_AUTH'
+const userToken = 'USER_TOKEN'
+
 export function setToken(auth, token) {
-    localStorage.setItem("USER_TOKEN", token)
-    sessionStorage.setItem("USER_AUTH", auth)
+    localStorage.setItem(userToken, token)
+    sessionStorage.setItem(userAuth, auth)
 }
 
 export function getToken() {
-    let token = localStorage.getItem('USER_TOKEN')
+    let token = localStorage.getItem(userToken)
     if (token === undefined || token === null) {
         token = ''
     }
-    let auth = sessionStorage.getItem('USER_AUTH')
+    let auth = sessionStorage.getItem(userAuth)
     if (auth === undefined || auth === null) {
         auth = ''
     } else {
@@ -18,6 +21,6 @@ export function getToken() {
 }
 
 export function clearToken() {
-    localStorage.removeItem('USER_TOKEN')
-    sessionStorage.removeItem('USER_AUTH')
+    localStorage.removeItem(userToken)
+    sessionStorage.removeItem(userAuth)
 }

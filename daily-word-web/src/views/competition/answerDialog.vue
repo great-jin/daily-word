@@ -41,7 +41,7 @@
 
         <el-row :style="{marginTop: '30px'}">
           <el-col :span="24">
-           <span>{{ currentDataIndex + 1}} / {{planData.length}}</span>
+            <span>{{ currentDataIndex + 1 }} / {{ planData.length }}</span>
           </el-col>
         </el-row>
 
@@ -157,7 +157,7 @@ export default {
             _data += it.value
           })
           if (_data === this.planData[this.currentDataIndex].value) {
-            speakEn(_data)
+            // 正确进入下一题
             this.choose('next')
           } else {
             this.$message.error('拼接不正确')
@@ -216,12 +216,7 @@ export default {
 }
 </script>
 
-<style>
-.container {
-  height: 100%;
-  background-color: white;
-}
-
+<style scoped>
 .input-word {
   width: 34px;
   margin-right: 10px;
@@ -236,6 +231,6 @@ export default {
   overflow-y: scroll;
 }
 
-.el-checkbox:last-of-type{
+.el-checkbox:last-of-type {
 }
 </style>

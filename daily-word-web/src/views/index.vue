@@ -20,7 +20,7 @@
             >
               <el-menu-item index="dictionary" class="head-banner">字典查询</el-menu-item>
               <el-menu-item index="competition" class="head-banner">知识竞赛</el-menu-item>
-              <el-sub-menu index="personal" style="margin-left: auto;">
+              <el-sub-menu index="personal" class="right-align-submenu">
                 <template #title>
                   <div style="font-weight: bold; font-size: 16px;">
                     <el-icon size="22">
@@ -101,7 +101,7 @@ export default {
           this.$router.push("/competition");
           break
         case 'personal':
-          this.$router.push("/personalCenter");
+          this.$router.push("/personal");
           break
         case 'quit':
           clearToken()
@@ -147,5 +147,10 @@ export default {
 
 .el-menu--collapse .el-menu .el-submenu, .el-menu--popup {
   min-width: 100px !important;
+}
+
+.right-align-submenu .el-sub-menu__wrap {
+  left: auto !important;
+  right: 0 !important; /* 将子菜单定位到最右边 */
 }
 </style>

@@ -4,9 +4,9 @@ auth:
     # deploy to server need config to "*"
     cors: http://localhost:8080,http://127.0.0.1:8080
   filter:
-    excludes: /api/auth/*,/websocket/**,/api/server/word/*
+    excludes: /api/auth/*,/websocket/**,/api/server/word/translation
   api:
-    excludes: /websocket/**,/api/server/word/*
+    excludes: /websocket/**,/api/server/word/translation
     loginApi: /api/auth/login
     freeApi: /api/auth/*
     userApi: /api/business/**
