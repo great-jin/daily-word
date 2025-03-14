@@ -3,7 +3,7 @@
     <el-card class="rank-card">
       <template #header>
         <div class="card-header">
-          <span>排行榜</span>
+          <span>积分排行榜</span>
         </div>
       </template>
 
@@ -23,27 +23,15 @@
             align="center"
         />
         <el-table-column
-            prop="time"
-            label="耗时"
+            prop="matchCount"
+            label="局数"
             align="center"
         />
         <el-table-column
             prop="score"
-            label="分数"
+            label="积分"
             align="center"
         />
-        <el-table-column
-            prop="operate"
-            label=""
-            fixed="right"
-            align="center"
-        >
-          <template #default>
-            <el-button link type="primary" size="small">
-              挑战
-            </el-button>
-          </template>
-        </el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -61,7 +49,7 @@ export default {
       this.rankData.push({
         rank: i,
         username: "Test-" + i,
-        time: '1m30s',
+        matchCount:  Math.floor(Math.random() * (95 - 70 + 1)) + 70,
         score: Math.floor(Math.random() * (95 - 70 + 1)) + 70
       })
     }

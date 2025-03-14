@@ -2,23 +2,28 @@
   <el-drawer
       v-model="visible"
       title="我的好友"
+      size="36%"
   >
     <el-button
         type="primary"
+        @click="addFriend"
         style="margin-bottom: 20px; float: left"
-    >添加好友
+    >
+      添加好友
     </el-button>
     <el-button
         type="primary"
+        @click="refreshTable"
         style="margin-bottom: 20px; float: right"
-    >刷新列表
+    >
+      刷新状态
     </el-button>
 
     <el-card class="friend-card">
       <el-table
           :data="friendData"
           class="friend-table"
-          :row-class-name="tableRowClassName"
+          :row-class-name="tableRowStyle"
       >
         <el-table-column
             prop="username"
@@ -42,13 +47,24 @@
             fixed="right"
             align="center"
         >
-          <template #default>
-            <el-button link type="primary">
+          <template #default="{ row }">
+            <el-button
+                type="primary"
+                @click="tableOptions('invite', row.username)"
+                link
+            >
               邀请
             </el-button>
-            <el-button link type="warning">
-              删除
-            </el-button>
+            <el-popconfirm
+                title="确认删除?"
+                cancel-button-text="否"
+                confirm-button-text="是"
+                @confirm="tableOptions('delete', row.username)"
+            >
+              <template #reference>
+                <el-button type="warning" link>删除</el-button>
+              </template>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -77,8 +93,24 @@ export default {
     show() {
       this.visible = true
     },
-    tableRowClassName({rowIndex}) {
+    tableRowStyle({rowIndex}) {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";
+    },
+    addFriend() {
+      this.$message.success('添加好友')
+    },
+    refreshTable() {
+      this.$message.success('刷新列表')
+    },
+    tableOptions(type, data) {
+      switch (type) {
+        case 'invite':
+          this.$message.success('邀请: ' + data)
+          break
+        case 'delete':
+          this.$message.warning('删除: ' + data)
+          break
+      }
     }
   }
 }

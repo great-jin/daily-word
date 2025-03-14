@@ -8,7 +8,7 @@
       <el-col :span="24">
         <span style="margin-right: 6px">房间号: </span>
         <el-input
-            v-model="roomNumber"
+            v-model="reqParams.roomNumber"
             placeholder="请输入房间号"
             style="width: 200px;"
         />
@@ -68,8 +68,8 @@ export default {
       visible: false,
       catalogues: CATALOG_ARRAY,
       batchOptions: SIZE_ARRAY,
-      roomNumber: null,
       reqParams: {
+        roomNumber: null,
         catalogue: CATALOG_ARRAY[0].value,
         size: SIZE_ARRAY[0].value,
         offset: 10
@@ -83,6 +83,7 @@ export default {
     },
     startTask() {
       getTaskContent(this.reqParams).then(res => {
+        this.reqParams.roomNumber = null
         this.$refs.answerDialog.show(res.data);
       })
     }
