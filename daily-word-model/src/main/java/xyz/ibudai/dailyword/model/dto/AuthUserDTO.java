@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.repository.dto;
+package xyz.ibudai.dailyword.model.dto;
 
 import lombok.Data;
 

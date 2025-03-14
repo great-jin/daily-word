@@ -3,8 +3,8 @@ package xyz.ibudai.dailyword.server.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.ibudai.dailyword.repository.enums.Catalogue;
-import xyz.ibudai.dailyword.repository.model.*;
+import xyz.ibudai.dailyword.model.enums.Catalogue;
+import xyz.ibudai.dailyword.model.vo.*;
 import xyz.ibudai.dailyword.server.cache.DicPreHeat;
 
 import java.util.*;

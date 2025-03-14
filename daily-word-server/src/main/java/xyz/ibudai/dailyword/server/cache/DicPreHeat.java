@@ -9,8 +9,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import xyz.ibudai.dailyword.repository.model.TaskWord;
-import xyz.ibudai.dailyword.repository.enums.Catalogue;
+import xyz.ibudai.dailyword.model.vo.TaskWord;
+import xyz.ibudai.dailyword.model.enums.Catalogue;
 
 import java.io.File;
 import java.util.*;

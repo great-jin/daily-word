@@ -13,8 +13,8 @@ import xyz.ibudai.dailyword.basic.enums.HttpHeader;
 import xyz.ibudai.dailyword.auth.util.AESUtil;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
 import xyz.ibudai.dailyword.basic.common.ResponseData;
-import xyz.ibudai.dailyword.repository.dto.AuthUserDTO;
-import xyz.ibudai.dailyword.repository.entity.AuthUser;
+import xyz.ibudai.dailyword.model.dto.AuthUserDTO;
+import xyz.ibudai.dailyword.model.entity.AuthUser;
 
 import java.io.IOException;
 import java.util.Base64;

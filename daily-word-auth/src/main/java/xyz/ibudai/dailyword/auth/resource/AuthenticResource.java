@@ -2,7 +2,7 @@ package xyz.ibudai.dailyword.auth.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import xyz.ibudai.dailyword.repository.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 
 /**

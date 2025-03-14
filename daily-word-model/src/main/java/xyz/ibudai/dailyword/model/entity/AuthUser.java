@@ -1,7 +1,8 @@
-package xyz.ibudai.dailyword.repository.entity;
+package xyz.ibudai.dailyword.model.entity;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,37 +21,37 @@ import java.util.List;
  * @since 2023-01-31 14:31:28
  */
 @Data
-@DatabaseTable(tableName = "auth_user")
+@TableName("auth_user")
 public class AuthUser implements Serializable, UserDetails {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @DatabaseField(id = true)
+    @TableId("id")
     private String id;
 
-    @DatabaseField(columnName = "user_name")
+    @TableField("user_name")
     private String username;
 
-    @DatabaseField(columnName = "password")
+    @TableField("password")
     private String password;
 
-    @DatabaseField(columnName = "role")
+    @TableField("role")
     private String role;
 
-    @DatabaseField(columnName = "authority")
+    @TableField("authority")
     private String authority;
 
-    @DatabaseField(columnName = "account_non_expired")
+    @TableField("account_non_expired")
     private Integer accountNonExpired;
 
-    @DatabaseField(columnName = "account_non_locked")
+    @TableField("account_non_locked")
     private Integer accountNonLocked;
 
-    @DatabaseField(columnName = "credentials_non_expired")
+    @TableField("credentials_non_expired")
     private Integer credentialsNonExpired;
 
-    @DatabaseField(columnName = "is_enabled")
+    @TableField("is_enabled")
     private Integer isEnabled;
 
 

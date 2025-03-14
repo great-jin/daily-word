@@ -12,8 +12,9 @@
     <packaging>pom</packaging>
 
     <properties>
-        <sqlite.version>3.42.0.0</sqlite.version>
-        <sqlite-orm.version>6.1</sqlite-orm.version>
+        <mysql.version>8.0.33</mysql.version>
+        <mybatis.version>3.0.1</mybatis.version>
+        <mybatis-plus.version>3.5.0</mybatis-plus.version>
 
         <jwt.version>0.9.0</jwt.version>
         <commons-codec.version>1.8</commons-codec.version>
@@ -34,14 +35,19 @@
 
             <!-- 数据库连接 -->
             <dependency>
-                <groupId>org.xerial</groupId>
-                <artifactId>sqlite-jdbc</artifactId>
-                <version>${sqlite.version}</version>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.j256.ormlite</groupId>
-                <artifactId>ormlite-jdbc</artifactId>
-                <version>${sqlite-orm.version}</version>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
             <!-- JWT认证加密 -->

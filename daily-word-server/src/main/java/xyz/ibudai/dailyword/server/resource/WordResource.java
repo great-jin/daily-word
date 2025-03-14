@@ -2,10 +2,7 @@ package xyz.ibudai.dailyword.server.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import xyz.ibudai.dailyword.repository.model.DictDetail;
-import xyz.ibudai.dailyword.repository.model.TaskWord;
-import xyz.ibudai.dailyword.repository.model.Word;
-import xyz.ibudai.dailyword.repository.model.WordRequest;
+import xyz.ibudai.dailyword.model.vo.*;
 import xyz.ibudai.dailyword.server.service.WordService;
 
 import java.util.List;

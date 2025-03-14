@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import xyz.ibudai.dailyword.repository.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.AuthUser;
 
 /**
  * (TbUser)表服务接口

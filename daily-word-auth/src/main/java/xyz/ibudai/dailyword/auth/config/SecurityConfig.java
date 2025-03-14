@@ -17,7 +17,7 @@ import xyz.ibudai.dailyword.auth.config.handler.LoginFailureHandler;
 import xyz.ibudai.dailyword.auth.config.handler.LoginSuccessHandler;
 import xyz.ibudai.dailyword.auth.encrypt.AESEncoder;
 import xyz.ibudai.dailyword.auth.filter.TokenFilter;
-import xyz.ibudai.dailyword.auth.model.ApiProperties;
+import xyz.ibudai.dailyword.model.props.ApiProperties;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 
 import java.util.Arrays;

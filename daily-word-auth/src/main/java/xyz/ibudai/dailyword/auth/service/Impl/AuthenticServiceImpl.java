@@ -11,10 +11,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import xyz.ibudai.dailyword.repository.dao.impl.UserDao;
-import xyz.ibudai.dailyword.repository.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.auth.util.AESUtil;
+import xyz.ibudai.dailyword.repository.service.UserService;
 
 import java.util.Objects;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class AuthenticServiceImpl implements AuthenticService {
     private String emailFrom;
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -51,7 +51,7 @@ public class AuthenticServiceImpl implements AuthenticService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthUser authUser = userDao.queryByName(username);
+        AuthUser authUser = userService.queryByName(username);
         if (authUser == null) {
             throw new IllegalArgumentException("User [" + username + "] doesn't exist.");
         }
@@ -61,7 +61,7 @@ public class AuthenticServiceImpl implements AuthenticService {
     @Override
     public boolean login(AuthUser user) {
         try {
-            AuthUser dbUser = userDao.queryByName(user.getUsername());
+            AuthUser dbUser = userService.queryByName(user.getUsername());
             if (dbUser == null) {
                 throw new IllegalAccessException("User [" + user.getUsername() + "] doesn't exist.");
             }

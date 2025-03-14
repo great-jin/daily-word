@@ -1,9 +1,9 @@
-package xyz.ibudai.dailyword.repository.model;
+package xyz.ibudai.dailyword.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import xyz.ibudai.dailyword.repository.enums.Catalogue;
+import xyz.ibudai.dailyword.model.enums.Catalogue;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.repository.entity;
+package xyz.ibudai.dailyword.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

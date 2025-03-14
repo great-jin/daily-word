@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.auth.model;
+package xyz.ibudai.dailyword.model.props;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
