@@ -35,6 +35,12 @@
                   </el-icon>
                   个人中心
                 </el-menu-item>
+                <el-menu-item index="friend">
+                  <el-icon>
+                    <ChatDotRound/>
+                  </el-icon>
+                  我的好友
+                </el-menu-item>
                 <el-menu-item index="quit" style="text-align:center;">
                   <el-icon>
                     <SwitchButton/>
@@ -44,6 +50,9 @@
               </el-sub-menu>
             </el-menu>
           </el-col>
+
+          <!-- 好友抽屉组件 -->
+          <FriendDrawer ref="friendDrawer"/>
         </el-row>
       </el-header>
 
@@ -69,8 +78,12 @@
 
 <script>
 import {clearToken} from "@/util/AuthUtil";
+import FriendDrawer from "@/views/competition/element/friendDrawer.vue";
 
 export default {
+  components: {
+    FriendDrawer
+  },
   provide() {
     return {
       reload: this.reload
@@ -102,6 +115,9 @@ export default {
           break
         case 'personal':
           this.$router.push("/personal");
+          break
+        case 'friend':
+          this.$refs.friendDrawer.show();
           break
         case 'quit':
           clearToken()

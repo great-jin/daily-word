@@ -43,16 +43,16 @@ public class AuthUser implements Serializable, UserDetails {
     private String authority;
 
     @TableField("account_non_expired")
-    private Integer accountNonExpired;
+    private Boolean accountNonExpired;
 
     @TableField("account_non_locked")
-    private Integer accountNonLocked;
+    private Boolean accountNonLocked;
 
     @TableField("credentials_non_expired")
-    private Integer credentialsNonExpired;
+    private Boolean credentialsNonExpired;
 
     @TableField("is_enabled")
-    private Integer isEnabled;
+    private Boolean isEnabled;
 
 
     @Override
@@ -70,22 +70,22 @@ public class AuthUser implements Serializable, UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.accountNonExpired != null && this.accountNonExpired == 1;
+        return this.accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.accountNonLocked != null && this.accountNonLocked == 1;
+        return this.accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired != null && this.credentialsNonExpired == 1;
+        return this.credentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled != null && this.isEnabled == 1;
+        return this.isEnabled;
     }
 }
 

@@ -8,10 +8,10 @@
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="VARCHAR"/>
         <result property="authority" column="authority" jdbcType="VARCHAR"/>
-        <result property="accountNonExpired" column="account_non_expired" jdbcType="INTEGER"/>
-        <result property="accountNonLocked" column="account_non_locked" jdbcType="INTEGER"/>
-        <result property="credentialsNonExpired" column="credentials_non_expired" jdbcType="INTEGER"/>
-        <result property="isEnabled" column="is_enabled" jdbcType="INTEGER"/>
+        <result property="accountNonExpired" column="account_non_expired" jdbcType="BOOLEAN"/>
+        <result property="accountNonLocked" column="account_non_locked" jdbcType="BOOLEAN"/>
+        <result property="credentialsNonExpired" column="credentials_non_expired" jdbcType="BOOLEAN"/>
+        <result property="isEnabled" column="is_enabled" jdbcType="BOOLEAN"/>
     </resultMap>
 
     <sql id="baseColumns">

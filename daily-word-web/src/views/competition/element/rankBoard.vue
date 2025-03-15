@@ -49,7 +49,7 @@ export default {
       this.rankData.push({
         rank: i,
         username: "Test-" + i,
-        matchCount:  Math.floor(Math.random() * (95 - 70 + 1)) + 70,
+        matchCount: Math.floor(Math.random() * (95 - 70 + 1)) + 70,
         score: Math.floor(Math.random() * (95 - 70 + 1)) + 70
       })
     }
@@ -79,7 +79,7 @@ export default {
 
 .rank-table {
   width: 100%;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 360px);
   overflow-y: auto;
 }
 

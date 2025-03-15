@@ -1,8 +1,8 @@
 <template>
   <el-dialog
       v-model="visible"
-      title="答题"
-      width="56%"
+      title="开始答题"
+      width="70%"
       @close="clearData"
   >
     <el-row style="height: 100%; padding: 20px 25px">
@@ -195,12 +195,13 @@ export default {
       // 这里只是一个简单的示例，你可以根据需求进行扩展
       // 只允许输入字母
       if (!/^[a-z]$/.test(this.inputValues[index].value)) {
-        this.inputValues[index].value = '';
+        this.inputValues[index].value = ''
+        return
       }
 
       // 将光标自动定位到下一个输入框
       if (index < this.textLength - 1 && this.inputValues[index].value !== '') {
-        this.$refs.inputRefs[index + 1].focus();
+        this.$refs.inputRefs[index + 1].focus()
       }
     },
     handleKeyDown(index) {
@@ -209,7 +210,7 @@ export default {
         // 阻止默认删除行为
         event.preventDefault();
         // 将光标自动定位到前一个输入框
-        this.$refs.inputRefs[index - 1].focus();
+        this.$refs.inputRefs[index - 1].focus()
       }
     }
   }
