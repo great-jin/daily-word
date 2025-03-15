@@ -78,7 +78,7 @@
 
 <script>
 import {clearToken} from "@/util/AuthUtil";
-import FriendDrawer from "@/views/competition/element/friendDrawer.vue";
+import FriendDrawer from "@/views/competition/components/friendDrawer.vue";
 
 export default {
   components: {

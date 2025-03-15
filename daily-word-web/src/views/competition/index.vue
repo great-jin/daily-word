@@ -4,7 +4,10 @@
       <!-- 基本信息 -->
       <el-row :gutter="12" style="padding: 0 10px 10px 10px">
         <el-col :span="8">
-          <el-card header="当前赛季" shadow="always">
+          <el-card shadow="always">
+            <template #header>
+              <div class="card-info-header">当前赛季</div>
+            </template>
             <div class="card-content">
               <el-icon class="icon">
                 <Medal/>
@@ -14,7 +17,10 @@
           </el-card>
         </el-col>
         <el-col :span="8">
-          <el-card header="对战局数" shadow="always">
+          <el-card shadow="always">
+            <template #header>
+              <div class="card-info-header">对战局数</div>
+            </template>
             <div class="card-content">
               <el-icon class="icon">
                 <GoldMedal/>
@@ -29,7 +35,10 @@
           </el-card>
         </el-col>
         <el-col :span="8">
-          <el-card header="我的积分" shadow="always">
+          <el-card shadow="always">
+            <template #header>
+              <div class="card-info-header">我的积分</div>
+            </template>
             <div class="card-content">
               <el-icon class="icon">
                 <TrophyBase/>
@@ -86,8 +95,8 @@
 </template>
 
 <script>
-import RankBoard from "./element/rankBoard.vue";
-import RoomDialog from "./element/roomDialog.vue";
+import RankBoard from "@/views/competition/components/rankBoard.vue";
+import RoomDialog from "@/views/competition/components/roomDialog.vue";
 import {CATALOG_ARRAY, ROOM_ARRAY} from "@/views/competition/const";
 
 export default {
@@ -117,16 +126,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   width: 100%;
   height: 100%;
-}
-
-.room-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 25px;
 }
 
 .room-row {
@@ -143,8 +146,15 @@ export default {
   background: #f8eefc;
 }
 
+.card-info-header {
+  color: #62aaf4;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
 .card-header {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   text-align: center;
 }
@@ -158,5 +168,9 @@ export default {
 .icon {
   font-size: 20px;
   margin-right: 4px;
+}
+
+::v-deep(.el-tabs__item) {
+  font-weight: bold;
 }
 </style>

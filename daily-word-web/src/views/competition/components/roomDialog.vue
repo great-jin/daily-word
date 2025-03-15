@@ -1,12 +1,34 @@
 <template>
   <el-dialog
       v-model="visible"
-      title="创建房间"
+      title="匹配对局"
       width="40%"
       @close="closeDialog"
   >
     <el-row
         v-if="reqParams.roomSize !== 0"
+        style="height: 100%; padding: 20px 25px"
+    >
+      <el-col :span="24">
+        <span style="margin-right: 6px">匹配方式: </span>
+        <el-select
+            v-model="reqParams.mode"
+            placeholder="选择匹配方式"
+            style="width: 240px"
+            @change="changeMode"
+        >
+          <el-option
+              v-for="item in modeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
+      </el-col>
+    </el-row>
+
+    <el-row
+        v-if="showRoomInput"
         style="height: 100%; padding: 20px 25px"
     >
       <el-col :span="24">
@@ -76,10 +98,22 @@ export default {
   data() {
     return {
       visible: false,
+      showRoomInput: false,
       catalogues: CATALOG_ARRAY,
       batchOptions: SIZE_ARRAY,
       roomNumValues: ['', '', '', '', '', ''],
+      modeOptions: [
+        {
+          label: '随机匹配',
+          value: 1
+        },
+        {
+          label: '自定义房间',
+          value: 2
+        },
+      ],
       reqParams: {
+        mode: 1,
         roomSize: null,
         roomNumber: null,
         catalogue: CATALOG_ARRAY[0].value,
@@ -93,16 +127,17 @@ export default {
     show(data) {
       this.visible = true
       this.reqParams.roomSize = data
+      this.showRoomInput = this.reqParams.mode === 2 && this.reqParams.roomSize !== 0
     },
     closeDialog() {
       this.visible = false
+      this.reqParams.mode = 1
+      this.reqParams.roomSize = null
+      this.reqParams.roomNumber = null
       this.roomNumValues = ['', '', '', '', '', '']
     },
-    startTask() {
-      getTaskContent(this.reqParams).then(res => {
-        this.reqParams.roomNumber = null
-        this.$refs.answerDialog.show(res.data)
-      })
+    changeMode(data) {
+      this.showRoomInput = data === 2 && this.reqParams.roomSize !== 0
     },
     handleInput(index) {
       if (!/^\d$/.test(this.roomNumValues[index])) {
@@ -124,6 +159,12 @@ export default {
         // 将光标自动定位到前一个输入框
         this.$refs.inputRefs[index - 1].focus()
       }
+    },
+    startTask() {
+      getTaskContent(this.reqParams).then(res => {
+        this.reqParams.roomNumber = null
+        this.$refs.answerDialog.show(res.data)
+      })
     }
   }
 }

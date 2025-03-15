@@ -45,6 +45,15 @@
           </el-col>
         </el-row>
 
+        <el-row :style="{marginTop: '30px'}">
+          <el-col :span="24">
+            <span>
+              <strong>作答耗时:</strong>
+              {{ formattedTime }}
+            </span>
+          </el-col>
+        </el-row>
+
         <el-row :style="{marginTop: '20px'}">
           <el-col :span="24">
             <el-button @click="clickOption('hit')">提示</el-button>
@@ -62,7 +71,7 @@
         </el-row>
       </el-col>
 
-      <el-col :span="6" style="background-color: #e6dfdf">
+      <el-col :span="6" style="background-color: #f5f1f1">
         <div class="word-container">
           <el-checkbox
               v-for="(item, index) in checkboxItems"
@@ -86,6 +95,11 @@ import {speakEn} from "@/util/SpeakUtil";
 export default {
   data() {
     return {
+      clock: {
+        time: 0,
+        isRunning: false,
+        timer: null
+      },
       visible: false,
       inputValues: [], // 用于存储输入框的数据
       textLength: 0,
@@ -94,6 +108,20 @@ export default {
       planData: [],
       currentDataIndex: 0
     }
+  },
+  computed: {
+    // 格式化时间：HH:MM:SS
+    formattedTime() {
+      const _this = this.clock
+      const hours = String(Math.floor(_this.time / 3600)).padStart(2, "0");
+      const minutes = String(Math.floor((_this.time % 3600) / 60)).padStart(2, "0");
+      const seconds = String(_this.time % 60).padStart(2, "0");
+      return `${hours}:${minutes}:${seconds}`;
+    }
+  },
+  beforeDestroy() {
+    const _this = this.clock
+    clearInterval(_this.timer);
   },
   methods: {
     show(data) {
@@ -106,6 +134,7 @@ export default {
       }
       this.currentDataIndex = 0
       this.setSingleWord(this.planData[0].value)
+      this.startTimer()
     },
     clearData() {
       this.currentDataIndex = 0
@@ -115,7 +144,28 @@ export default {
     },
     finish() {
       this.visible = false
-      this.$message.success('关闭页面')
+      this.$message.success('共计耗时: ' + this.clock.time)
+      this.resetTimer()
+    },
+    startTimer() {
+      const _this = this.clock
+      if (!_this.isRunning) {
+        _this.isRunning = true;
+        _this.timer = setInterval(() => {
+          _this.time++;
+        }, 1000);
+      }
+    },
+    pauseTimer() {
+      const _this = this.clock
+      _this.isRunning = false;
+      clearInterval(_this.timer);
+    },
+    resetTimer() {
+      const _this = this.clock
+      _this.isRunning = false;
+      clearInterval(_this.timer);
+      _this.time = 0;
     },
     choose(type) {
       const index = this.currentDataIndex
@@ -227,7 +277,7 @@ export default {
 
 .word-container {
   padding: 20px 10px;
-  max-height: 200px;
+  max-height: 290px;
   scroll-behavior: smooth;
   overflow-y: scroll;
 }

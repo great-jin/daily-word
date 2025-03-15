@@ -102,8 +102,8 @@
 </template>
 
 <script>
-import RegisterModal from './register.vue';
-import CompactModal from './compact.vue';
+import RegisterModal from './components/register.vue';
+import CompactModal from './components/compact.vue';
 import {login} from "@/api/authUser";
 import {Encrypt} from '@/util/AES.js';
 import {setToken} from "@/util/AuthUtil";
