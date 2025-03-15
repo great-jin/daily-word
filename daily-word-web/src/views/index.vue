@@ -12,7 +12,7 @@
             <el-menu
                 mode="horizontal"
                 @select="handleSelect"
-                :default-active="activeTab"
+                :default-active="activeMenu"
                 background-color="#545c64"
                 text-color="#fff"
                 active-text-color="#ffd04b"
@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       isRouterAlive: true,
-      activeTab: 'dictionary'
+      activeMenu: 'dictionary'
     }
   },
   mounted() {
@@ -108,20 +108,21 @@ export default {
     handleSelect(tab) {
       switch (tab) {
         case 'dictionary':
-          this.$router.push("/dictionary");
+          this.activeMenu = 'dictionary';
+          this.$router.push('/dictionary');
           break
         case 'competition':
-          this.$router.push("/competition");
+          this.$router.push('/competition');
           break
         case 'personal':
-          this.$router.push("/personal");
+          this.$router.push('/personal');
           break
         case 'friend':
           this.$refs.friendDrawer.show();
           break
         case 'quit':
           clearToken()
-          this.$router.push("/dictionary");
+          this.handleSelect('/dictionary');
           break
       }
     }

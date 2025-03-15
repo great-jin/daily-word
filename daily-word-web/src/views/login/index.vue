@@ -34,32 +34,11 @@
                   placeholder="请输入密码"
               />
             </el-form-item>
-            <el-form-item label="验证码:" prop="captcha">
-              <el-input
-                  v-model="loginForm.captcha"
-                  placeholder="请输入验证码"
-              />
-            </el-form-item>
-            <el-form-item>
-              <img
-                  v-if="captchaUrl"
-                  :src="captchaUrl"
-                  alt="验证码"
-                  @click="refreshCaptcha"
-                  class="captcha-image"
-              />
-              <el-button
-                  @click="refreshCaptcha"
-                  style="margin: 10px 0 0 20px;"
-              >
-                刷新
-              </el-button>
-            </el-form-item>
             <el-form-item>
               <el-button
                   type="primary"
                   style="width: 100%"
-                  @click="clickOption('login')"
+                  @click="doLogin"
               >登录
               </el-button>
             </el-form-item>
@@ -118,8 +97,7 @@ export default {
       radioValue: false,
       loginForm: {
         username: '',
-        password: '',
-        captcha: ''
+        password: ''
       },
       captchaUrl: '',
       rules: {
@@ -128,54 +106,51 @@ export default {
         ],
         password: [
           {required: true, message: '密码不能为空', trigger: 'blur'},
-        ],
-        captcha: [
-          {required: true, message: '验证码不能为空', trigger: 'blur'},
-        ],
+        ]
       }
     }
   },
   methods: {
+    doLogin(){
+      this.$refs.loginForm.validate(valid => {
+        if (!valid) {
+          // 表单验证失败
+          this.$message.error('请填写登录信息')
+          return;
+        }
+
+        if (!this.radioValue) {
+          this.$message.warning('请勾选同意用户协议')
+          return
+        }
+        // 表单验证通过，执行提交逻辑
+        const user = {
+          username: this.loginForm.username,
+          password: Encrypt(this.loginForm.password),
+        }
+        login(user).then(res => {
+          const data = res.data
+          if (data.data != null && data.data) {
+            this.$notify({
+              type: 'success',
+              title: '登录成功',
+              message: 'Welcome to Daily Word'
+            });
+
+            // 保存认证登录信息
+            setToken(res.headers['auth'], res.headers['token'])
+            this.$router.push('/')
+          } else {
+            this.$notify.error({
+              title: '登录失败',
+              message: res.data.msg
+            });
+          }
+        })
+      })
+    },
     clickOption(value) {
       switch (value) {
-        case 'login':
-          if (!this.radioValue) {
-            this.$message.warning('请勾选同意用户协议')
-            break
-          }
-
-          this.$refs.loginForm.validate(valid => {
-            if (valid) {
-              // 表单验证通过，执行提交逻辑
-              const user = {
-                username: this.loginForm.username,
-                password: Encrypt(this.loginForm.password),
-              }
-              login(user).then(res => {
-                const data = res.data
-                if (data.data != null && data.data) {
-                  this.$notify({
-                    type: 'success',
-                    title: '登录成功',
-                    message: 'Welcome to Daily Word'
-                  });
-
-                  // 保存认证登录信息
-                  setToken(res.headers['auth'], res.headers['token'])
-                  this.$router.push('/')
-                } else {
-                  this.$notify.error({
-                    title: '登录失败',
-                    message: res.data.msg
-                  });
-                }
-              })
-            } else {
-              // 表单验证失败
-              this.$message.error('表单验证失败')
-            }
-          })
-          break
         case 'register':
           this.$refs.registerModal.show('register');
           break
@@ -189,15 +164,7 @@ export default {
           this.$refs.registerModal.show('forgot');
           break
       }
-    },
-    refreshCaptcha() {
-      // 在这里刷新验证码
-      this.captchaUrl = 'https://via.placeholder.com/150x40'; // 示例中使用了一个占位图片
     }
-  },
-  mounted() {
-    // 页面加载时刷新验证码
-    this.refreshCaptcha();
   }
 }
 </script>
@@ -231,10 +198,5 @@ export default {
 .center-container {
   max-width: 400px; /* 可根据实际情况调整容器最大宽度 */
   width: 100%;
-}
-
-.captcha-image {
-  cursor: pointer;
-  margin-top: 10px;
 }
 </style>

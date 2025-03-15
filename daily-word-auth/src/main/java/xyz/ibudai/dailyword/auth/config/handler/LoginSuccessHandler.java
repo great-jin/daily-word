@@ -18,7 +18,6 @@ import xyz.ibudai.dailyword.model.entity.AuthUser;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
@@ -39,7 +38,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             userDTO.setRole(user.getRole());
             // 验证成功为用户生成过期时间为 60 分钟的 Token
             String key = objectMapper.writeValueAsString(userDTO);
-            token = TokenUtil.createJWT(key, TimeUnit.MINUTES.toMillis(60));
+            token = TokenUtil.createJWT(key);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

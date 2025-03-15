@@ -35,7 +35,9 @@ function request(axiosConfig) {
             })
             clearToken()
             router.push('/')
+            return null
         }
+
         if (axiosConfig.url === '/api/auth/login') {
             // 登录页需返回请求头
             return res

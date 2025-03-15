@@ -16,10 +16,19 @@ public class TokenUtil {
      */
     public static final String JWT_KEY = "ibudai";
     /**
-     * 过期时间
+     * 默认过期时间
      */
-    public static final Long JWT_TTL = TimeUnit.MINUTES.toMillis(5);
+    public static final Long JWT_TTL = TimeUnit.HOURS.toMillis(12);
 
+
+    /**
+     * 生成 Token
+     *
+     * @param data the data
+     */
+    public static String createJWT(String data) {
+        return createJWT(data, null);
+    }
 
     /**
      * 生成 Token
