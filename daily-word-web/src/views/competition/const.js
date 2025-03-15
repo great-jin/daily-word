@@ -23,6 +23,9 @@ export const CATALOG_ARRAY = [
 
 export const ROOM_ARRAY = [
     {
+        label: '人机对战',
+        value: 0
+    }, {
         label: '双人对战',
         value: 2
     },
@@ -33,28 +36,24 @@ export const ROOM_ARRAY = [
     {
         label: '五人对战',
         value: 5
-    },
-    {
-        label: '六人对战',
-        value: 6
     }
 ]
 
 export const SIZE_ARRAY = [
-    {
-        label: '20个/组',
-        value: '20'
-    },
     {
         label: '30个/组',
         value: '30'
     },
     {
         label: '40个/组',
-        value: '30'
+        value: '40'
     },
     {
         label: '50个/组',
         value: '50'
+    },
+    {
+        label: '80个/组',
+        value: '80'
     }
 ]

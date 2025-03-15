@@ -5,7 +5,10 @@
       width="40%"
       @close="closeDialog"
   >
-    <el-row style="height: 100%; padding: 20px 25px">
+    <el-row
+        v-if="reqParams.roomSize !== 0"
+        style="height: 100%; padding: 20px 25px"
+    >
       <el-col :span="24">
         <span style="margin-right: 6px">房间号: </span>
         <el-input
