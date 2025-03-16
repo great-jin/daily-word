@@ -5,7 +5,7 @@
         <el-avatar
             :size="80"
             fit="fill"
-            :src="userInfo.url"
+            :src="userInfo.avatar"
             @error="avatarErrorHandler"
         />
       </el-col>
@@ -15,18 +15,17 @@
       <el-col :span="24">
         <el-descriptions
             :column="1"
-            direction="vertical"
-            style="padding: 14px 24px"
+            style="padding: 14px 200px"
             border
         >
-          <el-descriptions-item label="用户名">
-            {{ userInfo.username }}
+          <el-descriptions-item label="用&nbsp;户&nbsp;名">
+            {{ userInfo.userName }}
           </el-descriptions-item>
-          <el-descriptions-item label="邮箱">
+          <el-descriptions-item label="电子邮箱">
             {{ userInfo.email }}
           </el-descriptions-item>
           <el-descriptions-item label="注册时间">
-            {{ userInfo.registerTime }}
+            {{ userInfo.registerTime.substring(0, 10) }}
           </el-descriptions-item>
         </el-descriptions>
       </el-col>
@@ -35,21 +34,28 @@
 </template>
 
 <script>
+import {getByUserId} from "@/api/userDetails";
+import {getUId} from "@/util/AuthUtil";
+
 export default {
   data() {
     return {
       userInfo: {
-        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        username: 'admin',
-        email: 'ibudai56@163.com',
-        registerTime: '2025-03-21',
+        avatar: '',
+        userName: null,
+        email: null,
+        registerTime: '',
       }
     }
   },
+  mounted() {
+    getByUserId(getUId()).then(res => {
+      this.userInfo = res.data
+    })
+  },
   methods: {
     avatarErrorHandler() {
-      // 默认头像
-      this.userInfo.url = 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png'
+      this.userInfo.avatar = 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png'
     }
   }
 }

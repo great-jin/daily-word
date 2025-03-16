@@ -11,5 +11,11 @@ import xyz.ibudai.dailyword.model.entity.UserDetail;
  */
 public interface UserDetailDao extends BaseMapper<UserDetail> {
 
+    /**
+     * Update online time.
+     *
+     * @param userId the user id
+     */
+    void updateOnlineTime(Integer userId);
 }
 

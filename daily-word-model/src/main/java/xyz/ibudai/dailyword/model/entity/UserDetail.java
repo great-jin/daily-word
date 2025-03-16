@@ -22,8 +22,11 @@ import java.time.LocalDateTime;
 @TableName("user_detail")
 public class UserDetail extends Model<UserDetail> {
 
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.INPUT)
     private Integer userId;
+
+    @TableField("user_name")
+    private String userName;
 
     @TableField("avatar")
     private String avatar;

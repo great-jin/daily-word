@@ -36,5 +36,8 @@ public class InviteCode extends Model<InviteCode> {
     @TableField("expire_day")
     private Integer expireDay;
 
+    @TableField("active")
+    private Boolean active;
+
 }
 

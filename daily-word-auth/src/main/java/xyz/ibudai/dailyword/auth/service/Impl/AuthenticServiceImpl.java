@@ -11,17 +11,24 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import xyz.ibudai.dailyword.auth.util.CodeUtil;
+import xyz.ibudai.dailyword.basic.consts.RegexConst;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.auth.util.AESUtil;
+import xyz.ibudai.dailyword.model.entity.InviteCode;
+import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;
+import xyz.ibudai.dailyword.repository.service.InviteCodeService;
+import xyz.ibudai.dailyword.repository.service.UserDetailService;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * (TbUser)表服务实现类
@@ -33,7 +40,7 @@ import java.util.regex.Pattern;
 @Service
 public class AuthenticServiceImpl implements AuthenticService {
 
-    private final static Cache<String, String> verifyCode = Caffeine.newBuilder()
+    private final static Cache<String, String> VERIFY_CODE_MAP = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .initialCapacity(100)
             .maximumSize(1000)
@@ -43,10 +50,16 @@ public class AuthenticServiceImpl implements AuthenticService {
     private String emailFrom;
 
     @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
     private AuthUserService authUserService;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private UserDetailService userDetailService;
+
+    @Autowired
+    private InviteCodeService inviteCodeService;
 
 
     @Override
@@ -77,23 +90,28 @@ public class AuthenticServiceImpl implements AuthenticService {
 
     @Override
     public boolean sendMail(String address) {
-        String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern pattern = Pattern.compile(EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(address);
+        Matcher matcher = RegexConst.PATTERN_EMAIL.matcher(address);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Email is Illegal.");
         }
+        List<UserDetail> list = userDetailService.lambdaQuery()
+                .eq(UserDetail::getEmail, address)
+                .list();
+        if (!CollectionUtils.isEmpty(list)) {
+            throw new IllegalArgumentException("Email has been registered.");
+        }
 
+        // 生成并记录验证码
         String mailCode;
         String key = UUID.nameUUIDFromBytes(address.getBytes()).toString();
-        String code = verifyCode.getIfPresent(key);
+        String code = VERIFY_CODE_MAP.getIfPresent(key);
         if (!StringUtils.isBlank(code)) {
             mailCode = code;
         } else {
-            mailCode = generateCode();
-            verifyCode.put(key, mailCode);
+            mailCode = CodeUtil.generateEmailCode();
+            VERIFY_CODE_MAP.put(key, mailCode);
         }
-
+        // 发送验证码
         boolean success;
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -111,22 +129,21 @@ public class AuthenticServiceImpl implements AuthenticService {
     }
 
     @Override
-    public boolean register(AuthUser user) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean register(UserDetail user) {
+        InviteCode code = inviteCodeService.lambdaQuery()
+                .eq(InviteCode::getCode, user.getInviteCode())
+                .eq(InviteCode::getActive, Boolean.TRUE)
+                .one();
+        if (Objects.isNull(code)) {
+            throw new IllegalStateException("The invite code illegal.");
+        }
+
         return false;
     }
 
     @Override
-    public boolean forgot(AuthUser user) {
+    public boolean forgot(UserDetail user) {
         return false;
-    }
-
-    private String generateCode() {
-        StringBuilder builder = new StringBuilder();
-        Random random = new Random();
-        for (int i = 0; i < 6; i++) {
-            int digit = random.nextInt(10);
-            builder.append(digit);
-        }
-        return builder.toString();
     }
 }

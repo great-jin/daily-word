@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
+import xyz.ibudai.dailyword.model.entity.UserDetail;
 
 /**
  * The type Login resource.
@@ -43,7 +44,7 @@ public class AuthenticResource {
      * @return the boolean
      */
     @PostMapping("register")
-    public Boolean register(@RequestBody AuthUser user) {
+    public Boolean register(@RequestBody UserDetail user) {
         return authenticService.register(user);
     }
 
@@ -54,7 +55,7 @@ public class AuthenticResource {
      * @return the boolean
      */
     @PostMapping("forgot")
-    public Boolean forgot(@RequestBody AuthUser user) {
+    public Boolean forgot(@RequestBody UserDetail user) {
         return authenticService.forgot(user);
     }
 }

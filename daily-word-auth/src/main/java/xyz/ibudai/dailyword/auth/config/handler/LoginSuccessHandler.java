@@ -9,12 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.dailyword.basic.enums.ContentType;
-import xyz.ibudai.dailyword.basic.enums.HttpHeader;
 import xyz.ibudai.dailyword.auth.util.AESUtil;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
 import xyz.ibudai.dailyword.basic.common.ResponseData;
 import xyz.ibudai.dailyword.model.dto.AuthUserDTO;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -24,6 +24,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private UserDetailDao userDetailDao;
 
 
     @Override
@@ -42,6 +45,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        // 更新登录时间
+        userDetailDao.updateOnlineTime(user.getId());
 
         // 回传用户信息
         userDTO.setPassword(null);

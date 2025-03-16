@@ -76,12 +76,14 @@
       <!-- 注册弹窗 -->
       <RegisterModal ref="registerModal"/>
       <CompactModal ref="compactModal"/>
+      <ForgotModal ref="forgotModal"/>
     </el-container>
   </div>
 </template>
 
 <script>
 import RegisterModal from './components/register.vue';
+import ForgotModal from './components/forgot.vue';
 import CompactModal from './components/compact.vue';
 import {login} from "@/api/authUser";
 import {Encrypt} from '@/util/AES.js';
@@ -90,6 +92,7 @@ import {setToken} from "@/util/AuthUtil";
 export default {
   components: {
     RegisterModal,
+    ForgotModal,
     CompactModal
   },
   data() {
@@ -152,7 +155,7 @@ export default {
     clickOption(value) {
       switch (value) {
         case 'register':
-          this.$refs.registerModal.show('register');
+          this.$refs.registerModal.show();
           break
         case 'compact':
           this.radioValue = this.radioValue === true;
@@ -161,7 +164,7 @@ export default {
           }
           break
         case 'forgot':
-          this.$refs.registerModal.show('forgot');
+          this.$refs.forgotModal.show();
           break
       }
     }

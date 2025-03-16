@@ -4,6 +4,7 @@
 
     <resultMap type="xyz.ibudai.dailyword.model.entity.UserDetail" id="UserDetailMap">
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
         <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="inviteCode" column="invite_code" jdbcType="VARCHAR"/>
@@ -11,5 +12,13 @@
         <result property="lastOnlineTime" column="last_online_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <update id="updateOnlineTime">
+        update
+            user_detail
+        set
+            last_online_time = now()
+        where
+            user_id = #{userId}
+    </update>
 </mapper>
 

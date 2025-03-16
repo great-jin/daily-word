@@ -2,6 +2,7 @@ package xyz.ibudai.dailyword.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.UserDetail;
 
 /**
  * (TbUser)表服务接口
@@ -33,7 +34,7 @@ public interface AuthenticService extends UserDetailsService {
      * @param user the user
      * @return the boolean
      */
-    boolean register(AuthUser user);
+    boolean register(UserDetail user);
 
     /**
      * Forgot boolean.
@@ -41,5 +42,5 @@ public interface AuthenticService extends UserDetailsService {
      * @param user the user
      * @return the boolean
      */
-    boolean forgot(AuthUser user);
+    boolean forgot(UserDetail user);
 }

@@ -2,11 +2,9 @@
   <el-dialog
       v-model="dialogVisible"
       width="30%"
-      title="账号注册"
+      title="忘记密码"
       style="--el-dialog-padding-primary: 10px 40px 10px 10px;"
-      center
   >
-    <!-- 注册表单 -->
     <el-form
         ref="regForm"
         :rules="rules"
@@ -14,18 +12,6 @@
         label-width="100px"
         style="margin-top: 20px"
     >
-      <el-form-item label="邀请码:" prop="inviteCode">
-        <el-input
-            v-model="registerForm.inviteCode"
-            placeholder="请输入邀请码"
-        />
-      </el-form-item>
-      <el-form-item label="用户名:" prop="username">
-        <el-input
-            v-model="registerForm.username"
-            placeholder="请输入用户名"
-        />
-      </el-form-item>
       <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="mail">
         <el-row style="width: 100%">
           <el-col :span="18">
@@ -77,30 +63,21 @@
 export default {
   data() {
     return {
-      operate: '',
       dialogVisible: false,
       countDown: 0,
       timer: null,
       registerForm: {
-        username: '',
         mail: '',
         captcha: '',
-        inviteCode: '',
         password: '',
         passwordCheck: '',
       },
       rules: {
-        username: [
-          {required: true, message: '用户名不能为空', trigger: 'blur'},
-        ],
         mail: [
           {required: true, message: '邮箱不能为空', trigger: 'blur'},
         ],
         captcha: [
           {required: true, message: '验证码不能为空', trigger: 'blur'},
-        ],
-        inviteCode: [
-          {required: true, message: '邀请码不能为空', trigger: 'blur'},
         ],
         password: [
           {required: true, message: '密码不能为空', trigger: 'blur'},
@@ -112,18 +89,19 @@ export default {
     }
   },
   beforeDestroy() {
+    // 组件销毁时清除计时器
     if (this.timer) {
       clearInterval(this.timer);
     }
   },
   methods: {
-    show() {
+    show(operate) {
+      this.operate = operate
       this.dialogVisible = true
     },
     sendMail() {
       this.$refs.regForm.validateField('mail', (valid) => {
         if (valid) {
-          // 验证未通过
           this.$message.success('发送邮件')
 
           // 按钮倒计时

@@ -10,7 +10,7 @@
       <el-tab-pane label="隐私设置">
         <PrivateTab/>
       </el-tab-pane>
-      <el-tab-pane label="实&nbsp;验&nbsp;室">
+      <el-tab-pane label="实&nbsp;&nbsp;验&nbsp;&nbsp;室">
         <LabTab/>
       </el-tab-pane>
     </el-tabs>
