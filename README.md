@@ -18,7 +18,7 @@ Notice that backend must run with jdk 17.
 
 Config the module `daily-word-server` of `application-dev.yml` to set the database connection.
 
-The database script is stored in `document/sql/table_struct.sql` and `document/sql/table_data.sql`.
+The database script is stored in `document/sql/DDL.sql` and `document/sql/DML.sql`.
 
 
 ### Frontend-Web

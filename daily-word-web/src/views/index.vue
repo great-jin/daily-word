@@ -64,11 +64,11 @@
       <el-footer class="footer-copyright">
         <div>
           <h2 style="color: white; font-weight: normal; padding: 0; margin: 0;">
-            Copyright 2024 - 2025 布袋青年 ©All Rights Reserved
+            Feel free to contact us, Email: ibudai56@163.com
           </h2>
           <br/>
           <h2 style="color: white; font-weight: normal; padding: 0; margin: 0;">
-            Feel free to contact us, Email: ibudai56@163.com
+            Copyright 2024 - {{ new Date().getFullYear() }} 布袋青年 ©All Rights Reserved
           </h2>
         </div>
       </el-footer>

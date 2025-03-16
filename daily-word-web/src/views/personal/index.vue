@@ -10,6 +10,9 @@
       <el-tab-pane label="隐私设置">
         <PrivateTab/>
       </el-tab-pane>
+      <el-tab-pane label="实&nbsp;验&nbsp;室">
+        <LabTab/>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -17,9 +20,11 @@
 <script>
 import BasicTab from "./tabs/basicTab.vue";
 import PrivateTab from "./tabs/privateTab.vue";
+import LabTab from "@/views/personal/tabs/labTab.vue";
 
 export default {
   components: {
+    LabTab,
     BasicTab,
     PrivateTab
   }

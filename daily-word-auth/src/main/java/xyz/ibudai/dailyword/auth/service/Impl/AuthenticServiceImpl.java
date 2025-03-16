@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.auth.util.AESUtil;
-import xyz.ibudai.dailyword.repository.service.UserService;
+import xyz.ibudai.dailyword.repository.service.AuthUserService;
 
 import java.util.Objects;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class AuthenticServiceImpl implements AuthenticService {
     private String emailFrom;
 
     @Autowired
-    private UserService userService;
+    private AuthUserService authUserService;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -51,7 +51,7 @@ public class AuthenticServiceImpl implements AuthenticService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthUser authUser = userService.queryByName(username);
+        AuthUser authUser = authUserService.queryByName(username);
         if (authUser == null) {
             throw new IllegalArgumentException("User [" + username + "] doesn't exist.");
         }
@@ -61,7 +61,7 @@ public class AuthenticServiceImpl implements AuthenticService {
     @Override
     public boolean login(AuthUser user) {
         try {
-            AuthUser dbUser = userService.queryByName(user.getUsername());
+            AuthUser dbUser = authUserService.queryByName(user.getUsername());
             if (dbUser == null) {
                 throw new IllegalAccessException("User [" + user.getUsername() + "] doesn't exist.");
             }

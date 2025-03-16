@@ -4,6 +4,7 @@ package xyz.ibudai.dailyword.model.enums;
  * The enum Catalogue.
  */
 public enum Catalogue {
+
     /**
      * Cet 4 catalogue.
      */
@@ -13,13 +14,13 @@ public enum Catalogue {
      */
     CET6,
     /**
-     * Gre catalogue.
-     */
-    GRE,
-    /**
      * Graduate catalogue.
      */
     Graduate,
+    /**
+     * Gre catalogue.
+     */
+    GRE,
     /**
      * Oxford catalogue.
      */

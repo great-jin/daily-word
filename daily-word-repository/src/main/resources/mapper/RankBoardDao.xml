@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.ibudai.dailyword.repository.dao.RankBoardDao">
+
+    <resultMap type="xyz.ibudai.dailyword.model.entity.RankBoard" id="RankBoardMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="season" column="season" jdbcType="INTEGER"/>
+        <result property="catalog" column="catalog_id" jdbcType="VARCHAR"/>
+        <result property="score" column="score" jdbcType="INTEGER"/>
+        <result property="matchCount" column="match_count" jdbcType="INTEGER"/>
+        <result property="matchWin" column="match_win" jdbcType="INTEGER"/>
+        <result property="matchLost" column="match_lost" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+</mapper>
+

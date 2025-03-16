@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * (TbUser)实体类
  *
- * @author makejava
+ * @author ibudai
  * @since 2023-01-31 14:31:28
  */
 @Data

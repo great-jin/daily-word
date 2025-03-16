@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
         "xyz.ibudai.dailyword.repository",
         "xyz.ibudai.dailyword.server"
 })
-@MapperScan("xyz.ibudai.dailyword.repository.mapper")
+@MapperScan("xyz.ibudai.dailyword.repository.dao")
 public class DailyWordWebApplication {
 
     public static void main(String[] args) {

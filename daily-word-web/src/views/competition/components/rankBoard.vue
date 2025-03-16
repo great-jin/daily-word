@@ -16,7 +16,11 @@
             prop="rank"
             label="排名"
             align="center"
-        />
+        >
+          <template v-slot="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
         <el-table-column
             prop="username"
             label="用户名"
@@ -38,23 +42,27 @@
 </template>
 
 <script>
+import {list} from "@/api/rankBoard"
+
 export default {
+  props: {
+    rankType: String
+  },
   data() {
     return {
-      rankData: [],
+      activeType: this.rankType,
+      rankData: []
     }
   },
   mounted() {
-    for (let i = 1; i < 100; i++) {
-      this.rankData.push({
-        rank: i,
-        username: "Test-" + i,
-        matchCount: Math.floor(Math.random() * (95 - 70 + 1)) + 70,
-        score: Math.floor(Math.random() * (95 - 70 + 1)) + 70
-      })
-    }
+    this.listTable()
   },
   methods: {
+    listTable() {
+      list(this.activeType).then(res => {
+        this.rankData = res.data
+      })
+    },
     tableRowClassName({rowIndex}) {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";
     }

@@ -8,12 +8,12 @@ export const CATALOG_ARRAY = [
         value: 'CET6'
     },
     {
-        label: 'GRE词汇',
-        value: 'GRE'
-    },
-    {
         label: '考研词汇',
         value: 'Graduate'
+    },
+    {
+        label: 'GRE词汇',
+        value: 'GRE'
     },
     {
         label: '牛津词汇',

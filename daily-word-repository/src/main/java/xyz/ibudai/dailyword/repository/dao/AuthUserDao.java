@@ -1,9 +1,10 @@
-package xyz.ibudai.dailyword.repository.mapper;
+package xyz.ibudai.dailyword.repository.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 
-public interface UserMapper extends BaseMapper<AuthUser> {
+public interface AuthUserDao extends BaseMapper<AuthUser> {
 
     /**
      * Query by name tb user.

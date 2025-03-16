@@ -58,7 +58,9 @@
           <el-card shadow="always" class="room-card">
             <template #header>
               <div class="card-header">
-                <el-icon><WindPower /></el-icon>
+                <el-icon>
+                  <WindPower/>
+                </el-icon>
                 {{ item.label }}
               </div>
             </template>
@@ -87,7 +89,7 @@
             :label="item.label"
             :name="item.value"
         >
-          <RankBoard ref="rankBoard"/>
+          <RankBoard  v-if="activeRankTab === item.value" :rank-type="item.value"/>
         </el-tab-pane>
       </el-tabs>
     </el-col>
@@ -95,9 +97,9 @@
 </template>
 
 <script>
-import RankBoard from "@/views/competition/components/rankBoard.vue";
-import RoomDialog from "@/views/competition/components/roomDialog.vue";
-import {CATALOG_ARRAY, ROOM_ARRAY} from "@/views/competition/const";
+import RankBoard from "./components/rankBoard.vue";
+import RoomDialog from "./components/roomDialog.vue";
+import {CATALOG_ARRAY, ROOM_ARRAY} from "./const";
 
 export default {
   inject: ['reload'],
