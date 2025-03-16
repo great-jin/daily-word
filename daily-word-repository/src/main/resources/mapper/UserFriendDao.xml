@@ -9,5 +9,20 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <select id="findLinkUser" resultType="INTEGER">
+        select
+            friend_id as user_id
+        from
+            user_friend
+        where
+            user_id = #{userId}
+        union
+        select
+            user_id
+        from
+            user_friend
+        where
+            friend_id = #{userId}
+    </select>
 </mapper>
 

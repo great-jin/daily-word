@@ -111,7 +111,7 @@ export default {
     }
   },
   methods: {
-    doLogin(){
+    doLogin() {
       this.$refs.loginForm.validate(valid => {
         if (!valid) {
           // 表单验证失败
@@ -129,8 +129,8 @@ export default {
           password: Encrypt(this.loginForm.password),
         }
         login(user).then(res => {
-          const data = res.data
-          if (data.data != null && data.data) {
+          const _data = res.data
+          if (_data != null && _data.userId !== null) {
             this.$notify({
               type: 'success',
               title: '登录成功',
@@ -138,7 +138,7 @@ export default {
             });
 
             // 保存认证登录信息
-            setToken(res.headers['auth'], res.headers['token'])
+            setToken(_data)
             this.$router.push('/')
           } else {
             this.$notify.error({

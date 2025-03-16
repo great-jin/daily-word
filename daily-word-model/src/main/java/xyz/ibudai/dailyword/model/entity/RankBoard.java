@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,9 +18,15 @@ import java.time.LocalDateTime;
  * @since 2025-03-16 09:26:04
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName("rank_board")
 public class RankBoard extends Model<RankBoard> {
+
+    @TableField(exist = false)
+    private String index;
 
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -55,5 +61,15 @@ public class RankBoard extends Model<RankBoard> {
     @TableField("update_time")
     private LocalDateTime updateTime;
 
+
+    public static RankBoard init() {
+        return RankBoard.builder()
+                .season(1)
+                .score(0)
+                .matchCount(0)
+                .matchWin(0)
+                .matchLost(0)
+                .build();
+    }
 }
 

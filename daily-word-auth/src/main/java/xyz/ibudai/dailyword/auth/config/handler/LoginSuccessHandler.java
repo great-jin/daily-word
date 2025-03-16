@@ -29,26 +29,27 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         AuthUser user = (AuthUser) authentication.getPrincipal();
-        String token, plainPwd;
+        String refreshToken;
+        AuthUserDTO userDTO;
         try {
-            AuthUserDTO userDTO = new AuthUserDTO();
-            plainPwd = AESUtil.desEncrypt(user.getPassword()).trim();
-            userDTO.setUsername(user.getUsername());
-            userDTO.setPassword(plainPwd);
-            userDTO.setRole(user.getRole());
-            // 验证成功为用户生成过期时间为 60 分钟的 Token
+            userDTO = AuthUserDTO.builder()
+                    .userId(user.getId())
+                    .username(user.getUsername())
+                    .password(AESUtil.desEncrypt(user.getPassword()).trim())
+                    .build();
             String key = objectMapper.writeValueAsString(userDTO);
-            token = TokenUtil.createJWT(key);
+            refreshToken = TokenUtil.createJWT(key);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        // 将 Token 写入响应的请求头返回
-        response.addHeader(HttpHeader.TOKEN.getBackend(), token);
+        // 回传用户信息
+        userDTO.setPassword(null);
+        userDTO.setRefreshToken(refreshToken);
         String auth = user.getUsername() + ":" + user.getPassword();
-        response.addHeader(HttpHeader.AUTHENTIC.getBackend(), Base64.getEncoder().encodeToString(auth.getBytes()));
+        userDTO.setAuthentic(Base64.getEncoder().encodeToString(auth.getBytes()));
+        ResponseData result = ResponseData.success(userDTO);
         response.setContentType(ContentType.JSON.getVal());
-        ResponseData result = ResponseData.success(true);
         response.getWriter().write(objectMapper.writeValueAsString(result));
     }
 }

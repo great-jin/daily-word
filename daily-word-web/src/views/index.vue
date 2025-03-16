@@ -122,7 +122,7 @@ export default {
           break
         case 'quit':
           clearToken()
-          this.handleSelect('/dictionary');
+          this.$router.push('/dictionary');
           break
       }
     }

@@ -1,7 +1,11 @@
 package xyz.ibudai.dailyword.repository.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
+import xyz.ibudai.dailyword.model.vo.UserFriendVo;
+
+import java.util.List;
 
 /**
  * (UserFriend)表服务接口
@@ -11,5 +15,12 @@ import xyz.ibudai.dailyword.model.entity.UserFriend;
  */
 public interface UserFriendService extends IService<UserFriend> {
 
+    /**
+     * Find by user id list.
+     *
+     * @param userId the user id
+     * @return the list
+     */
+    List<UserFriendVo> findByUserId(Integer userId);
 }
 

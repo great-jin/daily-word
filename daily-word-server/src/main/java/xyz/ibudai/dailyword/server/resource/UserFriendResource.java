@@ -2,7 +2,9 @@ package xyz.ibudai.dailyword.server.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
+import xyz.ibudai.dailyword.model.vo.UserFriendVo;
 import xyz.ibudai.dailyword.repository.service.UserFriendService;
 
 import java.util.List;
@@ -31,8 +33,8 @@ public class UserFriendResource {
      * @return the list
      */
     @GetMapping("list")
-    public List<UserFriend> list(Integer userId) {
-        return userFriendService.lambdaQuery().eq(UserFriend::getUserId, userId).list();
+    public List<UserFriendVo> list(Integer userId) {
+        return userFriendService.findByUserId(userId);
     }
 }
 

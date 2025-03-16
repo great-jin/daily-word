@@ -28,7 +28,7 @@ public class AuthUser implements Serializable, UserDetails {
     private static final long serialVersionUID = 1L;
 
     @TableId("id")
-    private String id;
+    private Integer id;
 
     @TableField("user_name")
     private String username;
@@ -70,22 +70,22 @@ public class AuthUser implements Serializable, UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
+        return Boolean.TRUE.equals(this.accountNonExpired);
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.accountNonLocked;
+        return Boolean.TRUE.equals(this.accountNonLocked);
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired;
+        return Boolean.TRUE.equals(this.credentialsNonExpired);
     }
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled;
+        return Boolean.TRUE.equals(this.isEnabled);
     }
 }
 

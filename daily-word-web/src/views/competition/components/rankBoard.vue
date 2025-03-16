@@ -3,7 +3,14 @@
     <el-card class="rank-card">
       <template #header>
         <div class="card-header">
-          <span>积分排行榜</span>
+          <el-tooltip
+              class="box-item"
+              effect="dark"
+              content="仅展示前 100 名用户"
+              placement="bottom"
+          >
+            <span>积分排行榜</span>
+          </el-tooltip>
         </div>
       </template>
 
@@ -13,14 +20,10 @@
           :row-class-name="tableRowClassName"
       >
         <el-table-column
-            prop="rank"
+            prop="index"
             label="排名"
             align="center"
-        >
-          <template v-slot="scope">
-            {{ scope.$index + 1 }}
-          </template>
-        </el-table-column>
+        />
         <el-table-column
             prop="userName"
             label="用户名"
@@ -43,6 +46,7 @@
 
 <script>
 import {list} from "@/api/rankBoard"
+import {getUId} from "@/util/AuthUtil";
 
 export default {
   props: {
@@ -59,12 +63,16 @@ export default {
   },
   methods: {
     listTable() {
-      list(this.activeType).then(res => {
+      const params = {
+        userId: getUId(),
+        catalog: this.activeType
+      }
+      list(params).then(res => {
         this.rankData = res.data
       })
     },
     tableRowClassName({rowIndex}) {
-      return rowIndex % 2 === 0 ? "odd-row" : "even-row";
+      return rowIndex % 2 === 0 ? 'odd-row' : 'even-row'
     }
   }
 }

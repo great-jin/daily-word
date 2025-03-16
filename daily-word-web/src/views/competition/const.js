@@ -23,19 +23,23 @@ export const CATALOG_ARRAY = [
 
 export const ROOM_ARRAY = [
     {
-        label: '人机对战',
-        value: 0
+        label: '单人硬行',
+        value: 0,
+        describe: '单人没有积分奖励哦'
     }, {
         label: '双人对战',
-        value: 2
+        value: 2,
+        describe: '双人挑战'
     },
     {
         label: '三人对战',
-        value: 3
+        value: 3,
+        describe: '三人挑战'
     },
     {
         label: '五人对战',
-        value: 5
+        value: 5,
+        describe: '五人挑战'
     }
 ]
 

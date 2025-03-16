@@ -3,6 +3,7 @@
       v-model="visible"
       title="我的好友"
       size="36%"
+      @close="close"
   >
     <el-button
         type="primary"
@@ -13,7 +14,7 @@
     </el-button>
     <el-button
         type="primary"
-        @click="refreshTable"
+        @click="listFriend"
         style="margin-bottom: 20px; float: right"
     >
       刷新状态
@@ -26,18 +27,18 @@
           :row-class-name="tableRowStyle"
       >
         <el-table-column
-            prop="username"
+            prop="userName"
             label="用户名"
             align="center"
         />
         <el-table-column
-            prop="status"
+            prop="online"
             label="状态"
             align="center"
         >
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'">
-              {{ row.status === 1 ? '在线' : '离线' }}
+            <el-tag :type="row.online ? 'success' : 'danger'">
+              {{ row.online ? '在线' : '离线' }}
             </el-tag>
           </template>
         </el-table-column>
@@ -50,7 +51,7 @@
           <template #default="{ row }">
             <el-button
                 type="primary"
-                @click="tableOptions('invite', row.username)"
+                @click="tableOptions('invite', row.userName)"
                 link
             >
               邀请
@@ -59,7 +60,7 @@
                 title="确认删除?"
                 cancel-button-text="否"
                 confirm-button-text="是"
-                @confirm="tableOptions('delete', row.username)"
+                @confirm="tableOptions('delete', row.userName)"
             >
               <template #reference>
                 <el-button type="warning" link>删除</el-button>
@@ -73,6 +74,9 @@
 </template>
 
 <script>
+import {list} from "@/api/userFriend"
+import {getUId} from "@/util/AuthUtil";
+
 export default {
   data() {
     return {
@@ -80,18 +84,14 @@ export default {
       friendData: [],
     }
   },
-  mounted() {
-    for (let i = 1; i < 100; i++) {
-      this.friendData.push(
-          {
-            username: "Test-" + i,
-            status: i % 4 === 0 ? 0 : 1
-          })
-    }
-  },
   methods: {
     show() {
       this.visible = true
+      this.listFriend()
+    },
+    close() {
+      this.visible = false
+      this.friendData = []
     },
     tableRowStyle({rowIndex}) {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";
@@ -99,8 +99,10 @@ export default {
     addFriend() {
       this.$message.success('添加好友')
     },
-    refreshTable() {
-      this.$message.success('刷新列表')
+    listFriend() {
+      list(getUId()).then(res => {
+        this.friendData = res.data
+      })
     },
     tableOptions(type, data) {
       switch (type) {

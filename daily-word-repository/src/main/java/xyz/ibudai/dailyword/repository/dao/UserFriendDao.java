@@ -3,6 +3,8 @@ package xyz.ibudai.dailyword.repository.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
 
+import java.util.List;
+
 /**
  * (UserFriend)表数据库访问层
  *
@@ -11,5 +13,6 @@ import xyz.ibudai.dailyword.model.entity.UserFriend;
  */
 public interface UserFriendDao extends BaseMapper<UserFriend> {
 
+    List<Integer> findLinkUser(Integer userId);
 }
 

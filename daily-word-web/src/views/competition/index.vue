@@ -12,7 +12,7 @@
               <el-icon class="icon">
                 <Medal/>
               </el-icon>
-              {{ cardData.season }}
+              第 {{ cardData.season }} 赛季
             </div>
           </el-card>
         </el-col>
@@ -25,12 +25,12 @@
               <el-icon class="icon">
                 <GoldMedal/>
               </el-icon>
-              胜: {{ cardData.winNum }}
+              胜: {{ cardData.matchWin }}
               &nbsp;&nbsp;
               <el-icon class="icon">
                 <Star/>
               </el-icon>
-              负: {{ cardData.lostNum }}
+              负: {{ cardData.matchLost }}
             </div>
           </el-card>
         </el-col>
@@ -61,15 +61,24 @@
                 <el-icon>
                   <WindPower/>
                 </el-icon>
-                {{ item.label }}
+                &nbsp;
+                <el-tooltip
+                    class="box-item"
+                    effect="dark"
+                    :content="item.describe"
+                    placement="top-start"
+                >
+                  {{ item.label }}
+                </el-tooltip>
               </div>
             </template>
+
             <el-button
                 type="primary"
                 @click="createRoom(item.value)"
                 style="height: 60px"
             >
-              开始匹配
+              开始挑战
             </el-button>
           </el-card>
         </el-col>
@@ -89,7 +98,7 @@
             :label="item.label"
             :name="item.value"
         >
-          <RankBoard  v-if="activeRankTab === item.value" :rank-type="item.value"/>
+          <RankBoard v-if="activeRankTab === item.value" :rank-type="item.value"/>
         </el-tab-pane>
       </el-tabs>
     </el-col>
@@ -100,6 +109,8 @@
 import RankBoard from "./components/rankBoard.vue";
 import RoomDialog from "./components/roomDialog.vue";
 import {CATALOG_ARRAY, ROOM_ARRAY} from "./const";
+import {getUserRank} from "@/api/rankBoard";
+import {getUId} from "@/util/AuthUtil";
 
 export default {
   inject: ['reload'],
@@ -113,12 +124,17 @@ export default {
       rankTypes: CATALOG_ARRAY,
       activeRankTab: 'CET4',
       cardData: {
-        season: '第 1 赛季',
-        score: '1000',
-        winNum: 30,
-        lostNum: 12
+        season: 1,
+        score: 0,
+        matchWin: 0,
+        matchLost: 0
       }
     }
+  },
+  mounted() {
+    getUserRank(getUId()).then(res => {
+      this.cardData = res.data
+    })
   },
   methods: {
     createRoom(type) {

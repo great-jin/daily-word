@@ -25,14 +25,25 @@ public class RankBoardResource {
 
 
     /**
-     * 分页查询所有数据
+     * 查询前 100 条记录
      *
      * @param catalog the catalog
      * @return 所有数据 list
      */
     @GetMapping("list")
-    public List<RankBoard> list(String catalog) {
-        return rankBoardService.listByCatalog(catalog);
+    public List<RankBoard> list(Integer userId, String catalog) {
+        return rankBoardService.listByCatalog(userId, catalog);
+    }
+
+    /**
+     * 查询用户记录
+     *
+     * @param userId the user id
+     * @return 所有数据 list
+     */
+    @GetMapping("getUserRank")
+    public RankBoard getUserRank(Integer userId) {
+        return rankBoardService.getUserRank(userId);
     }
 }
 

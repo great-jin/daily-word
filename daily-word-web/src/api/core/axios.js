@@ -38,12 +38,7 @@ function request(axiosConfig) {
             return null
         }
 
-        if (axiosConfig.url === '/api/auth/login') {
-            // 登录页需返回请求头
-            return res
-        } else {
-            return res.data
-        }
+        return res.data
     }, err => {
         // 请求信息弹窗提示
         const errorBody = err.response.data
