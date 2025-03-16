@@ -32,8 +32,7 @@ spring:
           starttls.enable: true
           starttls.required: true
 
-
 # 绑定 MyBatis
-mybatis:
+mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: xyz.ibudai.dailyword.repository.entity

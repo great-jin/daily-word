@@ -22,7 +22,7 @@
           </template>
         </el-table-column>
         <el-table-column
-            prop="username"
+            prop="userName"
             label="用户名"
             align="center"
         />
