@@ -23,7 +23,8 @@ public class SocketResource {
      * @return the boolean
      */
     @GetMapping("send")
-    public Boolean send(@RequestParam("userId") String userId, @RequestParam("message") String message) {
+    public Boolean send(@RequestParam("userId") String userId,
+                        @RequestParam("message") String message) {
         socketSender.send(userId, message);
         return true;
     }

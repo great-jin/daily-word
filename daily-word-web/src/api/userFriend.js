@@ -9,3 +9,11 @@ export function list(params) {
     })
 }
 
+export function deleteById(params) {
+    return request({
+        url: `${prefix}/deleteById`,
+        method: 'get',
+        params: params
+    })
+}
+

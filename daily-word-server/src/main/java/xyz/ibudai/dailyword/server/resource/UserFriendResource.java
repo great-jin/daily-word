@@ -2,8 +2,6 @@ package xyz.ibudai.dailyword.server.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
-import xyz.ibudai.dailyword.model.entity.UserFriend;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
 import xyz.ibudai.dailyword.repository.service.UserFriendService;
 
@@ -33,8 +31,21 @@ public class UserFriendResource {
      * @return the list
      */
     @GetMapping("list")
-    public List<UserFriendVo> list(Integer userId) {
+    public List<UserFriendVo> list(@RequestParam("userId") Integer userId) {
         return userFriendService.findByUserId(userId);
+    }
+
+    /**
+     * Delete by id boolean.
+     *
+     * @param userId   the user id
+     * @param friendId the friend id
+     * @return the list
+     */
+    @GetMapping("deleteById")
+    public Boolean deleteById(@RequestParam("userId") Integer userId,
+                              @RequestParam("friendId") Integer friendId) {
+        return userFriendService.deleteById(userId, friendId);
     }
 }
 

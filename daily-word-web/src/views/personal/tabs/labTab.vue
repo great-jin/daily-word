@@ -1,6 +1,7 @@
 <template>
   <div>
-    好友邀请码
+    <!-- TODO 管理员可生成邀请码 -->
+    功能正在开发中，敬请期待！
   </div>
 </template>
 
@@ -8,8 +9,7 @@
 
 export default {
   data() {
-    return {
-    }
+    return {}
   }
 }
 </script>

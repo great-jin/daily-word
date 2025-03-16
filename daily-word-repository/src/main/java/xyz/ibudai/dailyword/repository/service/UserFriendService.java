@@ -1,7 +1,6 @@
 package xyz.ibudai.dailyword.repository.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
 
@@ -22,5 +21,13 @@ public interface UserFriendService extends IService<UserFriend> {
      * @return the list
      */
     List<UserFriendVo> findByUserId(Integer userId);
+
+    /**
+     * 双向删除用户关系
+     *
+     * @param userId the user id
+     * @return the boolean
+     */
+    Boolean deleteById(Integer userId, Integer friendId);
 }
 

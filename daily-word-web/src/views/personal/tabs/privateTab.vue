@@ -1,6 +1,7 @@
 <template>
   <div>
-    隐私设置
+    <!-- TODO 修改密码，邮箱 -->
+    功能正在开发中，敬请期待！
   </div>
 </template>
 

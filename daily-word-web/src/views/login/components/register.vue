@@ -123,9 +123,6 @@ export default {
     sendMail() {
       this.$refs.regForm.validateField('mail', (valid) => {
         if (valid) {
-          // 验证未通过
-          this.$message.success('发送邮件')
-
           // 按钮倒计时
           this.startCountDown()
         }
@@ -153,9 +150,9 @@ export default {
       if (type === 'ok') {
         this.$refs.regForm.validate(valid => {
           if (valid) {
-            // 表单验证通过，执行提交逻辑
-            // 处理注册逻辑
-            this.$message.success(this.operate)
+            // 表单验证通过
+            this.$message.info('注册暂未开放！')
+            this.clickOption('cancel')
           } else {
             this.$message.error('请填写信息后重试')
           }

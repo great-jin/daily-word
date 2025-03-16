@@ -51,7 +51,7 @@
           <template #default="{ row }">
             <el-button
                 type="primary"
-                @click="tableOptions('invite', row.userName)"
+                @click="tableOptions('invite', row)"
                 link
             >
               邀请
@@ -60,7 +60,7 @@
                 title="确认删除?"
                 cancel-button-text="否"
                 confirm-button-text="是"
-                @confirm="tableOptions('delete', row.userName)"
+                @confirm="tableOptions('delete', row)"
             >
               <template #reference>
                 <el-button type="warning" link>删除</el-button>
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import {list} from "@/api/userFriend"
+import {deleteById, list} from "@/api/userFriend"
 import {getUId} from "@/util/AuthUtil";
 
 export default {
@@ -97,7 +97,7 @@ export default {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";
     },
     addFriend() {
-      this.$message.success('添加好友')
+      this.$message.info('功能开发中，敬请期待！')
     },
     listFriend() {
       list(getUId()).then(res => {
@@ -107,10 +107,21 @@ export default {
     tableOptions(type, data) {
       switch (type) {
         case 'invite':
-          this.$message.success('邀请: ' + data)
+          this.$message.info('功能开发中，敬请期待！')
           break
         case 'delete':
-          this.$message.warning('删除: ' + data)
+          const _params = {
+            userId: getUId(),
+            friendId: data.userId
+          }
+          deleteById(_params).then(res => {
+            if (res.data) {
+              this.$message.success('删除成功')
+              this.listFriend()
+            } else {
+              this.$message.error('删除失败')
+            }
+          })
           break
       }
     }

@@ -35,7 +35,7 @@ export default {
 .container {
   height: 100%;
   border-radius: 30px;
-  background-color: rgba(223, 243, 255, 0.98);
+  background-color: rgba(238, 249, 255, 0.98);
 }
 
 .tab-container {
