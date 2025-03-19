@@ -11,8 +11,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.path === '/' || to.path === '/dictionary') {
-        // 首页访问以及单词查询不做拦截
+    if (to.path === '/' || to.path === '/logout' || to.path === '/dictionary') {
+        // 免登录
         next()
         return
     }

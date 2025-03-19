@@ -122,7 +122,7 @@ export default {
           break
         case 'quit':
           clearToken()
-          this.$router.push('/dictionary');
+          this.$router.push('/logout');
           break
       }
     }

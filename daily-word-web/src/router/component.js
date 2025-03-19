@@ -1,10 +1,11 @@
 import HomeView from "@/views/index.vue";
 import LoginView from "@/views/login/index.vue";
+import LogoutView from "@/views/logout/index.vue";
 import DictionaryView from "@/views/dictionary/index.vue";
 import CompetitionView from "@/views/competition/index.vue";
 import PersonalView from "@/views/personal/index.vue";
 
-export const pathArray=[
+export const pathArray = [
     {
         path: '/',
         redirect: '/dictionary'
@@ -13,7 +14,7 @@ export const pathArray=[
         path: '/',
         name: 'Home',
         component: HomeView,
-        children : [
+        children: [
             {
                 path: '/dictionary',
                 name: 'Dictionary',
@@ -32,5 +33,9 @@ export const pathArray=[
         path: '/login',
         name: 'Login',
         component: LoginView
+    }, {
+        path: '/logout',
+        name: 'Logout',
+        component: LogoutView
     }
 ]
