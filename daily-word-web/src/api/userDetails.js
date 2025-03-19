@@ -2,9 +2,9 @@ import request from './core/axios';
 
 const prefix = "/api/server/userDetail"
 
-export function getByUserId(params) {
+export function getDetails() {
     return request({
-        url: `${prefix}/${params}`,
+        url: `${prefix}/get`,
         method: 'get'
     })
 }

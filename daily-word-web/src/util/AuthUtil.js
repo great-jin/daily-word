@@ -1,15 +1,9 @@
-const userId = 'U_ID'
-const userAuth = 'U_AUTH'
-const userToken = 'U_TOKEN'
+const userAuth = 'U_A'
+const userToken = 'U_T'
 
 export function setToken(data) {
-    localStorage.setItem(userId, data.userId)
     localStorage.setItem(userAuth, data.authentic)
     localStorage.setItem(userToken, data.refreshToken)
-}
-
-export function getUId() {
-    return localStorage.getItem(userId)
 }
 
 export function getToken() {
@@ -27,7 +21,6 @@ export function getToken() {
 }
 
 export function clearToken() {
-    localStorage.removeItem(userId)
     localStorage.removeItem(userToken)
     localStorage.removeItem(userAuth)
 }

@@ -75,7 +75,6 @@
 
 <script>
 import {deleteById, list} from "@/api/userFriend"
-import {getUId} from "@/util/AuthUtil";
 
 export default {
   data() {
@@ -100,7 +99,7 @@ export default {
       this.$message.info('功能开发中，敬请期待！')
     },
     listFriend() {
-      list(getUId()).then(res => {
+      list().then(res => {
         this.friendData = res.data
       })
     },
@@ -110,11 +109,7 @@ export default {
           this.$message.info('功能开发中，敬请期待！')
           break
         case 'delete':
-          const _params = {
-            userId: getUId(),
-            friendId: data.userId
-          }
-          deleteById(_params).then(res => {
+          deleteById(data.userId).then(res => {
             if (res.data) {
               this.$message.success('删除成功')
               this.listFriend()

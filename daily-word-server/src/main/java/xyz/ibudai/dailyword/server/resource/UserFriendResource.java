@@ -27,25 +27,22 @@ public class UserFriendResource {
     /**
      * List data.
      *
-     * @param userId the user id
      * @return the list
      */
     @GetMapping("list")
-    public List<UserFriendVo> list(@RequestParam("userId") Integer userId) {
-        return userFriendService.findByUserId(userId);
+    public List<UserFriendVo> list() {
+        return userFriendService.findByUserId();
     }
 
     /**
      * Delete by id boolean.
      *
-     * @param userId   the user id
      * @param friendId the friend id
      * @return the list
      */
     @GetMapping("deleteById")
-    public Boolean deleteById(@RequestParam("userId") Integer userId,
-                              @RequestParam("friendId") Integer friendId) {
-        return userFriendService.deleteById(userId, friendId);
+    public Boolean deleteById(@RequestParam("friendId") Integer friendId) {
+        return userFriendService.deleteById(friendId);
     }
 }
 

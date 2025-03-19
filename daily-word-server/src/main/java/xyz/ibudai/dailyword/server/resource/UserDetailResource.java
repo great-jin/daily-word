@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
+import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 /**
  * (UserDetail)表控制层
@@ -19,9 +20,9 @@ public class UserDetailResource {
     private UserDetailDao userDetailDao;
 
 
-    @GetMapping("{userId}")
-    public UserDetail getById(@PathVariable("userId") Integer userId) {
-        return userDetailDao.selectById(userId);
+    @GetMapping("get")
+    public UserDetail getById() {
+        return userDetailDao.selectById(SecurityUtil.getLoginUser());
     }
 }
 

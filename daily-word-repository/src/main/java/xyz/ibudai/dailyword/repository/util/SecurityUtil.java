@@ -1,0 +1,28 @@
+package xyz.ibudai.dailyword.repository.util;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import xyz.ibudai.dailyword.model.entity.AuthUser;
+
+import java.util.Objects;
+
+public class SecurityUtil {
+
+    /**
+     * Get login user id
+     *
+     * @return the user id
+     */
+    public static Integer getLoginUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication)) {
+            throw new IllegalStateException("Not login");
+        }
+        AuthUser user = (AuthUser) authentication.getPrincipal();
+        if (Objects.isNull(user)) {
+            throw new IllegalStateException("Not login");
+        }
+
+        return user.getId();
+    }
+}

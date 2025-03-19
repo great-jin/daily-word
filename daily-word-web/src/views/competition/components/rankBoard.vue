@@ -46,7 +46,6 @@
 
 <script>
 import {list} from "@/api/rankBoard"
-import {getUId} from "@/util/AuthUtil";
 
 export default {
   props: {
@@ -63,11 +62,7 @@ export default {
   },
   methods: {
     listTable() {
-      const params = {
-        userId: getUId(),
-        catalog: this.activeType
-      }
-      list(params).then(res => {
+      list(this.activeType).then(res => {
         this.rankData = res.data
       })
     },

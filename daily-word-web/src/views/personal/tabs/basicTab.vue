@@ -34,8 +34,7 @@
 </template>
 
 <script>
-import {getByUserId} from "@/api/userDetails";
-import {getUId} from "@/util/AuthUtil";
+import {getDetails} from "@/api/userDetails";
 
 export default {
   data() {
@@ -49,7 +48,7 @@ export default {
     }
   },
   mounted() {
-    getByUserId(getUId()).then(res => {
+    getDetails().then(res => {
       this.userInfo = res.data
     })
   },

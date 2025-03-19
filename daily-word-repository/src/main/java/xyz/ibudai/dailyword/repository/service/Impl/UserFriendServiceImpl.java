@@ -12,6 +12,7 @@ import xyz.ibudai.dailyword.model.vo.UserFriendVo;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
 import xyz.ibudai.dailyword.repository.service.UserFriendService;
+import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,8 +32,8 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
 
 
     @Override
-    public List<UserFriendVo> findByUserId(Integer userId) {
-        List<Integer> userIdList = this.baseMapper.findLinkUser(userId);
+    public List<UserFriendVo> findByUserId() {
+        List<Integer> userIdList = this.baseMapper.findLinkUser(SecurityUtil.getLoginUser());
         if (CollectionUtils.isEmpty(userIdList)) {
             return Collections.emptyList();
         }
@@ -50,7 +51,8 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean deleteById(Integer userId, Integer friendId) {
+    public Boolean deleteById(Integer friendId) {
+        Integer userId = SecurityUtil.getLoginUser();
         List<Integer> ids = new ArrayList<>();
         // 用户添加的好友
         List<UserFriend> list1 = this.lambdaQuery()

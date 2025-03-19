@@ -2,16 +2,16 @@ import request from './core/axios';
 
 const prefix = "/api/server/rankBoard"
 
-export function getUserRank(params) {
+export function getUserRank() {
     return request({
-        url: `${prefix}/getUserRank?userId=${params}`,
+        url: `${prefix}/getUserRank`,
         method: 'get'
     })
 }
 
 export function list(params) {
     return request({
-        url: `${prefix}/list?userId=${params.userId}&catalog=${params.catalog}`,
+        url: `${prefix}/list?catalog=${params}`,
         method: 'get'
     })
 }

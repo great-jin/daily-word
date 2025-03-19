@@ -9,6 +9,7 @@ import xyz.ibudai.dailyword.model.entity.RankBoard;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.RankBoardDao;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
+import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,11 +30,11 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
 
 
     @Override
-    public RankBoard getUserRank(Integer userId) {
+    public RankBoard getUserRank() {
         RankBoard rankBoard = new RankBoard();
         List<RankBoard> list = this.lambdaQuery()
                 .eq(RankBoard::getSeason, 1)
-                .eq(RankBoard::getUserId, userId)
+                .eq(RankBoard::getUserId, SecurityUtil.getLoginUser())
                 .list();
         if (CollectionUtils.isEmpty(list)) {
             return RankBoard.init();
@@ -53,7 +54,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
     }
 
     @Override
-    public List<RankBoard> listByCatalog(Integer userId, String catalog) {
+    public List<RankBoard> listByCatalog(String catalog) {
         List<RankBoard> list = this.lambdaQuery()
                 .eq(RankBoard::getSeason, 1)
                 .eq(RankBoard::getCatalog, catalog)
@@ -67,6 +68,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
         for (RankBoard item : list) {
             item.setIndex(String.valueOf(i++));
         }
+        Integer userId = SecurityUtil.getLoginUser();
         if (userIds.contains(userId)) {
             return list;
         }

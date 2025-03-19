@@ -16,10 +16,9 @@ public interface RankBoardService extends IService<RankBoard> {
     /**
      * Gets user rank.
      *
-     * @param userId the user id
      * @return the user rank
      */
-    RankBoard getUserRank(Integer userId);
+    RankBoard getUserRank();
 
     /**
      * List by catalog list.
@@ -27,6 +26,6 @@ public interface RankBoardService extends IService<RankBoard> {
      * @param catalog the catalog
      * @return the list
      */
-    List<RankBoard> listByCatalog(Integer userId, String catalog);
+    List<RankBoard> listByCatalog(String catalog);
 }
 

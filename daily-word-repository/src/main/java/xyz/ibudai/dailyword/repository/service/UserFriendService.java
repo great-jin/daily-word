@@ -17,17 +17,16 @@ public interface UserFriendService extends IService<UserFriend> {
     /**
      * Find by user id list.
      *
-     * @param userId the user id
      * @return the list
      */
-    List<UserFriendVo> findByUserId(Integer userId);
+    List<UserFriendVo> findByUserId();
 
     /**
      * 双向删除用户关系
      *
-     * @param userId the user id
+     * @param friendId the friend id
      * @return the boolean
      */
-    Boolean deleteById(Integer userId, Integer friendId);
+    Boolean deleteById(Integer friendId);
 }
 

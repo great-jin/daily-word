@@ -31,19 +31,18 @@ public class RankBoardResource {
      * @return 所有数据 list
      */
     @GetMapping("list")
-    public List<RankBoard> list(Integer userId, String catalog) {
-        return rankBoardService.listByCatalog(userId, catalog);
+    public List<RankBoard> list(String catalog) {
+        return rankBoardService.listByCatalog(catalog);
     }
 
     /**
      * 查询用户记录
      *
-     * @param userId the user id
      * @return 所有数据 list
      */
     @GetMapping("getUserRank")
-    public RankBoard getUserRank(Integer userId) {
-        return rankBoardService.getUserRank(userId);
+    public RankBoard getUserRank() {
+        return rankBoardService.getUserRank();
     }
 }
 

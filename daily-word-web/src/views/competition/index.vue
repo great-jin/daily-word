@@ -110,7 +110,6 @@ import RankBoard from "./components/rankBoard.vue";
 import RoomDialog from "./components/roomDialog.vue";
 import {CATALOG_ARRAY, ROOM_ARRAY} from "./const";
 import {getUserRank} from "@/api/rankBoard";
-import {getUId} from "@/util/AuthUtil";
 
 export default {
   inject: ['reload'],
@@ -132,7 +131,7 @@ export default {
     }
   },
   mounted() {
-    getUserRank(getUId()).then(res => {
+    getUserRank().then(res => {
       this.cardData = res.data
     })
   },
