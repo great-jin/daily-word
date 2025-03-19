@@ -19,6 +19,7 @@
         <module>daily-word-model</module>
         <module>daily-word-repository</module>
         <module>daily-word-auth</module>
+        <module>daily-word-socket</module>
         <module>daily-word-server</module>
     </modules>
 
