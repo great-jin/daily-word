@@ -57,14 +57,13 @@ public class AuthUser implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 获取用户所有权限
         String[] roles = role.split(",");
-        // 遍历 roles，取出每一个权限进行认证，添加到简单的授予认证类
+        // 遍历 roles，添加到授予认证类
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         for (String role : roles) {
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         }
-        // 返回到已经被授予认证的权限集合, 这里面的角色所拥有的权限都已经被 spring security 所知道
+        // 返回到已经被授予认证的权限集合
         return authorities;
     }
 
