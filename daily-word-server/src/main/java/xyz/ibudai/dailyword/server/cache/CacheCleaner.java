@@ -15,7 +15,7 @@ public class CacheCleaner implements ApplicationListener<ContextClosedEvent> {
             DicPreHeat.catalogueMap.clear();
             xyz.ibudai.dailyword.server.cache.DicPreHeat.dictCache.clear();
         } catch (Exception e) {
-            log.error("缓存清除异常", e);
+            log.error("CacheCleaner clear catalog went wrong", e);
         }
     }
 }

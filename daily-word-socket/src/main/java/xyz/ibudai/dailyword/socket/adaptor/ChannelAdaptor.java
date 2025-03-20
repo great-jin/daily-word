@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 import xyz.ibudai.dailyword.socket.enums.AttrKey;
+import xyz.ibudai.dailyword.socket.enums.Protocol;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
 
 /**
@@ -17,11 +18,11 @@ import xyz.ibudai.dailyword.socket.manager.ChannelManager;
 public abstract class ChannelAdaptor extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     /**
-     * Gets uri.
+     * Gets protocol.
      *
-     * @return the uri
+     * @return the protocol
      */
-    public abstract String getUri();
+    public abstract Protocol getProtocol();
 
 
     @Override
@@ -30,12 +31,13 @@ public abstract class ChannelAdaptor extends SimpleChannelInboundHandler<TextWeb
             Channel channel = ctx.channel();
             Object authed = channel.attr(AttributeKey.valueOf(AttrKey.AUTHED.getKey())).get();
             if (Boolean.FALSE.equals(authed)) {
-                ctx.writeAndFlush(new TextWebSocketFrame("Not Authenticated"));
+                log.warn("The socket not authenticated");
+                ChannelManager.send(channel, "Not Authenticated");
                 channel.close();
                 return;
             }
 
-            ctx.writeAndFlush(new TextWebSocketFrame("Handshake success"));
+            ChannelManager.send(channel, "Connect success");
             return;
         }
 
@@ -47,8 +49,17 @@ public abstract class ChannelAdaptor extends SimpleChannelInboundHandler<TextWeb
      */
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
-        String cId = ctx.channel().id().asLongText();
-        ChannelManager.remove(cId);
-        log.info("ChannelAdaptor::disconnected, cid: {}", cId);
+        ChannelManager.remove(getProtocol(), ctx.channel().id().asLongText());
+    }
+
+    /**
+     * 异常事件处理
+     */
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        this.handlerRemoved(ctx);
+        ChannelManager.send(ctx.channel(), cause.getMessage());
+
+        super.exceptionCaught(ctx, cause);
     }
 }

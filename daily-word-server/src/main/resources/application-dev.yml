@@ -3,6 +3,11 @@ server:
   servlet:
     context-path: /dailyWord
 
+
+websocket:
+  port: 9091
+
+
 spring:
   # MySQL 数据库
   datasource:

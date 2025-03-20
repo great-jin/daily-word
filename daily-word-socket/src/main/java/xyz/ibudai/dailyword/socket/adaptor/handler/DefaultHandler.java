@@ -12,8 +12,8 @@ import xyz.ibudai.dailyword.socket.enums.Protocol;
 public class DefaultHandler extends ChannelAdaptor {
 
     @Override
-    public String getUri() {
-        return Protocol.PREFIX.getUri() + Protocol.DEFAULT.getUri();
+    public Protocol getProtocol() {
+        return Protocol.DEFAULT;
     }
 
     /**

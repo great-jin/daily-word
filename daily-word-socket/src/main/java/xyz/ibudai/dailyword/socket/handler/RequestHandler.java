@@ -6,16 +6,19 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.AttributeKey;
-import xyz.ibudai.dailyword.socket.adaptor.ChannelAdaptor;
+import lombok.extern.slf4j.Slf4j;
 import xyz.ibudai.dailyword.socket.adaptor.handler.RankHandler;
 import xyz.ibudai.dailyword.socket.enums.AttrKey;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
+import xyz.ibudai.dailyword.socket.manager.AdaptorManager;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
     /**
@@ -24,32 +27,27 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
      * ${@link RankHandler#handlerAdded(io.netty.channel.ChannelHandlerContext)}
      */
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) {
-        // 解析 URL 参数
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+        // 解析 URL
         String uri = request.uri();
         QueryStringDecoder decoder = new QueryStringDecoder(uri);
         Map<String, List<String>> parameters = decoder.parameters();
+        Protocol protocol = Protocol.getByUri(new URI(uri).getPath());
 
         boolean valid = false;
         Channel channel = ctx.channel();
-        if (parameters.containsKey(AttrKey.UID.getKey())) {
-            valid = true;
-            // 转存会话信息
-            Integer userId = Integer.parseInt(parameters.get(AttrKey.UID.getKey()).get(0));
-            ChannelManager.setChannel(userId, channel);
-        }
-
-        // 根据不同地址路由
-        String path = ChannelManager.getUriPath(uri);
-        ChannelAdaptor adaptor = ChannelManager.ADAPTOR_MAP.get(path);
-        if (Objects.isNull(adaptor)) {
-            // 非法路由
-            valid = false;
-            adaptor = ChannelManager.ADAPTOR_MAP.get(Protocol.PREFIX.getUri() + Protocol.DEFAULT.getUri());
+        if (!Objects.equals(protocol, Protocol.DEFAULT)) {
+            if (parameters.containsKey(AttrKey.UID.getKey())) {
+                valid = true;
+                // 转存会话信息
+                Integer userId = Integer.parseInt(parameters.get(AttrKey.UID.getKey()).get(0));
+                ChannelManager.setChannel(protocol, userId, channel);
+            }
         }
         channel.attr(AttributeKey.valueOf(AttrKey.AUTHED.getKey())).set(valid);
-        ctx.pipeline().addLast(adaptor);
 
+        // 服务路由
+        ctx.pipeline().addLast(AdaptorManager.getAdaptor(protocol));
 
         // 继续 WebSocket 握手
         ctx.fireChannelRead(request.retain());

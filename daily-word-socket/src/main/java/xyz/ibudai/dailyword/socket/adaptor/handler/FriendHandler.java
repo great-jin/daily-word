@@ -12,8 +12,8 @@ import xyz.ibudai.dailyword.socket.enums.Protocol;
 public class FriendHandler extends ChannelAdaptor {
 
     @Override
-    public String getUri() {
-        return Protocol.PREFIX.getUri() + Protocol.FRIEND.getUri();
+    public Protocol getProtocol() {
+        return Protocol.FRIEND;
     }
 
     /**

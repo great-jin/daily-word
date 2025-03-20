@@ -30,4 +30,20 @@ public enum Protocol {
         }
         return String.join(",", list);
     }
+
+    /**
+     * Gets by uri.
+     *
+     * @param uri the uri
+     * @return the by uri
+     */
+    public static Protocol getByUri(String uri) {
+        for (Protocol item : values()) {
+            String s = PREFIX.getUri() + item.getUri();
+            if (s.equalsIgnoreCase(uri)) {
+                return item;
+            }
+        }
+        return DEFAULT;
+    }
 }

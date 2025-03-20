@@ -4,48 +4,57 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import xyz.ibudai.dailyword.socket.adaptor.ChannelAdaptor;
+import xyz.ibudai.dailyword.socket.enums.Protocol;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class ChannelManager {
 
-    // TODO Cache 添加类型
+    private static final Integer INITIAL_SIZE = 12;
 
-    private final static Cache<Integer, String> UC_CACHE = Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .initialCapacity(12)
-            .maximumSize(128)
+    private static final Integer MAX_SIZE = 1024;
+
+    /**
+     * Key: ChannelId
+     * Value: UserId
+     */
+    private final static Cache<String, Integer> CU_CACHE = Caffeine.newBuilder()
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .initialCapacity(INITIAL_SIZE)
+            .maximumSize(MAX_SIZE)
             .build();
 
-    private final static Cache<String, Channel> CC_CACHE = Caffeine.newBuilder()
+    private final static Cache<Protocol, Map<Integer, Channel>> SERVER = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
-            .initialCapacity(12)
-            .maximumSize(128)
+            .initialCapacity(INITIAL_SIZE)
+            .maximumSize(MAX_SIZE)
             .build();
 
-    public static final Map<String, ChannelAdaptor> ADAPTOR_MAP = new ConcurrentHashMap<>();
 
-    static {
-        ServiceLoader<ChannelAdaptor> loaders = ServiceLoader.load(ChannelAdaptor.class);
-        for (ChannelAdaptor loader : loaders) {
-            ADAPTOR_MAP.put(loader.getUri(), loader);
+    /**
+     * Sets channel.
+     *
+     * @param userId  the user id
+     * @param channel the channel
+     */
+    public static void setChannel(Protocol protocol, Integer userId, Channel channel) {
+        if (Objects.isNull(channel)) {
+            return;
         }
-    }
 
+        String cid = channel.id().asLongText();
+        CU_CACHE.put(cid, userId);
 
-    public static String getUriPath(String uri) {
-        try {
-            return new URI(uri).getPath();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+        // User - Chanel
+        Map<Integer, Channel> ucMap = SERVER.getIfPresent(protocol);
+        if (Objects.isNull(ucMap)) {
+            ucMap = new ConcurrentHashMap<>();
         }
+        ucMap.put(userId, channel);
+        SERVER.put(protocol, ucMap);
     }
 
     /**
@@ -54,24 +63,13 @@ public class ChannelManager {
      * @param userId the user id
      * @return the channel
      */
-    public static Channel getChannel(Integer userId) {
-        return CC_CACHE.getIfPresent(UC_CACHE.getIfPresent(userId));
-    }
-
-    /**
-     * Sets channel.
-     *
-     * @param userId  the user id
-     * @param channel the channel
-     */
-    public static void setChannel(Integer userId, Channel channel) {
-        if (Objects.isNull(channel)) {
-            return;
+    public static Channel getChannel(Protocol protocol, Integer userId) {
+        Map<Integer, Channel> map = SERVER.getIfPresent(protocol);
+        if (Objects.isNull(map)) {
+            return null;
         }
 
-        String cid = channel.id().asLongText();
-        UC_CACHE.put(userId, cid);
-        CC_CACHE.put(cid, channel);
+        return map.get(userId);
     }
 
     /**
@@ -79,19 +77,40 @@ public class ChannelManager {
      *
      * @param cid the cid
      */
-    public static void remove(String cid) {
-        CC_CACHE.invalidate(cid);
+    public static void remove(Protocol protocol, String cid) {
+        Integer userId = CU_CACHE.getIfPresent(cid);
+        Map<Integer, Channel> map = SERVER.getIfPresent(protocol);
+        if (Objects.nonNull(map)) {
+            map.remove(userId);
+        }
+        if (Objects.nonNull(map) && map.isEmpty()) {
+            SERVER.invalidate(protocol);
+            return;
+        }
+
+        SERVER.put(protocol, map);
     }
 
     /**
-     * Send boolean.
+     * Send message.
      *
      * @param userId  the user id
      * @param message the message
      * @return the boolean
      */
-    public static boolean send(Integer userId, String message) {
-        Channel channel = getChannel(userId);
+    public static boolean send(Protocol protocol, Integer userId, String message) {
+        Channel channel = getChannel(protocol, userId);
+        return send(channel, message);
+    }
+
+    /**
+     * Send message.
+     *
+     * @param channel the channel
+     * @param message the message
+     * @return the boolean
+     */
+    public static boolean send(Channel channel, String message) {
         if (Objects.isNull(channel)) {
             return false;
         }

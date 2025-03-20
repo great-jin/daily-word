@@ -7,10 +7,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import xyz.ibudai.dailyword.socket.initializer.ServerInitializer;
 
-public class WebSocketServer {
+public class WebSocketServerTest {
 
     public static void main(String[] args) throws InterruptedException {
-        new WebSocketServer().start();
+        new WebSocketServerTest().start();
     }
 
 
