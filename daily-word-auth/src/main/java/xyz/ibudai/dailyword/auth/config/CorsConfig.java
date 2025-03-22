@@ -1,25 +1,26 @@
 package xyz.ibudai.dailyword.auth.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import xyz.ibudai.dailyword.model.props.SystemProps;
 
 import java.util.concurrent.TimeUnit;
 
 @Configuration
+@RequiredArgsConstructor
 public class CorsConfig implements WebMvcConfigurer {
 
-    @Value("${auth.host.cors}")
-    private String hosts;
+    private final SystemProps systemProps;
+
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        String[] corsHost = hosts.trim().split(",");
         // 设置允许跨域的路径
         registry.addMapping("/**")
                 // 设置允许跨域请求的域名
-                .allowedOriginPatterns(corsHost)
+                .allowedOriginPatterns(systemProps.getCors())
                 // 是否允许cookie
                 .allowCredentials(true)
                 // 设置允许的请求方式

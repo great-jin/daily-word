@@ -2,9 +2,9 @@ package xyz.ibudai.dailyword.auth.service.Impl;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -38,6 +38,7 @@ import java.util.regex.Matcher;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthenticServiceImpl implements AuthenticService {
 
     private final static Cache<String, String> VERIFY_CODE_MAP = Caffeine.newBuilder()
@@ -49,17 +50,11 @@ public class AuthenticServiceImpl implements AuthenticService {
     @Value("${spring.mail.username}")
     private String emailFrom;
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
-    @Autowired
-    private AuthUserService authUserService;
-
-    @Autowired
-    private UserDetailService userDetailService;
-
-    @Autowired
-    private InviteCodeService inviteCodeService;
+    private final AuthUserService authUserService;
+    private final UserDetailService userDetailService;
+    private final InviteCodeService inviteCodeService;
 
 
     @Override

@@ -7,10 +7,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,25 +21,21 @@ import xyz.ibudai.dailyword.basic.enums.LoginStatus;
 import xyz.ibudai.dailyword.basic.common.ResponseData;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.props.FilterProps;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TokenFilter implements Filter {
 
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
+    private final FilterProps filterProps;
 
-    @Value("${auth.filter.excludes}")
-    private String excludesApi;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
 
     @Override
@@ -102,11 +97,7 @@ public class TokenFilter implements Filter {
     private boolean excludesUrl(String path) {
         boolean isMarch = false;
         try {
-            String[] excludesResource = Arrays.stream(excludesApi.split(","))
-                    .map(it -> contextPath + it)
-                    .toArray(String[]::new);
-
-            for (String pattern : excludesResource) {
+            for (String pattern : filterProps.getExcludes()) {
                 isMarch = pathMatcher.match(pattern, path);
                 if (isMarch) {
                     break;

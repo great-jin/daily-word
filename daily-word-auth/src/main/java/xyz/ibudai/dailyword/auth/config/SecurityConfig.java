@@ -1,6 +1,6 @@
 package xyz.ibudai.dailyword.auth.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
@@ -17,34 +17,24 @@ import xyz.ibudai.dailyword.auth.config.handler.LoginFailureHandler;
 import xyz.ibudai.dailyword.auth.config.handler.LoginSuccessHandler;
 import xyz.ibudai.dailyword.auth.encrypt.AESEncoder;
 import xyz.ibudai.dailyword.auth.filter.TokenFilter;
-import xyz.ibudai.dailyword.model.props.ApiProperties;
+import xyz.ibudai.dailyword.model.enums.SysRole;
+import xyz.ibudai.dailyword.model.props.SecurityProps;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private static final String COMMA = ",";
+    private final SecurityProps securityProps;
 
-    @Autowired
-    private ApiProperties apiProperties;
+    private final AuthenticService authenticService;
 
-    @Autowired
-    private AuthenticService authenticService;
-
-    @Autowired
-    private TokenFilter tokenFilter;
-
-    @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
-
-    @Autowired
-    private LoginFailureHandler loginFailureHandler;
-
-    @Autowired
-    private AuthExceptionHandler authExceptionHandler;
+    private final TokenFilter tokenFilter;
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
+    private final AuthExceptionHandler authExceptionHandler;
 
 
     @Bean
@@ -71,8 +61,7 @@ public class SecurityConfig {
      */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        String[] ignoredApis = apiProperties.getExcludes().split(COMMA);
-        return (web) -> web.ignoring().requestMatchers(ignoredApis);
+        return (web) -> web.ignoring().requestMatchers(securityProps.getExcludeUrls());
     }
 
     /**
@@ -80,29 +69,21 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // 解析接口名单
-        String[] freeResource = Arrays.stream(apiProperties.getFreeApi().trim().split(COMMA))
-                .toArray(String[]::new);
-        String[] userResource = Arrays.stream(apiProperties.getUserApi().trim().split(COMMA))
-                .toArray(String[]::new);
-        String[] adminResource = Arrays.stream(apiProperties.getAdminApi().trim().split(COMMA))
-                .toArray(String[]::new);
-
         // 配置 security 作用规则
         http
                 .authorizeHttpRequests(auth -> {
                     // permitAll(): 任意角色都可访问
-                    auth.requestMatchers(freeResource).permitAll();
+                    auth.requestMatchers(securityProps.getCommonUrls()).permitAll();
                     // 为不同权限分配不同资源
-                    auth.requestMatchers(userResource).hasRole("USER");
-                    auth.requestMatchers(adminResource).hasRole("ADMIN");
+                    auth.requestMatchers(securityProps.getUserUrls()).hasRole(SysRole.USER.name());
+                    auth.requestMatchers(securityProps.getAdminUrls()).hasRole(SysRole.ADMIN.name());
                     // 默认无定义资源都需认证
                     auth.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> {
                     // 配置登录接口
-                    form.loginProcessingUrl(apiProperties.getLoginApi()).permitAll();
+                    form.loginProcessingUrl(securityProps.getLoginUrl()).permitAll();
                     // 登录成功处理逻辑
                     form.successHandler(loginSuccessHandler);
                     // 登录失败处理逻辑

@@ -9,17 +9,17 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "auth.api")
-public class ApiProperties {
+@ConfigurationProperties(prefix = "resources.security")
+public class SecurityProps {
 
-    private String excludes;
+    private String loginUrl;
 
-    private String loginApi;
+    private String[] excludeUrls;
 
-    private String freeApi;
+    private String[] commonUrls;
 
-    private String userApi;
+    private String[] userUrls;
 
-    private String adminApi;
+    private String[] adminUrls;
 
 }
