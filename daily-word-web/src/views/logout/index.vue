@@ -4,7 +4,11 @@
       <p class="logout-text">您已登出</p>
 
       <router-link to="/">
-        <el-button type="primary">回到首页</el-button>
+        <el-button type="primary" style="margin-right: 14px">回到首页</el-button>
+      </router-link>
+
+      <router-link to="/login">
+        <el-button type="primary">重新登录</el-button>
       </router-link>
     </el-card>
   </div>
@@ -31,3 +35,5 @@
   margin-bottom: 40px;
 }
 </style>
+<script setup lang="ts">
+</script>
