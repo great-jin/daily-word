@@ -18,7 +18,7 @@
                 active-text-color="#ffd04b"
                 style="height: 100%; width: 100%;"
             >
-              <el-menu-item index="dictionary" class="head-banner">字典查询</el-menu-item>
+              <el-menu-item index="dictionary" class="head-banner" >字典查询</el-menu-item>
               <el-menu-item index="competition" class="head-banner">知识竞赛</el-menu-item>
               <el-sub-menu index="personal" class="right-align-submenu">
                 <template #title>
@@ -41,6 +41,12 @@
                   </el-icon>
                   我的好友
                 </el-menu-item>
+                <el-menu-item index="history">
+                  <el-icon>
+                    <Files/>
+                  </el-icon>
+                  匹配记录
+                </el-menu-item>
                 <el-menu-item index="quit" style="text-align:center;">
                   <el-icon>
                     <SwitchButton/>
@@ -51,8 +57,10 @@
             </el-menu>
           </el-col>
 
-          <!-- 好友抽屉组件 -->
+          <!-- 我的好友组件 -->
           <FriendDrawer ref="friendDrawer"/>
+          <!-- 匹配记录组件 -->
+          <HistoryDrawer ref="historyDrawer"/>
         </el-row>
       </el-header>
 
@@ -78,11 +86,13 @@
 
 <script>
 import {clearToken} from "@/util/AuthUtil";
-import FriendDrawer from "@/views/competition/components/friendDrawer.vue";
+import FriendDrawer from "@/views/friend/index.vue";
+import HistoryDrawer from "@/views/history/index.vue";
 
 export default {
   components: {
-    FriendDrawer
+    FriendDrawer,
+    HistoryDrawer
   },
   provide() {
     return {
@@ -119,6 +129,9 @@ export default {
           break
         case 'friend':
           this.$refs.friendDrawer.show();
+          break
+        case 'history':
+          this.$refs.historyDrawer.show();
           break
         case 'quit':
           clearToken()

@@ -1,6 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {pathArray} from "@/router/component";
-import {getToken} from "@/util/AuthUtil";
+import {getToken, getUid} from "@/util/AuthUtil";
 import {ElNotification} from "element-plus";
 
 const routes = pathArray

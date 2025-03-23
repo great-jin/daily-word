@@ -1,12 +1,7 @@
 <template>
-  <el-dialog
-      v-model="visible"
-      title="开始答题"
-      width="70%"
-      @close="clearData"
-  >
-    <el-row style="height: 100%; padding: 20px 25px">
-      <el-col :span="18">
+  <div style="height: 100%;">
+    <el-row style="height: 100%;">
+      <el-col :span="18" class="container">
         <el-row :style="{marginTop: '20px'}">
           <el-col :span="24">
             <div
@@ -88,6 +83,7 @@
           <el-col :span="24">
             <el-button type="primary" @click="changeCurrentIndex('back')">上一题</el-button>
             <el-button type="primary" @click="changeCurrentIndex('next')">下一题</el-button>
+            <el-button key="submit" type="danger" @click="quit">放弃</el-button>
             <el-button key="submit" type="primary" @click="submit">提交</el-button>
           </el-col>
         </el-row>
@@ -101,20 +97,27 @@
               v-model="answeredItems[index]"
               @change="changCurrentWord(index)"
               size="large"
-              style="display: block"
+              style="display: block; height: 100%"
           >
             {{ item }}
           </el-checkbox>
         </div>
       </el-col>
     </el-row>
-  </el-dialog>
+
+    <ResultDialog ref="resultDialog"/>
+  </div>
 </template>
 
 <script>
 import {speakEn} from "@/util/SpeakUtil";
+import ResultDialog from "./resultDialog.vue"
 
 export default {
+  name: 'AnswerView',
+  components: {
+    ResultDialog
+  },
   data() {
     return {
       clock: {
@@ -122,7 +125,6 @@ export default {
         isRunning: false,
         timer: null
       },
-      visible: false,
       planData: [],
       currentIndex: 0,
       // 输入与长度
@@ -150,14 +152,16 @@ export default {
       return `${hours}:${minutes}:${seconds}`;
     }
   },
+  mounted() {
+    const params = this.$route.params.planData
+    console.log('222', params)
+  },
   beforeDestroy() {
     const _this = this.clock
     clearInterval(_this.timer);
   },
   methods: {
     show(data) {
-      this.visible = true
-
       this.clearData()
       this.planData = data
       for (let i = 1; i <= this.planData.length; i++) {
@@ -175,6 +179,13 @@ export default {
       this.answeredItems = []
       this.submitRecords = []
     },
+    quit() {
+      // TODO 2025/3/23 得分计算
+
+      this.visible = false
+      this.$refs.resultDialog.show(this.clock)
+      this.resetTimer()
+    },
     submit() {
       const leftCount = this.planData.length - this.submitRecords.length
       if (leftCount > 0) {
@@ -183,7 +194,7 @@ export default {
       }
 
       this.visible = false
-      this.$message.success('共计耗时: ' + this.clock.time)
+      this.$refs.resultDialog.show(this.clock)
       this.resetTimer()
     },
     startTimer() {
@@ -323,6 +334,12 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  height: 100%;
+  background: #daedf9;
+  border-radius: 20px;
+}
+
 .input-word {
   width: 34px;
   margin-right: 10px;

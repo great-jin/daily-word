@@ -133,7 +133,7 @@ export default {
         }
         login(user).then(res => {
           const _data = res.data
-          if (_data != null && _data.userId !== null) {
+          if (_data != null && _data.user !== null) {
             this.$notify({
               type: 'success',
               title: '登录成功',

@@ -46,11 +46,16 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         // 更新登录时间
         userDetailDao.updateOnlineTime(user.getId());
 
+        try {
+            userDTO = new AuthUserDTO();
+            userDTO.setUser(AESUtil.encrypt(user.getId().toString()));
+            userDTO.setRefreshToken(refreshToken);
+            String auth = user.getUsername() + ":" + user.getPassword();
+            userDTO.setAuthentic(Base64.getEncoder().encodeToString(auth.getBytes()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         // 回传用户信息
-        userDTO.setPassword(null);
-        userDTO.setRefreshToken(refreshToken);
-        String auth = user.getUsername() + ":" + user.getPassword();
-        userDTO.setAuthentic(Base64.getEncoder().encodeToString(auth.getBytes()));
         ResponseData result = ResponseData.success(userDTO);
         response.setContentType(ContentType.JSON.getVal());
         response.getWriter().write(objectMapper.writeValueAsString(result));

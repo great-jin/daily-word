@@ -1,10 +1,13 @@
 <template>
   <el-drawer
       v-model="visible"
-      title="我的好友"
-      size="36%"
+      width="40%"
       @close="close"
   >
+    <template #header>
+      <span style="font-weight: bold; font-size: 18px">我的好友</span>
+    </template>
+
     <el-button
         type="primary"
         @click="addFriend"
@@ -14,17 +17,21 @@
     </el-button>
     <el-button
         type="primary"
-        @click="listFriend"
+        @click="requestList"
         style="margin-bottom: 20px; float: right"
     >
-      刷新状态
+      我的申请
     </el-button>
+
+    <DetailDrawer ref="detailDrawer"/>
+    <RequestDrawer ref="requestDrawer"/>
 
     <el-card class="friend-card">
       <el-table
           :data="friendData"
           class="friend-table"
           :row-class-name="tableRowStyle"
+          @row-click="selectRow"
       >
         <el-table-column
             prop="userName"
@@ -75,8 +82,14 @@
 
 <script>
 import {deleteById, list} from "@/api/userFriend"
+import DetailDrawer from "./components/detailDrawer.vue";
+import RequestDrawer from "./components/requestDrawer.vue";
 
 export default {
+  components: {
+    DetailDrawer,
+    RequestDrawer
+  },
   data() {
     return {
       visible: false,
@@ -86,11 +99,17 @@ export default {
   methods: {
     show() {
       this.visible = true
-      this.listFriend()
+
+      this.listTableData()
     },
     close() {
       this.visible = false
       this.friendData = []
+    },
+    listTableData() {
+      list().then(res => {
+        this.friendData = res.data
+      })
     },
     tableRowStyle({rowIndex}) {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";
@@ -98,21 +117,22 @@ export default {
     addFriend() {
       this.$message.info('功能开发中，敬请期待！')
     },
-    listFriend() {
-      list().then(res => {
-        this.friendData = res.data
-      })
+    requestList() {
+      this.$refs.requestDrawer.show(null)
     },
-    tableOptions(type, data) {
+    selectRow(row, column, event) {
+      this.$refs.detailDrawer.show(row)
+    },
+    tableOptions(type, row) {
       switch (type) {
         case 'invite':
           this.$message.info('功能开发中，敬请期待！')
           break
         case 'delete':
-          deleteById(data.userId).then(res => {
+          deleteById(row.userId).then(res => {
             if (res.data) {
               this.$message.success('删除成功')
-              this.listFriend()
+              this.listTableData()
             } else {
               this.$message.error('删除失败')
             }

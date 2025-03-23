@@ -9,8 +9,9 @@ import javax.crypto.spec.SecretKeySpec;
 public class AESUtil {
 
     private final static String ALGORITHM = "AES/CBC/NoPadding";
-    private final static String DEFAULT_IV = "1234567890123456";
-    private final static String DEFAULT_KEY = "1234567890123456";
+    private final static String DEFAULT_IV = "budai_invincible";
+    private final static String DEFAULT_KEY = "budai_invincible";
+
 
     /**
      * 默认的 KEY 和 IV 加密

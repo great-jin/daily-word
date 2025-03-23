@@ -3,6 +3,7 @@ import LoginView from "@/views/login/index.vue";
 import LogoutView from "@/views/logout/index.vue";
 import DictionaryView from "@/views/dictionary/index.vue";
 import CompetitionView from "@/views/competition/index.vue";
+import AnswerView from "@/views/competition/answer/index.vue";
 import PersonalView from "@/views/personal/index.vue";
 
 export const pathArray = [
@@ -27,15 +28,19 @@ export const pathArray = [
                 path: '/personal',
                 name: 'Personal',
                 component: PersonalView
+            }, {
+                path: '/roomRank',
+                name: 'roomRank',
+                component: AnswerView
+            }, {
+                path: '/logout',
+                name: 'Logout',
+                component: LogoutView
             }
         ]
     }, {
         path: '/login',
         name: 'Login',
         component: LoginView
-    }, {
-        path: '/logout',
-        name: 'Logout',
-        component: LogoutView
     }
 ]

@@ -85,21 +85,16 @@
       </el-row>
 
       <el-button type="primary" @click="startTask">开始匹配</el-button>
-
-      <AnswerDialog ref="answerDialog"/>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import AnswerDialog from "./answerDialog.vue";
+import AnswerView from "../answer/index.vue";
 import {CATALOG_ARRAY, SIZE_ARRAY} from "@/views/competition/const";
 import {getTaskContent} from "@/api/wordApi";
 
 export default {
-  components: {
-    AnswerDialog
-  },
   data() {
     return {
       visible: false,
@@ -185,7 +180,14 @@ export default {
 
           getTaskContent(this.reqParams).then(res => {
             this.reqParams.roomNumber = null
-            this.$refs.answerDialog.show(res.data)
+
+            // 跳转答题
+            this.$router.push({
+              path: '/roomRank',
+              params: {
+                planData: res.data
+              }
+            })
           })
         }
       }, 1000);
