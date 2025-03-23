@@ -1,23 +1,28 @@
 export const CATALOG_ARRAY = [
     {
         label: '四级词汇',
-        value: 'CET4'
+        value: 'CET4',
+        score: 5
     },
     {
         label: '六级词汇',
-        value: 'CET6'
+        value: 'CET6',
+        score: 10
     },
     {
         label: '考研词汇',
-        value: 'Graduate'
+        value: 'Graduate',
+        score: 15
     },
     {
         label: 'GRE词汇',
-        value: 'GRE'
+        value: 'GRE',
+        score: 20
     },
     {
         label: '牛津词汇',
-        value: 'Oxford'
+        value: 'Oxford',
+        score: 25
     }
 ]
 
@@ -46,18 +51,22 @@ export const ROOM_ARRAY = [
 export const SIZE_ARRAY = [
     {
         label: '30个/组',
-        value: '30'
+        value: '30',
+        score: 5
     },
     {
         label: '40个/组',
-        value: '40'
+        value: '40',
+        score: 10
     },
     {
         label: '50个/组',
-        value: '50'
+        value: '50',
+        score: 15
     },
     {
         label: '80个/组',
-        value: '80'
+        value: '80',
+        score: 20
     }
 ]

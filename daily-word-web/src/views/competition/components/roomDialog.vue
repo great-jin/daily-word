@@ -19,7 +19,7 @@
               v-model="reqParams.mode"
               placeholder="选择匹配方式"
               style="width: 240px"
-              @change="changeMode"
+              @change="changeMode('mode', $event)"
           >
             <el-option
                 v-for="item in modeOptions"
@@ -51,13 +51,14 @@
         </el-col>
       </el-row>
 
-      <el-row style="height: 100%; padding: 20px 25px">
+      <el-row style="height: 100%; padding: 20px 0 40px 0">
         <el-col :span="24">
-          <span style="padding-right: 6px">词典: </span>
+          <span>词典: </span>
           <el-select
               v-model="reqParams.catalogue"
-              placeholder="Select dictionary"
-              style="width: 120px; padding-right: 20px"
+              placeholder="请选中词典"
+              @change="changeMode('dict', $event)"
+              style="width: 120px; padding-right: 14px"
           >
             <el-option
                 v-for="item in catalogues"
@@ -67,11 +68,12 @@
             />
           </el-select>
 
-          <span style="padding-right: 6px">数量: </span>
+          <span>数量: </span>
           <el-select
               v-model="reqParams.size"
-              placeholder="Select batch size"
-              style="width: 120px; padding-right: 20px"
+              placeholder="请选中单词数量"
+              @change="changeMode('count', $event)"
+              style="width: 120px; padding-right: 14px"
           >
             <el-option
                 v-for="item in batchOptions"
@@ -81,6 +83,13 @@
             />
           </el-select>
 
+          <span v-if="reqParams.roomSize !== 0">积分奖励: </span>
+          <el-input
+              v-model="rankScore"
+              style="width: 60px"
+              v-if="reqParams.roomSize !== 0"
+              disabled
+          />
         </el-col>
       </el-row>
 
@@ -90,7 +99,6 @@
 </template>
 
 <script>
-import AnswerView from "../answer/index.vue";
 import {CATALOG_ARRAY, SIZE_ARRAY} from "@/views/competition/const";
 import {getTaskContent} from "@/api/wordApi";
 
@@ -125,6 +133,8 @@ export default {
         size: SIZE_ARRAY[0].value,
         offset: 10
       },
+      // 对局积分
+      rankScore: 10,
       taskWords: []
     }
   },
@@ -143,8 +153,23 @@ export default {
 
       this.clearIntervalLoop();
     },
-    changeMode(data) {
-      this.showRoomInput = data === 2 && this.reqParams.roomSize !== 0
+    changeMode(type, data) {
+      let s1, s2
+      switch (type) {
+        case 'mode':
+          this.showRoomInput = data === 2 && this.reqParams.roomSize !== 0
+          break
+        case 'dict':
+          s1 = this.catalogues.find(it => it.value === data).score
+          s2 = this.batchOptions.find(it => it.value === this.reqParams.size).score
+          this.rankScore = s1 + s2
+          break
+        case 'count':
+          s1 = this.catalogues.find(it => it.value === this.reqParams.catalogue).score
+          s2 = this.batchOptions.find(it => it.value === data).score
+          this.rankScore = s1 + s2
+          break
+      }
     },
     handleInput(index) {
       if (!/^\d$/.test(this.roomNumValues[index])) {
