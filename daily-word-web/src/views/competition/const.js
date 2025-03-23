@@ -45,9 +45,6 @@ export const ROOM_ARRAY = [
 
 export const SIZE_ARRAY = [
     {
-        label: '1个/组',
-        value: '1'
-    }, {
         label: '30个/组',
         value: '30'
     },

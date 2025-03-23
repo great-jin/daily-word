@@ -2,18 +2,20 @@
   <div style="height: 100%;">
     <el-row style="height: 100%;">
       <el-col :span="18" class="container">
-        <el-row :style="{marginTop: '20px'}">
+        <el-row :style="{marginTop: '100px'}">
           <el-col :span="24">
             <div
                 v-if="planData.length > 0"
                 style="text-align: center"
             >
-            <span
-                v-for="item in planData[currentIndex].translation"
-                style="width: 100%"
-            >
+              <strong>
+              <span
+                  v-for="item in planData[currentIndex].translation"
+                  style="width: 100%"
+              >
               {{ item }}
             </span>
+              </strong>
             </div>
           </el-col>
         </el-row>
@@ -49,7 +51,7 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: '60px'}">
+        <el-row :style="{marginTop: '200px'}">
           <el-col :span="24">
             <el-popconfirm
                 title="提示将降低答题得分"
@@ -79,17 +81,41 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: '20px'}">
+        <el-row :style="{marginTop: '100px'}">
           <el-col :span="24">
             <el-button type="primary" @click="changeCurrentIndex('back')">上一题</el-button>
             <el-button type="primary" @click="changeCurrentIndex('next')">下一题</el-button>
-            <el-button key="submit" type="danger" @click="quit">放弃</el-button>
-            <el-button key="submit" type="primary" @click="submit">提交</el-button>
+
+            <el-popconfirm
+                title="放弃将判定对局为您负，请确认！"
+                confirm-button-text="是"
+                cancel-button-text="否"
+                placement="top"
+                width="260"
+                @confirm="quit"
+            >
+              <template #reference>
+                <el-button key="submit" type="danger">放&nbsp;弃</el-button>
+              </template>
+            </el-popconfirm>
+
+            <el-popconfirm
+                title="请确认结束对局并提交！"
+                confirm-button-text="是"
+                cancel-button-text="否"
+                placement="top"
+                width="200"
+                @confirm="submit"
+            >
+              <template #reference>
+                <el-button key="submit" type="primary">提&nbsp;交</el-button>
+              </template>
+            </el-popconfirm>
           </el-col>
         </el-row>
       </el-col>
 
-      <el-col :span="6" style="background-color: #f5f1f1">
+      <el-col :span="6">
         <div class="word-container">
           <el-checkbox
               v-for="(item, index) in subjectItems"
@@ -97,7 +123,6 @@
               v-model="answeredItems[index]"
               @change="changCurrentWord(index)"
               size="large"
-              style="display: block; height: 100%"
           >
             {{ item }}
           </el-checkbox>
@@ -153,12 +178,18 @@ export default {
     }
   },
   mounted() {
-    const params = this.$route.params.planData
-    console.log('222', params)
+    this.show(history.state.planData)
+
+    // 监听页面刷新或关闭事件
+    window.addEventListener("beforeunload", this.handleForceRefresh);
   },
   beforeDestroy() {
+    // 清除计时器
     const _this = this.clock
     clearInterval(_this.timer);
+
+    // 清除监听事件
+    window.removeEventListener("beforeunload", this.handleForceRefresh);
   },
   methods: {
     show(data) {
@@ -185,6 +216,11 @@ export default {
       this.visible = false
       this.$refs.resultDialog.show(this.clock)
       this.resetTimer()
+    },
+    handleForceRefresh(event) {
+      event.returnValue = '对局尚未提交，您确定退出吗？';
+      // TODO 监控取消
+
     },
     submit() {
       const leftCount = this.planData.length - this.submitRecords.length
@@ -298,8 +334,12 @@ export default {
     },
     // 切换当前单词
     changCurrentWord(index) {
-      this.currentIndex = index
+      // 未回答过移除选中效果
+      const item = this.submitRecords.find(it => it.position === index)
+      this.answeredItems[index] = item !== undefined && item !== null
+
       // 回填
+      this.currentIndex = index
       this.setAndRefillData(index)
     },
     clickOption(type) {
@@ -348,12 +388,12 @@ export default {
 }
 
 .word-container {
-  padding: 20px 10px;
-  max-height: 290px;
-  scroll-behavior: smooth;
+  height: calc(100vh - 240px);
+  margin-left: 20px;
+  padding: 20px;
   overflow-y: scroll;
-}
-
-.el-checkbox:last-of-type {
+  scroll-behavior: smooth;
+  background: #fce6dd;
+  border-radius: 20px;
 }
 </style>

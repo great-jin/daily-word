@@ -173,7 +173,6 @@ export default {
       _load.active = true
       _load.intervalId = setInterval(() => {
         // TODO 模拟耗时
-        console.log(`执行第 ${count} 次`)
 
         if (count++ > 0) {
           this.clearIntervalLoop()
@@ -181,10 +180,10 @@ export default {
           getTaskContent(this.reqParams).then(res => {
             this.reqParams.roomNumber = null
 
-            // 跳转答题
+            // 新版不支持 params 方式，通过 state 实现
             this.$router.push({
-              path: '/roomRank',
-              params: {
+              name: 'RoomRank',
+              state: {
                 planData: res.data
               }
             })

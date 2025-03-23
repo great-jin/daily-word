@@ -30,7 +30,7 @@ export const pathArray = [
                 component: PersonalView
             }, {
                 path: '/roomRank',
-                name: 'roomRank',
+                name: 'RoomRank',
                 component: AnswerView
             }, {
                 path: '/logout',
