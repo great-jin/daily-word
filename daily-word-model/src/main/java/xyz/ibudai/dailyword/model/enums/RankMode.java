@@ -9,6 +9,7 @@ public enum RankMode {
      * 随机匹配
      */
     RANDOM,
+
     /**
      * 自定义房间
      */

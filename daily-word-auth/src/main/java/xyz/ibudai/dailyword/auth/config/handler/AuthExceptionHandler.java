@@ -11,7 +11,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.dailyword.basic.enums.ContentType;
 import xyz.ibudai.dailyword.basic.enums.LoginStatus;
-import xyz.ibudai.dailyword.basic.common.ResponseData;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 
 import java.io.IOException;
 

@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 public enum Protocol {
 
-    PREFIX("/dailyword"),
+    PREFIX("/dailyWord"),
 
     RANK("/rank"),
 

@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.auth.util;
+package xyz.ibudai.dailyword.basic.encrypt;
 
 import org.apache.commons.codec.binary.Base64;
 

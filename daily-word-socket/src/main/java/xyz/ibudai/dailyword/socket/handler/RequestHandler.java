@@ -7,7 +7,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
-import xyz.ibudai.dailyword.socket.adaptor.handler.RankHandler;
+import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
 import xyz.ibudai.dailyword.socket.enums.AttrKey;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
 import xyz.ibudai.dailyword.socket.manager.AdaptorManager;
@@ -23,8 +23,6 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 
     /**
      * 执行完连接建立事件后触发
-     * <p>
-     * ${@link RankHandler#handlerAdded(io.netty.channel.ChannelHandlerContext)}
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
@@ -40,8 +38,12 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
             if (parameters.containsKey(AttrKey.UID.getKey())) {
                 valid = true;
                 // 转存会话信息
-                Integer userId = Integer.parseInt(parameters.get(AttrKey.UID.getKey()).get(0));
-                ChannelManager.setChannel(protocol, userId, channel);
+                String idStr = parameters.get(AttrKey.UID.getKey()).get(0);
+                ChannelManager.setChannel(
+                        protocol,
+                        Integer.parseInt(AESUtil.desEncrypt(idStr).trim()),
+                        channel
+                );
             }
         }
         channel.attr(AttributeKey.valueOf(AttrKey.AUTHED.getKey())).set(valid);

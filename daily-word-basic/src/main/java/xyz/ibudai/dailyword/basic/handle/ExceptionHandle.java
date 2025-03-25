@@ -3,7 +3,7 @@ package xyz.ibudai.dailyword.basic.handle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import xyz.ibudai.dailyword.basic.common.ResponseData;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 
 @Slf4j
 @RestControllerAdvice

@@ -10,7 +10,7 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-import xyz.ibudai.dailyword.basic.common.ResponseData;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 
 @RestControllerAdvice
 public class ResponseHandle implements ResponseBodyAdvice<Object> {

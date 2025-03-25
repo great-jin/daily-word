@@ -99,8 +99,10 @@
 </template>
 
 <script>
-import {CATALOG_ARRAY, SIZE_ARRAY} from "@/views/competition/const";
-import {getTaskContent} from "@/api/wordApi";
+import {CATALOG_ARRAY, MODE_OPTIONS, SIZE_ARRAY} from "@/views/competition/const";
+import {getUid} from "@/util/AuthUtil";
+import {getWsUrl} from "@/util/SocketUtils";
+import {Encrypt} from "@/util/AES";
 
 export default {
   data() {
@@ -114,19 +116,10 @@ export default {
       showRoomInput: false,
       catalogues: CATALOG_ARRAY,
       batchOptions: SIZE_ARRAY,
+      modeOptions: MODE_OPTIONS,
       roomNumValues: ['', '', '', '', '', ''],
-      modeOptions: [
-        {
-          label: '随机匹配',
-          value: 1
-        },
-        {
-          label: '自定义房间',
-          value: 2
-        },
-      ],
       reqParams: {
-        mode: 1,
+        mode: 'RANDOM',
         roomSize: null,
         roomNumber: null,
         catalogue: CATALOG_ARRAY[0].value,
@@ -142,11 +135,11 @@ export default {
     show(data) {
       this.visible = true
       this.reqParams.roomSize = data
-      this.showRoomInput = this.reqParams.mode === 2 && this.reqParams.roomSize !== 0
+      this.showRoomInput = this.reqParams.mode === 'CUSTOM' && this.reqParams.roomSize !== 0
     },
     closeDialog() {
       this.visible = false
-      this.reqParams.mode = 1
+      this.reqParams.mode = 'RANDOM'
       this.reqParams.roomSize = null
       this.reqParams.roomNumber = null
       this.roomNumValues = ['', '', '', '', '', '']
@@ -157,7 +150,7 @@ export default {
       let s1, s2
       switch (type) {
         case 'mode':
-          this.showRoomInput = data === 2 && this.reqParams.roomSize !== 0
+          this.showRoomInput = data === 'CUSTOM' && this.reqParams.roomSize !== 0
           break
         case 'dict':
           s1 = this.catalogues.find(it => it.value === data).score
@@ -194,27 +187,50 @@ export default {
     },
     startTask() {
       const _load = this.loading
-      let count = 1
       _load.active = true
-      _load.intervalId = setInterval(() => {
-        // TODO 模拟耗时
+      const url = getWsUrl()
+      const userId = getUid(false)
+      const socket = new WebSocket(`${url}/rank?key=${userId}`);
 
-        if (count++ > 0) {
-          this.clearIntervalLoop()
+      socket.addEventListener('open', () => {
+        // 发起匹配
+        socket.send(Encrypt(this.reqParams))
 
-          getTaskContent(this.reqParams).then(res => {
-            this.reqParams.roomNumber = null
+        // 五分钟未匹配自动关闭
+        let count = 1
+        _load.intervalId = setInterval(() => {
+          if (count++ > 300) {
+            socket.close()
+          }
+        }, 1000);
+      })
 
-            // 新版不支持 params 方式，通过 state 实现
-            this.$router.push({
-              name: 'RoomRank',
-              state: {
-                planData: res.data
-              }
-            })
-          })
+      socket.addEventListener('message', (event) => {
+        const data = event.data
+        console.log('data', data)
+        if (data !== null && data !== undefined) {
+          // 匹配成功
+
+          /* this.$router.push({
+             name: 'RoomRank',
+             state: {
+               planData: data
+             }
+           })*/
         }
-      }, 1000);
+      })
+
+      socket.addEventListener('close', (event) => {
+        this.clearIntervalLoop()
+        console.log('WebSocket 连接已关闭', event.data);
+        this.$message.info('未匹配对局，请重试')
+      })
+
+      socket.addEventListener('error', (event) => {
+        this.clearIntervalLoop()
+        console.error('WebSocket 错误', event);
+        this.$message.info('匹配失败，请重试')
+      })
     },
     clearIntervalLoop() {
       const _load = this.loading

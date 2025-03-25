@@ -35,6 +35,16 @@ public class ChannelManager {
 
 
     /**
+     * Gets uid.
+     *
+     * @param channelId the channel id
+     * @return the uid
+     */
+    public static Integer getUid(String channelId) {
+        return CU_CACHE.getIfPresent(channelId);
+    }
+
+    /**
      * Sets channel.
      *
      * @param userId  the user id

@@ -3,6 +3,7 @@ package xyz.ibudai.dailyword.server.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.vo.*;
+import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.server.service.WordService;
 
 import java.util.List;
@@ -39,14 +40,4 @@ public class WordResource {
         return wordService.translation(word);
     }
 
-    /**
-     * Gets task content.
-     *
-     * @param wordRequest the word request
-     * @return the task content
-     */
-    @PostMapping("getTaskContent")
-    public List<TaskWord> getTaskContent(@RequestBody WordRequest wordRequest) {
-        return wordService.getTaskContent(wordRequest);
-    }
 }

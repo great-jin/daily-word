@@ -10,13 +10,13 @@ export function setToken(data) {
     localStorage.setItem(KEY_TOKEN, data.refreshToken)
 }
 
-export function getUid() {
+export function getUid(needDecode) {
     let uid = localStorage.getItem(KEY_UID)
     if (uid === undefined || uid === null) {
         return null
     }
 
-    return Decrypt(uid)
+    return needDecode ? Decrypt(uid) : uid
 }
 
 export function getToken() {

@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.server;
+package xyz.ibudai.dailyword.client;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
         "xyz.ibudai.dailyword",
         "xyz.ibudai.dailyword.auth",
         "xyz.ibudai.dailyword.repository",
-        "xyz.ibudai.dailyword.server"
+        "xyz.ibudai.dailyword.server",
+        "xyz.ibudai.dailyword.socket",
+        "xyz.ibudai.dailyword.client"
 })
 @MapperScan("xyz.ibudai.dailyword.repository.dao")
 public class DailyWordWebApplication {

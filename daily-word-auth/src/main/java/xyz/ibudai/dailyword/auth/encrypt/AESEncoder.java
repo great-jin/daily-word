@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.auth.encrypt;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-import xyz.ibudai.dailyword.auth.util.AESUtil;
+import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
 
 import java.util.Objects;
 

@@ -17,7 +17,7 @@ import xyz.ibudai.dailyword.auth.util.CodeUtil;
 import xyz.ibudai.dailyword.basic.consts.RegexConst;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
-import xyz.ibudai.dailyword.auth.util.AESUtil;
+import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;

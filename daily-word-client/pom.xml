@@ -9,13 +9,17 @@
         <relativePath>../daily-word-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>daily-word-model</artifactId>
+    <artifactId>daily-word-client</artifactId>
+
+    <properties>
+        <skip-main-class>false</skip-main-class>
+    </properties>
 
     <dependencies>
-        <!-- 分页 -->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
+            <groupId>xyz.ibudai</groupId>
+            <artifactId>daily-word-socket</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

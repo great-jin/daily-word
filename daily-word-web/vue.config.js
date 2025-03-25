@@ -16,7 +16,7 @@ module.exports = defineConfig({
         changOrigin: true,
         pathRewrite: {
           // Rewrite path prefix to backend "servlet:context-path"
-          [`^${process.env.VUE_APP_API_BASE_PREFIX}`]: `${process.env.VUE_APP_API_SERLET_PREFIX}`
+          [`^${process.env.VUE_APP_API_BASE_PREFIX}`]: `${process.env.VUE_APP_API_SERVLET_PREFIX}`
         }
       }
     },

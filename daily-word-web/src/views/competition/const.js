@@ -48,6 +48,16 @@ export const ROOM_ARRAY = [
     }
 ]
 
+export const MODE_OPTIONS = [
+    {
+        label: '随机匹配',
+        value: 'RANDOM'
+    }, {
+        label: '自定义房间',
+        value: 'CUSTOM'
+    }
+]
+
 export const SIZE_ARRAY = [
     {
         label: '30个/组',

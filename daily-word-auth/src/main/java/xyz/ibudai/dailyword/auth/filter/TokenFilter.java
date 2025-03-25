@@ -18,7 +18,7 @@ import org.springframework.util.AntPathMatcher;
 import xyz.ibudai.dailyword.basic.enums.ContentType;
 import xyz.ibudai.dailyword.basic.enums.HttpHeader;
 import xyz.ibudai.dailyword.basic.enums.LoginStatus;
-import xyz.ibudai.dailyword.basic.common.ResponseData;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.props.FilterProps;

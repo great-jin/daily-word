@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum AttrKey {
 
-    UID("userId"),
+    UID("key"),
 
     AUTHED("authed");
 

@@ -11,4 +11,17 @@
 
     <artifactId>daily-word-basic</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>xyz.ibudai</groupId>
+            <artifactId>daily-word-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- AES -->
+        <dependency>
+            <groupId>org.apache.directory.studio</groupId>
+            <artifactId>org.apache.commons.codec</artifactId>
+        </dependency>
+    </dependencies>
 </project>

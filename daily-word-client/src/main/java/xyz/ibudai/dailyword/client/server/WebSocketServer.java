@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.server.server;
+package xyz.ibudai.dailyword.client.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
