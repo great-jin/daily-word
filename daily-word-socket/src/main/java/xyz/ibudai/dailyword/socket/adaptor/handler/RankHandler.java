@@ -8,6 +8,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import xyz.ibudai.dailyword.model.base.SocketResponse;
 import xyz.ibudai.dailyword.model.vo.match.RoomVo;
 import xyz.ibudai.dailyword.server.service.WordService;
 import xyz.ibudai.dailyword.socket.adaptor.ChannelAdaptor;
+import xyz.ibudai.dailyword.socket.consts.BeanConst;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
 import xyz.ibudai.dailyword.model.enums.socket.SocketStatus;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
@@ -29,14 +31,14 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Component
 @ChannelHandler.Sharable
+@Component(BeanConst.Handler.RANK)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RankHandler extends ChannelAdaptor {
 
-    @Autowired
-    private WordService wordService;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final WordService wordService;
+    private final ObjectMapper objectMapper;
+
 
     private final static Cache<String, Set<Integer>> RANK_POOL = Caffeine.newBuilder()
             // 五分钟未匹配上失效

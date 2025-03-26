@@ -6,11 +6,14 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.AttributeKey;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
+import xyz.ibudai.dailyword.socket.adaptor.ChannelAdaptor;
 import xyz.ibudai.dailyword.socket.enums.AttrKey;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
-import xyz.ibudai.dailyword.socket.manager.AdaptorManager;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
 
 import java.net.URI;
@@ -19,7 +22,12 @@ import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+
+    private final Map<String, ChannelAdaptor> adaptorMap;
+
 
     /**
      * 执行完连接建立事件后触发
@@ -49,7 +57,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
         channel.attr(AttributeKey.valueOf(AttrKey.AUTHED.getKey())).set(valid);
 
         // 服务路由
-        ctx.pipeline().addLast(AdaptorManager.getAdaptor(protocol));
+        ctx.pipeline().addLast(adaptorMap.get(Protocol.getBeanName(protocol)));
 
         // 继续 WebSocket 握手
         ctx.fireChannelRead(request.retain());

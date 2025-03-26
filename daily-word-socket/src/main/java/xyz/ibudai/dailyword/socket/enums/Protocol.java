@@ -1,6 +1,7 @@
 package xyz.ibudai.dailyword.socket.enums;
 
 import lombok.Getter;
+import xyz.ibudai.dailyword.socket.consts.BeanConst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,5 +46,19 @@ public enum Protocol {
             }
         }
         return DEFAULT;
+    }
+
+    /**
+     * Gets bean name.
+     *
+     * @param protocol the protocol
+     * @return the bean name
+     */
+    public static String getBeanName(Protocol protocol) {
+        return switch (protocol) {
+            case RANK -> BeanConst.Handler.RANK;
+            case FRIEND -> BeanConst.Handler.FRIEND;
+            default -> BeanConst.Handler.DEFAULT;
+        };
     }
 }
