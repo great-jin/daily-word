@@ -24,5 +24,13 @@ public class UserDetailResource {
     public UserDetail getById() {
         return userDetailDao.selectById(SecurityUtil.getLoginUser());
     }
+
+
+    @PostMapping("generateCode")
+    public void generateCode() {
+        // TODO 2025/3/27 生成好友码
+
+
+    }
 }
 

@@ -212,6 +212,8 @@ export default {
           this.$router.push({
             name: 'RoomRank',
             state: {
+              // TODO 2025/3/27 传递对局唯一标识用于结束时提交
+
               planData: res.data
             }
           })

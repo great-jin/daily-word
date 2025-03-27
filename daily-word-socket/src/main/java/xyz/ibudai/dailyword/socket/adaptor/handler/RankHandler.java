@@ -92,6 +92,9 @@ public class RankHandler extends ChannelAdaptor {
             // 匹配成功，返回对局数据内容
             ResponseData res = new ResponseData(RANK_MATCHED.getCode());
             res.setData(wordService.getTaskContent(roomVo.getCatalogue(), roomVo.getSize()));
+            // TODO 2025/3/27 返回对局 uuid 用于提交对局是计算
+
+
             String resContent = objectMapper.writeValueAsString(res);
 
             // 广播对应匹配的用户组
