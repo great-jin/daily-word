@@ -1,5 +1,6 @@
 package xyz.ibudai.dailyword.socket.adaptor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -7,11 +8,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.util.AttributeKey;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import xyz.ibudai.dailyword.model.base.ResponseData;
+import xyz.ibudai.dailyword.model.enums.socket.SocketStatus;
 import xyz.ibudai.dailyword.socket.enums.AttrKey;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
@@ -71,5 +72,17 @@ public abstract class ChannelAdaptor extends SimpleChannelInboundHandler<TextWeb
         ChannelManager.send(ctx.channel(), cause.getMessage());
 
         super.exceptionCaught(ctx, cause);
+    }
+
+    /**
+     * Send.
+     *
+     * @param channel the channel
+     * @param status  the status
+     * @throws JsonProcessingException the json processing exception
+     */
+    protected void send(Channel channel, SocketStatus status) throws JsonProcessingException {
+        ResponseData res = new ResponseData(status.getCode());
+        ChannelManager.send(channel, objectMapper.writeValueAsString(res));
     }
 }

@@ -23,10 +23,7 @@ import xyz.ibudai.dailyword.socket.consts.BeanConst;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static xyz.ibudai.dailyword.model.enums.socket.SocketStatus.*;
@@ -70,41 +67,65 @@ public class RankHandler extends ChannelAdaptor {
     }
 
     private synchronized void matchGame(ChannelHandlerContext ctx, String receiveText) throws JsonProcessingException {
+        Channel channel = ctx.channel();
         String key = UUID.nameUUIDFromBytes(receiveText.getBytes()).toString();
-        Set<Integer> userList = RANK_POOL.getIfPresent(key);
-        if (CollectionUtils.isEmpty(userList)) {
+        Integer uid = ChannelManager.getUid(channel.id().asLongText());
+        Set<Integer> users = RANK_POOL.getIfPresent(key);
+        if (CollectionUtils.isEmpty(users)) {
             // 第一个建房间，存入信息并返回匹配中
-            this.waiting(key, ctx.channel(), userList);
+            log.info("create rank match, userId: {}", uid);
+            this.waiting(key, channel, users);
+            return;
+        }
+        if (users.contains(uid)) {
+            // 同一用户重复提交
+            log.info("user {} already submit", uid);
+            super.send(channel, RANK_MATCHING);
             return;
         }
 
+        users.add(uid);
         RoomVo roomVo = objectMapper.readValue(receiveText, RoomVo.class);
-        if (userList.size() + 1 == roomVo.getRoomSize()) {
-            // 用户匹配房间人数，返回数据开始对局
+        if (users.size() == roomVo.getRoomSize()) {
+            log.info("match success, userId: {}, list: {}", uid, users);
+
+            // 匹配成功，返回对局数据内容
             ResponseData res = new ResponseData(RANK_MATCHED.getCode());
             res.setData(wordService.getTaskContent(roomVo.getCatalogue(), roomVo.getSize()));
-            ChannelManager.send(ctx.channel(), objectMapper.writeValueAsString(res));
+            String resContent = objectMapper.writeValueAsString(res);
+
+            // 广播对应匹配的用户组
+            List<Channel> channelList = new ArrayList<>();
+            for (Integer matchedUid : users) {
+                Channel matchedChannel = ChannelManager.getChannel(Protocol.RANK, matchedUid);
+                if (Objects.isNull(matchedChannel)) {
+                    continue;
+                }
+                channelList.add(matchedChannel);
+            }
+            log.info("match success, userId: {}, channel size: {}", uid, channelList.size());
+            ChannelManager.batchSend(channelList, resContent);
 
             // 成功后移除匹配
             RANK_POOL.asMap().computeIfPresent(key, (k, v) -> {
-                v.removeAll(userList);
+                v.removeAll(users);
                 return v;
             });
+            log.info("match success, after remove key: {}, users: {}", key, RANK_POOL.getIfPresent(key));
             return;
         }
 
         // 人数不足，放入缓存继续等待
-        this.waiting(key, ctx.channel(), userList);
+        this.waiting(key, ctx.channel(), users);
     }
 
 
-    private void waiting(String key, Channel channel, Set<Integer> userList) throws JsonProcessingException {
-        userList = Objects.isNull(userList) ? new HashSet<>() : userList;
-        userList.add(ChannelManager.getUid(channel.id().asLongText()));
-        RANK_POOL.put(key, userList);
+    private void waiting(String key, Channel channel, Set<Integer> users) throws JsonProcessingException {
+        users = Objects.isNull(users) ? new HashSet<>() : users;
+        users.add(ChannelManager.getUid(channel.id().asLongText()));
+        RANK_POOL.put(key, users);
 
         // 发送消息
-        ResponseData res = new ResponseData(RANK_MATCHING.getCode());
-        ChannelManager.send(channel, objectMapper.writeValueAsString(res));
+        super.send(channel, RANK_MATCHING);
     }
 }

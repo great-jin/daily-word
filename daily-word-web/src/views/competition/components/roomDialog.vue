@@ -206,7 +206,7 @@ export default {
       })
 
       socket.addEventListener('message', (event) => {
-        const res = event.data
+        const res = JSON.parse(event.data)
         if (res !== null && res.code === 302) {
           // 匹配成功
           this.$router.push({

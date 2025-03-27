@@ -4,8 +4,10 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -126,6 +128,24 @@ public class ChannelManager {
         }
 
         channel.writeAndFlush(new TextWebSocketFrame(message));
+        return true;
+    }
+
+    /**
+     * Batch send message.
+     *
+     * @param channelList the channel list
+     * @param message     the message
+     * @return the boolean
+     */
+    public static boolean batchSend(List<Channel> channelList, String message) {
+        if (CollectionUtils.isEmpty(channelList)) {
+            return false;
+        }
+
+        for (Channel channel : channelList) {
+            send(channel, message);
+        }
         return true;
     }
 }
