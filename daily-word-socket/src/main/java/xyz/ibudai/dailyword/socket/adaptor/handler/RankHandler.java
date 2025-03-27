@@ -15,13 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
-import xyz.ibudai.dailyword.model.base.SocketResponse;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.model.vo.match.RoomVo;
 import xyz.ibudai.dailyword.server.service.WordService;
 import xyz.ibudai.dailyword.socket.adaptor.ChannelAdaptor;
 import xyz.ibudai.dailyword.socket.consts.BeanConst;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
-import xyz.ibudai.dailyword.model.enums.socket.SocketStatus;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
 
 import java.util.HashSet;
@@ -29,6 +28,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static xyz.ibudai.dailyword.model.enums.socket.SocketStatus.*;
 
 @Slf4j
 @ChannelHandler.Sharable
@@ -65,6 +66,10 @@ public class RankHandler extends ChannelAdaptor {
         // 数据需解密
         receiveText = AESUtil.desEncrypt(receiveText).trim();
 
+        this.matchGame(ctx, receiveText);
+    }
+
+    private synchronized void matchGame(ChannelHandlerContext ctx, String receiveText) throws JsonProcessingException {
         String key = UUID.nameUUIDFromBytes(receiveText.getBytes()).toString();
         Set<Integer> userList = RANK_POOL.getIfPresent(key);
         if (CollectionUtils.isEmpty(userList)) {
@@ -74,11 +79,17 @@ public class RankHandler extends ChannelAdaptor {
         }
 
         RoomVo roomVo = objectMapper.readValue(receiveText, RoomVo.class);
-        if (userList.size() == roomVo.getRoomSize()) {
+        if (userList.size() + 1 == roomVo.getRoomSize()) {
             // 用户匹配房间人数，返回数据开始对局
-            SocketResponse res = new SocketResponse(SocketStatus.MATCHING);
+            ResponseData res = new ResponseData(RANK_MATCHED.getCode());
             res.setData(wordService.getTaskContent(roomVo.getCatalogue(), roomVo.getSize()));
             ChannelManager.send(ctx.channel(), objectMapper.writeValueAsString(res));
+
+            // 成功后移除匹配
+            RANK_POOL.asMap().computeIfPresent(key, (k, v) -> {
+                v.removeAll(userList);
+                return v;
+            });
             return;
         }
 
@@ -89,11 +100,11 @@ public class RankHandler extends ChannelAdaptor {
 
     private void waiting(String key, Channel channel, Set<Integer> userList) throws JsonProcessingException {
         userList = Objects.isNull(userList) ? new HashSet<>() : userList;
-        userList.add(ChannelManager.getUid(channel.id().toString()));
+        userList.add(ChannelManager.getUid(channel.id().asLongText()));
         RANK_POOL.put(key, userList);
 
         // 发送消息
-        SocketResponse res = new SocketResponse(SocketStatus.MATCHING);
+        ResponseData res = new ResponseData(RANK_MATCHING.getCode());
         ChannelManager.send(channel, objectMapper.writeValueAsString(res));
     }
 }

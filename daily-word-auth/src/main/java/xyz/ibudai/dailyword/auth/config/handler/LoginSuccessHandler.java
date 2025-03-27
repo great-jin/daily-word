@@ -48,7 +48,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         try {
             userDTO = new AuthUserDTO();
-            userDTO.setUser(AESUtil.encrypt(user.getId().toString()));
+            userDTO.setKey(AESUtil.encrypt(user.getId().toString()));
             userDTO.setRefreshToken(refreshToken);
             String auth = user.getUsername() + ":" + user.getPassword();
             userDTO.setAuthentic(Base64.getEncoder().encodeToString(auth.getBytes()));

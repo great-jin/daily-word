@@ -5,7 +5,7 @@ const KEY_AUTH = 'u1'
 const KEY_TOKEN = 'u2'
 
 export function setToken(data) {
-    localStorage.setItem(KEY_UID, data.user)
+    localStorage.setItem(KEY_UID, data.key)
     localStorage.setItem(KEY_AUTH, data.authentic)
     localStorage.setItem(KEY_TOKEN, data.refreshToken)
 }

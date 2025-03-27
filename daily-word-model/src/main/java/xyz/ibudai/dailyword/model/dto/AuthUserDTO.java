@@ -13,7 +13,7 @@ public class AuthUserDTO {
 
     private Integer userId;
 
-    private String user;
+    private String key;
 
     private String username;
 

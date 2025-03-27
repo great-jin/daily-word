@@ -1,12 +1,17 @@
 package xyz.ibudai.dailyword.socket.adaptor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.util.AttributeKey;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.socket.enums.AttrKey;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
 import xyz.ibudai.dailyword.socket.manager.ChannelManager;
@@ -16,6 +21,9 @@ import xyz.ibudai.dailyword.socket.manager.ChannelManager;
  */
 @Slf4j
 public abstract class ChannelAdaptor extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * Gets protocol.
@@ -32,12 +40,14 @@ public abstract class ChannelAdaptor extends SimpleChannelInboundHandler<TextWeb
             Object authed = channel.attr(AttributeKey.valueOf(AttrKey.AUTHED.getKey())).get();
             if (Boolean.FALSE.equals(authed)) {
                 log.warn("The socket not authenticated");
-                ChannelManager.send(channel, "Not Authenticated");
+                ResponseData res = new ResponseData(HttpStatus.UNAUTHORIZED.value());
+                ChannelManager.send(channel, objectMapper.writeValueAsString(res));
                 channel.close();
                 return;
             }
 
-            ChannelManager.send(channel, "Connect success");
+            ResponseData res = new ResponseData(HttpStatus.OK.value());
+            ChannelManager.send(channel, objectMapper.writeValueAsString(res));
             return;
         }
 

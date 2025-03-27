@@ -10,18 +10,23 @@ const router = createRouter({
     routes
 })
 
+const WHITE_LIST = [
+    '/',
+    '/logout',
+    '/dictionary'
+]
+
 router.beforeEach((to, from, next) => {
-    if (to.path === '/' || to.path === '/logout' || to.path === '/dictionary') {
-        // 免登录
+    if (WHITE_LIST.includes(to.path)) {
         next()
         return
     }
 
     // 状态判断
-    const auth = getToken()[1]
-    const token = getToken()[0]
-    const isAuth = !(auth == null || auth === '')
-    const isLogin = isAuth && !(token == null || token === '')
+    const loginInfo = getToken()
+    const containAuth = !(loginInfo[0] == null || loginInfo[0] === '')
+    const containToken = !(loginInfo[1] == null || loginInfo[1] === '')
+    const isLogin = containAuth && containToken
     if (to.path === '/login') {
         // 已登录则回主页，未登录放行
         isLogin ? next('/') : next()

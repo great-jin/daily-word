@@ -1,6 +1,7 @@
 package xyz.ibudai.dailyword.socket.handler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -23,6 +24,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
+@ChannelHandler.Sharable
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
@@ -46,7 +48,8 @@ public class RequestHandler extends SimpleChannelInboundHandler<FullHttpRequest>
             if (parameters.containsKey(AttrKey.UID.getKey())) {
                 valid = true;
                 // 转存会话信息
-                String idStr = parameters.get(AttrKey.UID.getKey()).get(0);
+                String idStr = parameters.get(AttrKey.UID.getKey()).get(0).trim();
+                idStr = idStr.replace(" ", "+");
                 ChannelManager.setChannel(
                         protocol,
                         Integer.parseInt(AESUtil.desEncrypt(idStr).trim()),

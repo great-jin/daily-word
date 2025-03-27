@@ -20,6 +20,10 @@ public class ResponseData {
     private Object data;
 
 
+    public ResponseData(int code) {
+        this.code = code;
+    }
+
     /**
      * Success response data.
      *

@@ -194,7 +194,7 @@ export default {
 
       socket.addEventListener('open', () => {
         // 发起匹配
-        socket.send(Encrypt(this.reqParams))
+        socket.send(Encrypt(JSON.stringify(this.reqParams)))
 
         // 五分钟未匹配自动关闭
         let count = 1
@@ -206,17 +206,15 @@ export default {
       })
 
       socket.addEventListener('message', (event) => {
-        const data = event.data
-        console.log('data', data)
-        if (data !== null && data !== undefined) {
+        const res = event.data
+        if (res !== null && res.code === 302) {
           // 匹配成功
-
-          /* this.$router.push({
-             name: 'RoomRank',
-             state: {
-               planData: data
-             }
-           })*/
+          this.$router.push({
+            name: 'RoomRank',
+            state: {
+              planData: res.data
+            }
+          })
         }
       })
 
