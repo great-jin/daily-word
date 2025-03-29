@@ -10,9 +10,10 @@ export function submit(params) {
     })
 }
 
-export function listMatchHistory() {
+export function listMatchHistory(params) {
     return request({
         url: `${apiPrefix}/listHistory`,
-        method: 'get'
+        method: 'get',
+        params: params
     })
 }

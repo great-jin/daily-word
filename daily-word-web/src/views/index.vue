@@ -11,16 +11,17 @@
           <el-col :span="20">
             <el-menu
                 mode="horizontal"
+                :ellipsis="false"
                 @select="handleSelect"
                 :default-active="activeMenu"
                 background-color="#545c64"
                 text-color="#fff"
                 active-text-color="#ffd04b"
-                style="height: 100%; width: 100%;"
+                class="home-menu"
             >
               <el-menu-item index="dictionary" class="head-banner" >字典查询</el-menu-item>
               <el-menu-item index="competition" class="head-banner">知识竞赛</el-menu-item>
-              <el-sub-menu index="personal" class="right-align-submenu">
+              <el-sub-menu index="personal" class="setting-menu">
                 <template #title>
                   <div style="font-weight: bold; font-size: 16px;">
                     <el-icon size="22">
@@ -175,12 +176,16 @@ export default {
   justify-content: center;
 }
 
-.el-menu--collapse .el-menu .el-submenu, .el-menu--popup {
-  min-width: 100px !important;
+.home-menu {
+  width: 100%;
+  height: 100%;
 }
 
-.right-align-submenu .el-sub-menu__wrap {
-  left: auto !important;
-  right: 0 !important; /* 将子菜单定位到最右边 */
+.el-menu--collapse .el-menu .el-submenu, .el-menu--popup {
+  min-width: 120px !important;
+}
+
+.el-menu--horizontal > .el-menu-item:nth-child(2) {
+  margin-right: auto;
 }
 </style>

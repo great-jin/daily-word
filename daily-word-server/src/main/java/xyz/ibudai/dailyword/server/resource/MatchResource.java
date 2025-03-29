@@ -1,19 +1,16 @@
 package xyz.ibudai.dailyword.server.resource;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.repository.service.MatchRecordService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/server/match")
@@ -39,15 +36,18 @@ public class MatchResource {
      * @return the list
      */
     @GetMapping("listHistory")
-    public List<MatchRecord> listHistory() {
+    public PageInfo<MatchRecord> listHistory(@RequestParam("pageNo") Integer pageNo,
+                                             @RequestParam("pageSize") Integer pageSize) {
         Integer loginUser = SecurityUtil.getLoginUser();
         if (Objects.isNull(loginUser)) {
-            return new ArrayList<>();
+            return new PageInfo<>(Collections.emptyList());
         }
 
-        return matchRecordService.lambdaQuery()
+        PageHelper.startPage(pageNo, pageSize);
+        List<MatchRecord> list = matchRecordService.lambdaQuery()
                 .eq(MatchRecord::getId, SecurityUtil.getLoginUser())
                 .eq(MatchRecord::getSeason, SystemConfig.getSeason())
                 .list();
+        return new PageInfo<>(list);
     }
 }

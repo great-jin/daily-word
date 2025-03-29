@@ -16,6 +16,8 @@
         <mybatis.version>3.0.1</mybatis.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
 
+        <pagehelper.version>2.1.0</pagehelper.version>
+
         <jwt.version>0.9.0</jwt.version>
         <commons-codec.version>1.8</commons-codec.version>
         <jaxb-api.version>2.1</jaxb-api.version>
@@ -45,6 +47,13 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- 分页 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
 
             <!-- JWT认证加密 -->
