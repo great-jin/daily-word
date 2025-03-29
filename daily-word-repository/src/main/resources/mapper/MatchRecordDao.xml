@@ -4,16 +4,18 @@
 
     <resultMap type="xyz.ibudai.dailyword.model.entity.MatchRecord" id="MatchRecordMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="groupId" column="group_id" jdbcType="VARCHAR"/>
-        <result property="roomId" column="room_id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="season" column="season" jdbcType="INTEGER"/>
+        <result property="groupId" column="group_id" jdbcType="VARCHAR"/>
+        <result property="rankMode" column="rank_mode" jdbcType="VARCHAR"/>
+        <result property="roomNumber" column="room_number" jdbcType="VARCHAR"/>
         <result property="rankType" column="rank_type" jdbcType="INTEGER"/>
-        <result property="rankMode" column="rank_mode" jdbcType="INTEGER"/>
-        <result property="catalogId" column="catalog_id" jdbcType="INTEGER"/>
+        <result property="catalog" column="catalog" jdbcType="VARCHAR"/>
         <result property="wordCount" column="word_count" jdbcType="INTEGER"/>
         <result property="costSecond" column="cost_second" jdbcType="INTEGER"/>
         <result property="score" column="score" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="finished" column="finished" jdbcType="BOOLEAN"/>
     </resultMap>
 
 </mapper>

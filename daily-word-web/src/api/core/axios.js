@@ -30,7 +30,7 @@ function request(axiosConfig) {
     // 响应拦截
     service.interceptors.response.use(res => {
         const code = res.data.code
-        if (res.status === 203 || code === 403) {
+        if (code !== undefined && code !== null && (code === 203 || code === 403)) {
             ElNotification({
                 title: '登录过期',
                 message: '登录过期, 请重新登录',

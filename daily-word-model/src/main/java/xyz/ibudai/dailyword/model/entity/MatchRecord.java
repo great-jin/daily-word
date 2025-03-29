@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +16,9 @@ import java.time.LocalDateTime;
  * @since 2025-03-16 09:26:04
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @TableName("match_record")
 public class MatchRecord extends Model<MatchRecord> {
@@ -24,23 +26,26 @@ public class MatchRecord extends Model<MatchRecord> {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    @TableField("user_id")
+    private Integer userId;
+
+    @TableField("season")
+    private Integer season;
+
     @TableField("group_id")
     private String groupId;
 
-    @TableField("room_id")
-    private Integer roomId;
+    @TableField("rank_mode")
+    private String rankMode;
 
-    @TableField("user_id")
-    private Integer userId;
+    @TableField("room_number")
+    private String roomNumber;
 
     @TableField("rank_type")
     private Integer rankType;
 
-    @TableField("rank_mode")
-    private Integer rankMode;
-
-    @TableField("catalog_id")
-    private Integer catalogId;
+    @TableField("catalog")
+    private String catalog;
 
     @TableField("word_count")
     private Integer wordCount;
@@ -53,6 +58,9 @@ public class MatchRecord extends Model<MatchRecord> {
 
     @TableField("create_time")
     private LocalDateTime createTime;
+
+    @TableField("finished")
+    private Boolean finished;
 
 }
 

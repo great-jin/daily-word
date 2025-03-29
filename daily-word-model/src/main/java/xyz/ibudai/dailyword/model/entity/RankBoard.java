@@ -6,9 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.*;
-import org.springframework.data.annotation.Id;
+import xyz.ibudai.dailyword.model.config.SystemConfig;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -62,9 +61,14 @@ public class RankBoard extends Model<RankBoard> {
     private LocalDateTime updateTime;
 
 
+    /**
+     * Init rank board.
+     *
+     * @return the rank board
+     */
     public static RankBoard init() {
         return RankBoard.builder()
-                .season(1)
+                .season(SystemConfig.getSeason())
                 .score(0)
                 .matchCount(0)
                 .matchWin(0)

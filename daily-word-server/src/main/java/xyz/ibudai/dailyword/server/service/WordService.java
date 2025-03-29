@@ -2,6 +2,7 @@ package xyz.ibudai.dailyword.server.service;
 
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.*;
+import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 
 import java.util.*;
@@ -33,5 +34,5 @@ public interface WordService {
      * @param size      the size
      * @return the task content
      */
-    List<TaskWord> getTaskContent(Catalogue catalogue, Integer size);
+    List<TaskWordDTO> getTaskContent(Catalogue catalogue, Integer size);
 }

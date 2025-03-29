@@ -9,7 +9,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import xyz.ibudai.dailyword.model.vo.TaskWord;
+import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public class DicPreHeat implements ApplicationRunner {
 
     public static final Map<String, List<JsonNode>> catalogueMap = new ConcurrentHashMap<>();
 
-    public static final Map<Catalogue, Map<Integer, TaskWord>> dictCache = new ConcurrentHashMap<>();
+    public static final Map<Catalogue, Map<Integer, TaskWordDTO>> dictCache = new ConcurrentHashMap<>();
 
 
     @Override
@@ -89,11 +89,11 @@ public class DicPreHeat implements ApplicationRunner {
     }
 
     private void preheatData(Catalogue type, File file) throws Exception {
-        Map<Integer, TaskWord> cache = new HashMap<>();
+        Map<Integer, TaskWordDTO> cache = new HashMap<>();
         JsonNode node = objectMapper.readTree(file);
         for (int i = 0; i < node.size(); i++) {
             JsonNode item = node.get(i);
-            TaskWord word = new TaskWord();
+            TaskWordDTO word = new TaskWordDTO();
             String name = item.get("name")
                     .asText();
             word.setValue(name);

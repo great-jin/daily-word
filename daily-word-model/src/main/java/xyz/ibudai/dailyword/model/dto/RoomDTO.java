@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.vo.match;
+package xyz.ibudai.dailyword.model.dto;
 
 import lombok.Data;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
@@ -8,7 +8,7 @@ import xyz.ibudai.dailyword.model.enums.RankMode;
  * The type Room.
  */
 @Data
-public class RoomVo {
+public class RoomDTO {
 
     /**
      * 匹配模式

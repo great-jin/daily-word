@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
@@ -33,7 +34,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
     public RankBoard getUserRank() {
         RankBoard rankBoard = new RankBoard();
         List<RankBoard> list = this.lambdaQuery()
-                .eq(RankBoard::getSeason, 1)
+                .eq(RankBoard::getSeason, SystemConfig.getSeason())
                 .eq(RankBoard::getUserId, SecurityUtil.getLoginUser())
                 .list();
         if (CollectionUtils.isEmpty(list)) {
@@ -46,7 +47,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
             win += item.getMatchWin();
             lost += item.getMatchLost();
         }
-        rankBoard.setSeason(1);
+        rankBoard.setSeason(SystemConfig.getSeason());
         rankBoard.setScore(score);
         rankBoard.setMatchWin(win);
         rankBoard.setMatchLost(lost);
@@ -56,7 +57,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
     @Override
     public List<RankBoard> listByCatalog(String catalog) {
         List<RankBoard> list = this.lambdaQuery()
-                .eq(RankBoard::getSeason, 1)
+                .eq(RankBoard::getSeason, SystemConfig.getSeason())
                 .eq(RankBoard::getCatalog, catalog)
                 .orderByDesc(RankBoard::getScore)
                 .last("LIMIT 100")
@@ -75,7 +76,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
 
         // 最后一条展示用户
         RankBoard userRank = this.lambdaQuery()
-                .eq(RankBoard::getSeason, 1)
+                .eq(RankBoard::getSeason, SystemConfig.getSeason())
                 .eq(RankBoard::getCatalog, catalog)
                 .eq(RankBoard::getUserId, userId)
                 .one();

@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import {listMatchHistory} from "@/api/matchApi";
+
 export default {
   data() {
     return {
@@ -84,17 +86,9 @@ export default {
       this.historyData = []
     },
     listTableData() {
-      for (let i = 0; i < 40; i++) {
-        this.historyData.push({
-          rankMode: '随机匹配',
-          roomMode: '双人对战',
-          catalogue: '四级词汇',
-          wordCount: '30个/组',
-          time: '60s',
-          score: 5,
-          result: true,
-        })
-      }
+      listMatchHistory().then(res => {
+        this.historyData = res.data
+      })
     },
     tableRowStyle({rowIndex}) {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";

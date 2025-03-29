@@ -81,7 +81,7 @@ public abstract class ChannelAdaptor extends SimpleChannelInboundHandler<TextWeb
      * @param status  the status
      * @throws JsonProcessingException the json processing exception
      */
-    protected void send(Channel channel, SocketStatus status) throws JsonProcessingException {
+    protected void response(Channel channel, SocketStatus status) throws JsonProcessingException {
         ResponseData res = new ResponseData(status.getCode());
         ChannelManager.send(channel, objectMapper.writeValueAsString(res));
     }

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.DictDetail;
-import xyz.ibudai.dailyword.model.vo.TaskWord;
+import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.model.vo.word.WordDescribe;
 import xyz.ibudai.dailyword.server.cache.DicPreHeat;
@@ -19,7 +19,7 @@ public class WordServiceImpl implements WordService {
 
     public List<DictDetail> getDictDetail() {
         List<DictDetail> detailList = new ArrayList<>();
-        for (Map.Entry<xyz.ibudai.dailyword.model.enums.Catalogue, Map<Integer, TaskWord>> Catalogue : DicPreHeat.dictCache.entrySet()) {
+        for (Map.Entry<xyz.ibudai.dailyword.model.enums.Catalogue, Map<Integer, TaskWordDTO>> Catalogue : DicPreHeat.dictCache.entrySet()) {
             Catalogue catalogue = Catalogue.getKey();
             int wordCount = Catalogue.getValue().size();
             DictDetail detail = new DictDetail(catalogue, wordCount);
@@ -62,17 +62,16 @@ public class WordServiceImpl implements WordService {
         }
     }
 
-    public List<TaskWord> getTaskContent(Catalogue catalogue, Integer size) {
+    public List<TaskWordDTO> getTaskContent(Catalogue catalogue, Integer size) {
         if (Objects.isNull(size) || size <= 0) {
             size = 20;
         }
 
         try {
-            Collection<TaskWord> values = DicPreHeat.dictCache.get(catalogue).values();
-
+            Collection<TaskWordDTO> values = DicPreHeat.dictCache.get(catalogue).values();
             return values.stream()
                     // TODO 2025/3/25 随机生成偏移量
-                    .filter(it -> it.getOffset() >= 10)
+                    .filter(it -> it.getOffset() >= 0)
                     .limit(size)
                     .toList();
         } catch (Exception e) {
