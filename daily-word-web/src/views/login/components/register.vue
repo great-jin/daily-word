@@ -3,72 +3,109 @@
       v-model="dialogVisible"
       width="30%"
       title="账号注册"
-      style="--el-dialog-padding-primary: 10px 40px 10px 10px;"
+      :show-close="false"
       center
   >
-    <!-- 注册表单 -->
-    <el-form
-        ref="regForm"
-        :rules="rules"
-        :model="registerForm"
-        label-width="100px"
-        style="margin-top: 20px"
+    <el-steps
+        :active="active"
+        finish-status="success"
+        style="margin: 20px"
+        align-center
     >
-      <el-form-item label="邀请码:" prop="inviteCode">
-        <el-input
-            v-model="registerForm.inviteCode"
-            placeholder="请输入邀请码"
-        />
-      </el-form-item>
-      <el-form-item label="用户名:" prop="username">
-        <el-input
-            v-model="registerForm.username"
-            placeholder="请输入用户名"
-        />
-      </el-form-item>
-      <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="mail">
-        <el-row style="width: 100%">
-          <el-col :span="18">
-            <el-input
-                v-model="registerForm.mail"
-                placeholder="请输入邮箱"
-            />
-          </el-col>
-          <el-col :span="6" style="display: flex; align-items: center; padding-left: 10px">
-            <el-button
-                style="width: 100%"
-                :disabled="countDown > 0"
-                @click="sendMail"
-            >{{ countDown > 0 ? `${countDown} s` : '发送' }}
-            </el-button>
-          </el-col>
-        </el-row>
-      </el-form-item>
-      <el-form-item label="验证码:" prop="captcha">
-        <el-input
-            v-model="registerForm.captcha"
-            placeholder="请输入验证码"
-        />
-      </el-form-item>
-      <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
-        <el-input
-            type="password"
-            v-model="registerForm.password"
-            placeholder="请输入密码"
-        />
-      </el-form-item>
-      <el-form-item label="确认密码:" prop="passwordCheck">
-        <el-input
-            type="password"
-            v-model="registerForm.passwordCheck"
-            placeholder="请再次输入密码"
-        />
-      </el-form-item>
-    </el-form>
+      <el-step title="邀请码"/>
+      <el-step title="基本信息"/>
+      <el-step title="注册提交"/>
+    </el-steps>
 
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="clickOption('cancel')">取 消</el-button>
-      <el-button type="primary" @click="clickOption('ok')">确 定</el-button>
+    <!-- 注册步骤 -->
+    <el-card style="margin-top: 20px; border-radius: 8px">
+      <div v-if="active === 0">
+        <el-row>
+          <el-input
+              v-model="registerForm.inviteCode"
+              placeholder="请输入邀请码"
+          />
+        </el-row>
+      </div>
+
+      <div v-if="active === 1">
+        <el-form
+            ref="regForm"
+            :rules="rules"
+            :model="registerForm"
+            label-width="100px"
+            style="margin-top: 20px"
+        >
+          <el-form-item label="用户名:" prop="username">
+            <el-input
+                v-model="registerForm.username"
+                placeholder="请输入用户名"
+            />
+          </el-form-item>
+          <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="mail">
+            <el-row style="width: 100%">
+              <el-col :span="18">
+                <el-input
+                    v-model="registerForm.mail"
+                    placeholder="请输入邮箱"
+                />
+              </el-col>
+              <el-col :span="6" style="display: flex; align-items: center; padding-left: 10px">
+                <el-button
+                    style="width: 100%"
+                    :disabled="countDown > 0"
+                    @click="sendMail"
+                >{{ countDown > 0 ? `${countDown} s` : '发送' }}
+                </el-button>
+              </el-col>
+            </el-row>
+          </el-form-item>
+          <el-form-item label="验证码:" prop="captcha">
+            <el-input
+                v-model="registerForm.captcha"
+                placeholder="请输入验证码"
+            />
+          </el-form-item>
+          <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
+            <el-input
+                type="password"
+                v-model="registerForm.password"
+                placeholder="请输入密码"
+            />
+          </el-form-item>
+          <el-form-item label="确认密码:" prop="passwordCheck">
+            <el-input
+                type="password"
+                v-model="registerForm.passwordCheck"
+                placeholder="请再次输入密码"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <div v-if="active === 2">
+        <el-result
+            :icon="registerResult.icon"
+            :title="registerResult.title"
+        >
+          <template #extra>
+            <el-button type="primary" @click="cancel">前往登录</el-button>
+          </template>
+        </el-result>
+      </div>
+    </el-card>
+
+    <div
+        v-if="active !== 2"
+        slot="footer"
+        class="dialog-footer"
+    >
+      <el-row style="text-align: center">
+        <el-col :span="24">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submit">下一步</el-button>
+        </el-col>
+      </el-row>
     </div>
   </el-dialog>
 </template>
@@ -79,15 +116,20 @@ export default {
     return {
       operate: '',
       dialogVisible: false,
+      active: 0,
       countDown: 0,
       timer: null,
       registerForm: {
-        username: '',
-        mail: '',
-        captcha: '',
-        inviteCode: '',
-        password: '',
-        passwordCheck: '',
+        username: null,
+        mail: null,
+        captcha: null,
+        inviteCode: null,
+        password: null,
+        passwordCheck: null,
+      },
+      registerResult: {
+        icon: 'success',
+        title: '注册成功'
       },
       rules: {
         username: [
@@ -146,21 +188,46 @@ export default {
         }
       }, 1000);
     },
-    clickOption(type) {
-      if (type === 'ok') {
+    cancel() {
+      this.dialogVisible = false
+      this.active = 0
+      this.registerForm = {}
+      this.$refs.regForm.clearValidate()
+    },
+    submit() {
+      // 邀请码校验
+      if (this.active === 0) {
+        const inviteCode = this.registerForm.inviteCode
+        if (inviteCode === null || inviteCode === '') {
+          this.$message.error('邀请码必填')
+          return
+        } else {
+          if (inviteCode !== 'invincible') {
+            this.$message.warning('邀请码无效')
+            return
+          }
+        }
+
+        // TODO 2025/3/30 校验邀请码
+        this.active++
+        return
+      }
+
+      // 表单校验
+      if (this.active === 1) {
         this.$refs.regForm.validate(valid => {
           if (valid) {
-            // 表单验证通过
-            this.$message.info('注册暂未开放！')
-            this.clickOption('cancel')
+            // TODO 2025/3/30 执行注册
+
+            this.active++
           } else {
             this.$message.error('请填写信息后重试')
           }
         })
-      } else {
-        this.dialogVisible = false
-        this.registerForm = {}
-        this.$refs.regForm.clearValidate()
+      }
+
+      if (this.active === 2) {
+        this.cancel()
       }
     }
   }
@@ -169,7 +236,6 @@ export default {
 
 <style scoped>
 .dialog-footer {
-  display: flex;
-  justify-content: flex-end;
+  margin-top: 14px;
 }
 </style>

@@ -2,7 +2,10 @@ package xyz.ibudai.dailyword.server.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
+import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.*;
+import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.server.service.WordService;
 
@@ -40,4 +43,16 @@ public class WordResource {
         return wordService.translation(word);
     }
 
+    /**
+     * Gets task content.
+     *
+     * @param catalogue the catalogue
+     * @param size      the size
+     * @return task content
+     */
+    @PostMapping("startTask")
+    public MatchVo startTask(@RequestParam("catalogue") Catalogue catalogue,
+                             @RequestParam("size") Integer size) {
+        return wordService.starTask(catalogue, size);
+    }
 }

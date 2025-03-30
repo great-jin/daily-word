@@ -95,9 +95,10 @@
 </template>
 
 <script>
+import {CATALOG_ARRAY} from "@/dict/catalogDict";
+import {TYPE_OPTIONS} from "@/dict/rankTypeDict";
 import RoomDialog from "./roomDialog.vue";
 import HistoryTable from "./history/index.vue";
-import {CATALOG_ARRAY, ROOM_ARRAY} from "@/dict/const";
 import {getUserRank} from "@/api/rankBoardApi";
 
 export default {
@@ -108,7 +109,7 @@ export default {
   },
   data() {
     return {
-      roomType: ROOM_ARRAY,
+      roomType: TYPE_OPTIONS,
       rankTypes: CATALOG_ARRAY,
       activeRankTab: 'CET4',
       cardData: {

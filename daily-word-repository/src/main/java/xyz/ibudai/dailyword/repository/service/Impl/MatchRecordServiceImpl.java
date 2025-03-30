@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
+import xyz.ibudai.dailyword.model.enums.RankMode;
 import xyz.ibudai.dailyword.repository.dao.MatchRecordDao;
 import xyz.ibudai.dailyword.repository.service.MatchRecordService;
 
@@ -35,11 +36,12 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
         List<MatchRecord> recordList = new ArrayList<>();
         for (Integer uid : uIdList) {
             Integer roomNumber = roomDTO.getRoomNumber();
+            RankMode rankMode = roomDTO.getMode();
             MatchRecord record = MatchRecord.builder()
                     .userId(uid)
                     .season(SystemConfig.getSeason())
                     .groupId(matchId)
-                    .rankMode(roomDTO.getMode().name())
+                    .rankMode(Objects.isNull(rankMode) ? null : rankMode.name())
                     .roomNumber(Objects.isNull(roomNumber) ? null : String.valueOf(roomNumber))
                     .rankType(roomDTO.getRoomSize())
                     .catalog(roomDTO.getCatalogue().name())

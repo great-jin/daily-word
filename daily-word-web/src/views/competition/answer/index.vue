@@ -146,6 +146,8 @@ export default {
         isRunning: false,
         timer: null
       },
+      // 对局信息
+      matchId: '',
       planData: [],
       currentIndex: 0,
       // 输入与长度
@@ -174,7 +176,9 @@ export default {
     }
   },
   mounted() {
-    this.show(history.state.planData)
+    const taskData = history.state.taskData
+    this.matchId = taskData.matchId
+    this.show(taskData.taskWords)
 
     // 监听页面刷新或关闭事件
     window.addEventListener("beforeunload", this.handleForceRefresh);
@@ -210,8 +214,7 @@ export default {
       // TODO 2025/3/23 得分计算
 
       this.visible = false
-      this.$refs.resultDialog.show(this.clock)
-      this.resetTimer()
+      this.finishTask()
     },
     handleForceRefresh(event) {
       event.returnValue = '对局尚未提交，您确定退出吗？';
@@ -226,7 +229,11 @@ export default {
       }
 
       this.visible = false
-      this.$refs.resultDialog.show(this.clock)
+      this.finishTask()
+    },
+    finishTask() {
+
+      this.$refs.resultDialog.show()
       this.resetTimer()
     },
     startTimer() {

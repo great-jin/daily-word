@@ -12,9 +12,7 @@
         :sub-title="result.message"
     >
       <template #extra>
-        <router-link to="/competition">
-          <el-button type="primary">返回</el-button>
-        </router-link>
+        <el-button type="primary" @click="close">返回</el-button>
       </template>
     </el-result>
   </el-dialog>
@@ -27,18 +25,18 @@ export default {
       visible: false,
       result: {
         icon: 'success',
-        title: '您赢得对局',
-        message: '耗时 60 秒，获取 5 积分',
+        title: '提交成功',
+        message: '对局结果计算中，可在匹配记录页查看结果',
       },
     }
   },
   methods: {
-    show(data) {
+    show() {
       this.visible = true
-
     },
     close() {
       this.visible = false
+      this.$router.push('/competition');
     }
   }
 }

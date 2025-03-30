@@ -71,6 +71,13 @@ public class RankHandler extends ChannelAdaptor {
         this.matchGame(ctx, receiveText);
     }
 
+    /**
+     * 对局匹配逻辑
+     *
+     * @param ctx         the ctx
+     * @param receiveText the receive text
+     * @throws JsonProcessingException the json processing exception
+     */
     private synchronized void matchGame(ChannelHandlerContext ctx, String receiveText) throws JsonProcessingException {
         Channel channel = ctx.channel();
         String key = UUID.nameUUIDFromBytes(receiveText.getBytes()).toString();
@@ -116,6 +123,15 @@ public class RankHandler extends ChannelAdaptor {
         log.info("match success, after remove key: {}, users: {}", key, RANK_POOL.getIfPresent(key));
     }
 
+    /**
+     * 匹配成功逻辑
+     *
+     * @param uid     the uid
+     * @param users   the users
+     * @param roomDTO the room dto
+     * @return string
+     * @throws JsonProcessingException the json processing exception
+     */
     private String handlerSuccess(Integer uid, Set<Integer> users, RoomDTO roomDTO) throws JsonProcessingException {
         log.info("match success, userId: {}, list: {}", uid, users);
         String matchId = UUID.randomUUID().toString();

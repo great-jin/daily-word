@@ -99,10 +99,13 @@
 </template>
 
 <script>
-import {CATALOG_ARRAY, MODE_OPTIONS, SIZE_ARRAY} from "@/dict/const";
+import {CATALOG_ARRAY} from "@/dict/catalogDict";
+import {MODE_OPTIONS} from "@/dict/rankModeDict";
+import {SIZE_OPTIONS} from "@/dict/rankTypeDict";
 import {getUid} from "@/util/AuthUtil";
 import {getWsUrl} from "@/util/SocketUtils";
 import {Encrypt} from "@/util/AES";
+import {startTask} from "@/api/wordApi";
 
 export default {
   data() {
@@ -113,10 +116,11 @@ export default {
         text: '匹配对局中...',
         intervalId: null,
       },
+      isSingle: false,
       showRoomInput: false,
-      catalogues: CATALOG_ARRAY,
-      batchOptions: SIZE_ARRAY,
       modeOptions: MODE_OPTIONS,
+      batchOptions: SIZE_OPTIONS,
+      catalogues: CATALOG_ARRAY,
       // 房间参数
       roomNumValues: ['', '', '', '', '', ''],
       reqParams: {
@@ -124,7 +128,7 @@ export default {
         roomSize: null,
         roomNumber: null,
         catalogue: CATALOG_ARRAY[0].value,
-        size: SIZE_ARRAY[0].value,
+        size: SIZE_OPTIONS[0].value,
         offset: 10
       },
       // 对局积分
@@ -136,7 +140,8 @@ export default {
     show(data) {
       this.visible = true
       this.reqParams.roomSize = data
-      this.showRoomInput = this.reqParams.mode === 'CUSTOM' && this.reqParams.roomSize !== 0
+      this.isSingle = this.reqParams.roomSize === 0
+      this.showRoomInput = this.reqParams.mode === 'CUSTOM' && !this.isSingle
     },
     closeDialog() {
       this.visible = false
@@ -187,6 +192,20 @@ export default {
       }
     },
     startTask() {
+      if (this.isSingle) {
+        // 单人不进行匹配
+        const _params = {
+          catalogue: this.reqParams.catalogue,
+          size: this.reqParams.size
+        }
+        startTask(_params).then(res => {
+          if (res !== null && res.code === 200) {
+            this.toAnswerPage(res.data)
+          }
+        })
+        return
+      }
+
       const _load = this.loading
       _load.active = true
       const url = getWsUrl()
@@ -210,14 +229,7 @@ export default {
         const res = JSON.parse(event.data)
         if (res !== null && res.code === 302) {
           // 匹配成功
-          this.$router.push({
-            name: 'Answer',
-            state: {
-              // TODO 2025/3/27 传递对局唯一标识用于结束时提交
-
-              planData: res.data
-            }
-          })
+          this.toAnswerPage(res.data)
         }
       })
 
@@ -239,6 +251,14 @@ export default {
       }
       _load.active = false
       _load.intervalId = null
+    },
+    toAnswerPage(data) {
+      this.$router.push({
+        name: 'Answer',
+        state: {
+          taskData: data
+        }
+      })
     }
   }
 }

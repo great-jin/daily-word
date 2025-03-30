@@ -1,13 +1,19 @@
 package xyz.ibudai.dailyword.server.service.Impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.DictDetail;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
+import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.model.vo.word.WordDescribe;
+import xyz.ibudai.dailyword.repository.service.MatchRecordService;
+import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.cache.DicPreHeat;
 import xyz.ibudai.dailyword.server.service.WordService;
 
@@ -15,7 +21,11 @@ import java.util.*;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordServiceImpl implements WordService {
+
+    private final MatchRecordService matchRecordService;
+
 
     public List<DictDetail> getDictDetail() {
         List<DictDetail> detailList = new ArrayList<>();
@@ -60,6 +70,23 @@ public class WordServiceImpl implements WordService {
             log.error("字典查询异常", e);
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public MatchVo starTask(Catalogue catalogue, Integer size) {
+        String matchId = UUID.randomUUID().toString();
+        Set<Integer> users = Set.of(SecurityUtil.getLoginUser());
+        // 房间信息
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setRoomSize(0);
+        roomDTO.setCatalogue(catalogue);
+        roomDTO.setSize(size);
+
+        // 初始化挑战记录
+        matchRecordService.initRecord(matchId, users, roomDTO);
+
+        // 返回挑战内容
+        return new MatchVo(matchId, this.getTaskContent(catalogue, size));
     }
 
     public List<TaskWordDTO> getTaskContent(Catalogue catalogue, Integer size) {

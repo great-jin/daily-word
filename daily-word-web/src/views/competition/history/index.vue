@@ -13,22 +13,30 @@
           :row-class-name="tableRowStyle"
       >
         <el-table-column
-            prop="rankMode"
+            prop="rankType"
             label="匹配方式"
             align="center"
-        />
+        >
+          <template #default="{ row }">
+            {{ getRankType(row.rankType) }}
+          </template>
+        </el-table-column>
         <el-table-column
             prop="roomMode"
             label="匹配模式"
             align="center"
-        />
+        >
+          <template #default="{ row }">
+            {{ getRankMode(row.roomMode) }}
+          </template>
+        </el-table-column>
         <el-table-column
-            prop="catalogue"
+            prop="catalog"
             label="词汇"
             align="center"
         >
           <template #default="{ row }">
-            <el-tag type="primary">{{ row.catalogue }}</el-tag>
+            <el-tag type="primary">{{ row.catalog }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -37,15 +45,23 @@
             align="center"
         />
         <el-table-column
-            prop="time"
+            prop="costSecond"
             label="耗时"
             align="center"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.costSecond === null ? '-' : row.costSecond }}
+          </template>
+        </el-table-column>
         <el-table-column
             prop="score"
             label="得分"
             align="center"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.score === null ? '-' : row.score }}
+          </template>
+        </el-table-column>
         <el-table-column
             prop="result"
             label="胜负"
@@ -57,7 +73,18 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column
+            label="操作"
+            align="center"
+        >
+          <template #default="{ row }">
+            <el-button type="primary" @click="showDetail(row)" link>详情</el-button>
+          </template>
+        </el-table-column>
       </el-table>
+
+      <!-- 详情窗口 -->
+      <DetailDrawer ref="detailDrawer"/>
 
       <el-config-provider :locale="locale">
         <el-pagination
@@ -76,10 +103,16 @@
 </template>
 
 <script>
+import {getRankType} from "@/dict/rankTypeDict";
+import {getRankMode} from "@/dict/rankModeDict";
 import {listMatchHistory} from "@/api/matchApi";
+import DetailDrawer from "./detailDrawer.vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 export default {
+  components: {
+    DetailDrawer,
+  },
   data() {
     return {
       locale: zhCn,
@@ -96,10 +129,8 @@ export default {
     this.listTableData()
   },
   methods: {
-    close() {
-      this.visible = false
-      this.historyData = []
-    },
+    getRankMode,
+    getRankType,
     listTableData() {
       const _req = {
         pageNo: this.pagination.pageNo,
@@ -122,6 +153,9 @@ export default {
     },
     tableRowStyle({rowIndex}) {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";
+    },
+    showDetail(data) {
+      this.$refs.detailDrawer.show(data);
     }
   }
 }

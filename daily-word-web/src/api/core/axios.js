@@ -29,14 +29,14 @@ function request(axiosConfig) {
 
     // 响应拦截
     service.interceptors.response.use(res => {
+        if (res === null || res.data == null) {
+            noticeAnClear()
+            router.push('/')
+            return null
+        }
         const code = res.data.code
         if (code !== undefined && code !== null && (code === 203 || code === 403)) {
-            ElNotification({
-                title: '登录过期',
-                message: '登录过期, 请重新登录',
-                type: 'warning'
-            })
-            clearToken()
+            noticeAnClear()
             router.push('/')
             return res.data
         }
@@ -56,3 +56,12 @@ function request(axiosConfig) {
 }
 
 export default request;
+
+function noticeAnClear() {
+    ElNotification({
+        title: '登录过期',
+        message: '登录过期, 请重新登录',
+        type: 'warning'
+    })
+    clearToken()
+}

@@ -16,10 +16,10 @@ export function getDictDetail() {
     })
 }
 
-export function getTaskContent(params) {
+export function startTask(params) {
     return request({
-        url: `${apiPrefix}/getTaskContent`,
+        url: `${apiPrefix}/startTask`,
         method: 'post',
-        data: params
+        params: params
     })
 }
