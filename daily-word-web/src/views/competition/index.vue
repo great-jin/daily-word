@@ -87,34 +87,23 @@
       </el-row>
     </el-col>
 
-    <!-- 排行榜 -->
+    <!-- 匹配记录 -->
     <el-col :span="10">
-      <el-tabs
-          v-model="activeRankTab"
-          type="card"
-      >
-        <el-tab-pane
-            v-for="(item) in rankTypes"
-            :label="item.label"
-            :name="item.value"
-        >
-          <RankBoard v-if="activeRankTab === item.value" :rank-type="item.value"/>
-        </el-tab-pane>
-      </el-tabs>
+      <HistoryTable ref="historyTable"/>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import RankBoard from "./components/rankBoard.vue";
-import RoomDialog from "./components/roomDialog.vue";
-import {CATALOG_ARRAY, ROOM_ARRAY} from "./const";
-import {getUserRank} from "@/api/rankBoard";
+import RoomDialog from "./roomDialog.vue";
+import HistoryTable from "./history/index.vue";
+import {CATALOG_ARRAY, ROOM_ARRAY} from "@/dict/const";
+import {getUserRank} from "@/api/rankBoardApi";
 
 export default {
   inject: ['reload'],
   components: {
-    RankBoard,
+    HistoryTable,
     RoomDialog
   },
   data() {
@@ -185,9 +174,5 @@ export default {
 .icon {
   font-size: 20px;
   margin-right: 4px;
-}
-
-::v-deep(.el-tabs__item) {
-  font-weight: bold;
 }
 </style>

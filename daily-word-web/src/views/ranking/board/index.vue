@@ -1,19 +1,6 @@
 <template>
   <div>
     <el-card class="rank-card">
-      <template #header>
-        <div class="card-header">
-          <el-tooltip
-              class="box-item"
-              effect="dark"
-              content="仅展示前 100 名用户"
-              placement="bottom"
-          >
-            <span>积分排行榜</span>
-          </el-tooltip>
-        </div>
-      </template>
-
       <el-table
           :data="rankData"
           class="rank-table"
@@ -45,7 +32,7 @@
 </template>
 
 <script>
-import {list} from "@/api/rankBoard"
+import {list} from "@/api/rankBoardApi"
 
 export default {
   props: {
@@ -82,15 +69,9 @@ export default {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-.card-header {
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-}
-
 .rank-table {
   width: 100%;
-  height: calc(100vh - 360px);
+  height: calc(100vh - 380px);
   overflow-y: auto;
 }
 

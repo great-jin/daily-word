@@ -1,32 +1,26 @@
 <template>
-  <el-drawer
-      v-model="visible"
-      width="40%"
-      @close="close"
-  >
-    <template #header>
-      <span style="font-weight: bold; font-size: 18px">我的好友</span>
-    </template>
-
-    <el-button
-        type="primary"
-        @click="addFriend"
-        style="margin-bottom: 20px; float: left"
-    >
-      添加好友
-    </el-button>
-    <el-button
-        type="primary"
-        @click="requestList"
-        style="margin-bottom: 20px; float: right"
-    >
-      我的申请
-    </el-button>
-
-    <DetailDrawer ref="detailDrawer"/>
-    <RequestDrawer ref="requestDrawer"/>
-
+  <div>
     <el-card class="friend-card">
+      <span style="font-weight: bold; font-size: 18px">我的好友</span>
+
+      <el-button
+          type="primary"
+          @click="addFriend"
+          style="margin-bottom: 20px; float: left"
+      >
+        添加好友
+      </el-button>
+      <el-button
+          type="primary"
+          @click="requestList"
+          style="margin-bottom: 20px; float: right"
+      >
+        我的申请
+      </el-button>
+
+      <DetailDrawer ref="detailDrawer"/>
+      <RequestDrawer ref="requestDrawer"/>
+
       <el-table
           :data="friendData"
           class="friend-table"
@@ -77,11 +71,11 @@
         </el-table-column>
       </el-table>
     </el-card>
-  </el-drawer>
+  </div>
 </template>
 
 <script>
-import {deleteById, list} from "@/api/userFriend"
+import {deleteById, list} from "@/api/userFriendApi"
 import DetailDrawer from "./components/detailDrawer.vue";
 import RequestDrawer from "./components/requestDrawer.vue";
 
@@ -96,12 +90,10 @@ export default {
       friendData: [],
     }
   },
+  mounted() {
+    this.listTableData()
+  },
   methods: {
-    show() {
-      this.visible = true
-
-      this.listTableData()
-    },
     close() {
       this.visible = false
       this.friendData = []
@@ -154,7 +146,7 @@ export default {
 
 .friend-table {
   width: 100%;
-  height: calc(100vh - 220px);
+  height: calc(100vh - 294px);
   overflow-y: auto;
 }
 

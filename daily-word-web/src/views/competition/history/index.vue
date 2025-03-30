@@ -1,15 +1,12 @@
 <template>
-  <el-drawer
-      v-model="visible"
-      size="50%"
-      direction="ltr"
-      @close="close"
-  >
-    <template #header>
-      <span style="font-weight: bold; font-size: 18px">匹配记录</span>
-    </template>
-
+  <div>
     <el-card class="history-card">
+      <template #header>
+        <div class="history-header">
+          <span>匹配记录</span>
+        </div>
+      </template>
+
       <el-table
           :data="historyData"
           class="history-table"
@@ -75,7 +72,7 @@
         />
       </el-config-provider>
     </el-card>
-  </el-drawer>
+  </div>
 </template>
 
 <script>
@@ -85,7 +82,6 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 export default {
   data() {
     return {
-      visible: false,
       locale: zhCn,
       historyData: [],
       pagination: {
@@ -96,12 +92,10 @@ export default {
       }
     }
   },
+  mounted() {
+    this.listTableData()
+  },
   methods: {
-    show() {
-      this.visible = true
-
-      this.listTableData()
-    },
     close() {
       this.visible = false
       this.historyData = []
@@ -141,9 +135,15 @@ export default {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
+.history-header {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+
 .history-table {
   width: 100%;
-  height: calc(100vh - 190px);
+  height: calc(100vh - 330px);
   overflow-y: auto;
 }
 

@@ -85,7 +85,7 @@
 import RegisterModal from './components/register.vue';
 import ForgotModal from './components/forgot.vue';
 import CompactModal from './components/compact.vue';
-import {login} from "@/api/authUser";
+import {login} from "@/api/authUserApi";
 import {Encrypt} from '@/util/AES.js';
 import {setToken} from "@/util/AuthUtil";
 

@@ -16,15 +16,14 @@
         <el-descriptions
             :column="1"
             style="padding: 14px 200px"
-            border
         >
-          <el-descriptions-item label="用&nbsp;户&nbsp;名">
+          <el-descriptions-item label="用&nbsp;户&nbsp;名: ">
             {{ userInfo.userName }}
           </el-descriptions-item>
-          <el-descriptions-item label="电子邮箱">
+          <el-descriptions-item label="电子邮箱: ">
             {{ userInfo.email }}
           </el-descriptions-item>
-          <el-descriptions-item label="注册时间">
+          <el-descriptions-item label="注册时间: ">
             {{ userInfo.registerTime.substring(0, 10) }}
           </el-descriptions-item>
         </el-descriptions>
@@ -34,7 +33,7 @@
 </template>
 
 <script>
-import {getDetails} from "@/api/userDetails";
+import {getDetails} from "@/api/userDetailsApi";
 
 export default {
   data() {

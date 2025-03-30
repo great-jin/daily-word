@@ -38,7 +38,7 @@ function request(axiosConfig) {
             })
             clearToken()
             router.push('/')
-            return null
+            return res.data
         }
 
         return res.data

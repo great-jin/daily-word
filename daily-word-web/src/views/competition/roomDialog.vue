@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import {CATALOG_ARRAY, MODE_OPTIONS, SIZE_ARRAY} from "@/views/competition/const";
+import {CATALOG_ARRAY, MODE_OPTIONS, SIZE_ARRAY} from "@/dict/const";
 import {getUid} from "@/util/AuthUtil";
 import {getWsUrl} from "@/util/SocketUtils";
 import {Encrypt} from "@/util/AES";
@@ -117,6 +117,7 @@ export default {
       catalogues: CATALOG_ARRAY,
       batchOptions: SIZE_ARRAY,
       modeOptions: MODE_OPTIONS,
+      // 房间参数
       roomNumValues: ['', '', '', '', '', ''],
       reqParams: {
         mode: 'RANDOM',
@@ -210,7 +211,7 @@ export default {
         if (res !== null && res.code === 302) {
           // 匹配成功
           this.$router.push({
-            name: 'RoomRank',
+            name: 'Answer',
             state: {
               // TODO 2025/3/27 传递对局唯一标识用于结束时提交
 
@@ -223,7 +224,6 @@ export default {
       socket.addEventListener('close', (event) => {
         this.clearIntervalLoop()
         console.log('WebSocket 连接已关闭', event.data);
-        this.$message.info('未匹配对局，请重试')
       })
 
       socket.addEventListener('error', (event) => {

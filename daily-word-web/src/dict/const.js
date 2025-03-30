@@ -30,7 +30,7 @@ export const ROOM_ARRAY = [
     {
         label: '单人硬行',
         value: 0,
-        describe: '单人没有积分奖励哦'
+        describe: '单人挑战不计入排行统计哦'
     }, {
         label: '双人对战',
         value: 2,

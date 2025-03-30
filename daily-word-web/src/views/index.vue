@@ -21,6 +21,7 @@
             >
               <el-menu-item index="dictionary" class="head-banner" >字典查询</el-menu-item>
               <el-menu-item index="competition" class="head-banner">知识竞赛</el-menu-item>
+              <el-menu-item index="ranking" class="head-banner">好友排行</el-menu-item>
               <el-sub-menu index="personal" class="setting-menu">
                 <template #title>
                   <div style="font-weight: bold; font-size: 16px;">
@@ -36,18 +37,6 @@
                   </el-icon>
                   个人中心
                 </el-menu-item>
-                <el-menu-item index="friend">
-                  <el-icon>
-                    <ChatDotRound/>
-                  </el-icon>
-                  我的好友
-                </el-menu-item>
-                <el-menu-item index="history">
-                  <el-icon>
-                    <Files/>
-                  </el-icon>
-                  匹配记录
-                </el-menu-item>
                 <el-menu-item index="quit" style="text-align:center;">
                   <el-icon>
                     <SwitchButton/>
@@ -57,11 +46,6 @@
               </el-sub-menu>
             </el-menu>
           </el-col>
-
-          <!-- 我的好友组件 -->
-          <FriendDrawer ref="friendDrawer"/>
-          <!-- 匹配记录组件 -->
-          <HistoryDrawer ref="historyDrawer"/>
         </el-row>
       </el-header>
 
@@ -87,14 +71,8 @@
 
 <script>
 import {clearToken} from "@/util/AuthUtil";
-import FriendDrawer from "@/views/friend/index.vue";
-import HistoryDrawer from "@/views/history/index.vue";
 
 export default {
-  components: {
-    FriendDrawer,
-    HistoryDrawer
-  },
   provide() {
     return {
       reload: this.reload
@@ -125,14 +103,11 @@ export default {
         case 'competition':
           this.$router.push('/competition');
           break
+        case 'ranking':
+          this.$router.push('/rank');
+          break
         case 'personal':
           this.$router.push('/personal');
-          break
-        case 'friend':
-          this.$refs.friendDrawer.show();
-          break
-        case 'history':
-          this.$refs.historyDrawer.show();
           break
         case 'quit':
           clearToken()
@@ -185,7 +160,7 @@ export default {
   min-width: 120px !important;
 }
 
-.el-menu--horizontal > .el-menu-item:nth-child(2) {
+.el-menu--horizontal > .el-menu-item:nth-child(3) {
   margin-right: auto;
 }
 </style>
