@@ -34,7 +34,7 @@ export default {
 <style scoped>
 .container {
   height: 100%;
-  border-radius: 30px;
+  border-radius: 20px;
   background-color: rgb(255, 255, 255);
 }
 

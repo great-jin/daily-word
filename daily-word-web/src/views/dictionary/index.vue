@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: white; height: 100%">
+  <div class="container">
     <div class="search-container">
       <div class="search-logo">
         <img
@@ -113,6 +113,12 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  height: 100%;
+  border-radius: 10px;
+  background-color: white;
+}
+
 .search-container {
   display: flex;
   flex-direction: column; /* 列表布局 */

@@ -5,28 +5,26 @@
         <el-avatar
             :size="80"
             fit="fill"
-            :src="userInfo.avatar"
+            :src="avatar"
             @error="avatarErrorHandler"
         />
       </el-col>
     </el-row>
 
-    <el-row>
+    <el-row style="margin-top: 20px">
       <el-col :span="24">
-        <el-descriptions
-            :column="1"
-            style="padding: 14px 200px"
+        <el-row
+            :gutter="20"
+            v-for="item in details"
+            style="margin: 16px 0"
         >
-          <el-descriptions-item label="用&nbsp;户&nbsp;名: ">
-            {{ userInfo.userName }}
-          </el-descriptions-item>
-          <el-descriptions-item label="电子邮箱: ">
-            {{ userInfo.email }}
-          </el-descriptions-item>
-          <el-descriptions-item label="注册时间: ">
-            {{ userInfo.registerTime.substring(0, 10) }}
-          </el-descriptions-item>
-        </el-descriptions>
+          <el-col :span="12" style="text-align: right">
+            <span>{{ item.label }}:</span>
+          </el-col>
+          <el-col :span="12" style="text-align: left">
+            <span style="color: #7d7c7c">{{ item.value }}</span>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
   </div>
@@ -38,17 +36,41 @@ import {getDetails} from "@/api/userDetailsApi";
 export default {
   data() {
     return {
-      userInfo: {
-        avatar: '',
-        userName: null,
-        email: null,
-        registerTime: '',
-      }
+      avatar: '',
+      details: [
+        {
+          label: '用户名',
+          value: ''
+        },
+        {
+          label: '电子邮箱',
+          value: ''
+        },
+        {
+          label: '注册时间',
+          value: ''
+        }
+      ]
     }
   },
   mounted() {
     getDetails().then(res => {
-      this.userInfo = res.data
+      const userInfo = res.data
+      this.avatar = userInfo.avatar
+      this.details = [
+        {
+          label: '用户名',
+          value: userInfo.userName
+        },
+        {
+          label: '电子邮箱',
+          value: userInfo.email
+        },
+        {
+          label: '注册时间',
+          value: userInfo.registerTime.substring(0, 10)
+        }
+      ]
     })
   },
   methods: {

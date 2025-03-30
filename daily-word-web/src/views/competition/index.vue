@@ -2,7 +2,7 @@
   <el-row :gutter="20" class="container">
     <el-col :span="14">
       <!-- 基本信息 -->
-      <el-row :gutter="12" style="padding: 0 10px 10px 10px">
+      <el-row :gutter="12" style="padding-bottom: 10px">
         <el-col :span="8">
           <el-card shadow="always">
             <template #header>
@@ -140,8 +140,7 @@ export default {
 }
 
 .room-row {
-  padding: 10px;
-  height: calc(100vh - 320px);
+  height: calc(100vh - 330px);
 }
 
 .room-card {

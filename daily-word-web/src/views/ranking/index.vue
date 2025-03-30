@@ -71,6 +71,7 @@ export default {
 .container {
   width: 100%;
   height: 100%;
+  padding: 0 10px;
 }
 
 .title-header {
@@ -82,7 +83,7 @@ export default {
 
 .board-col {
   padding: 10px;
-  border-radius: 20px;
+  border-radius: 10px;
   background: white;
 }
 
