@@ -7,18 +7,6 @@
             <el-button type="primary" @click="changeCurrentIndex('back')">上一题</el-button>
             <el-button type="primary" @click="changeCurrentIndex('next')">下一题</el-button>
             <el-popconfirm
-                title="放弃将判定对局为您负，请确认！"
-                confirm-button-text="是"
-                cancel-button-text="否"
-                placement="top"
-                width="260"
-                @confirm="quit"
-            >
-              <template #reference>
-                <el-button key="submit" type="danger">放&nbsp;弃</el-button>
-              </template>
-            </el-popconfirm>
-            <el-popconfirm
                 title="请确认结束对局并提交！"
                 confirm-button-text="是"
                 cancel-button-text="否"
@@ -27,7 +15,7 @@
                 @confirm="submit"
             >
               <template #reference>
-                <el-button key="submit" type="primary">提&nbsp;交</el-button>
+                <el-button key="submit" type="primary">提&nbsp;&nbsp;交</el-button>
               </template>
             </el-popconfirm>
           </el-col>
@@ -133,6 +121,7 @@
 <script>
 import {speakEn} from "@/util/SpeakUtil";
 import ResultDialog from "./resultDialog.vue"
+import {submitTask} from "@/api/matchApi";
 
 export default {
   name: 'AnswerView',
@@ -147,7 +136,10 @@ export default {
         timer: null
       },
       // 对局信息
-      matchId: '',
+      rankInfo: {
+        matchId: '',
+        score: 0
+      },
       planData: [],
       currentIndex: 0,
       // 输入与长度
@@ -177,7 +169,8 @@ export default {
   },
   mounted() {
     const taskData = history.state.taskData
-    this.matchId = taskData.matchId
+    this.rankInfo.matchId = taskData.matchId
+    this.rankInfo.score = taskData.rankScore
     this.show(taskData.taskWords)
 
     // 监听页面刷新或关闭事件
@@ -210,30 +203,29 @@ export default {
       this.answeredItems = []
       this.submitRecords = []
     },
-    quit() {
-      // TODO 2025/3/23 得分计算
-
-      this.visible = false
-      this.finishTask()
-    },
     handleForceRefresh(event) {
       event.returnValue = '对局尚未提交，您确定退出吗？';
       // TODO 监控取消
 
     },
     submit() {
-      const leftCount = this.planData.length - this.submitRecords.length
-      if (leftCount > 0) {
-        this.$message.warning(`剩余 ${leftCount} 道题未完成`)
-        return
-      }
-
       this.visible = false
       this.finishTask()
     },
     finishTask() {
-
-      this.$refs.resultDialog.show()
+      console.log('data', 1)
+      const _params = {
+        matchId: this.rankInfo.matchId,
+        correctCount: this.submitRecords.filter(it => it.correct === true).length,
+        costTime: this.clock.time,
+        score: this.rankInfo.score
+      }
+      console.log('data', _params)
+      submitTask(_params).then(res => {
+        if (res.code === 200) {
+          this.$refs.resultDialog.show()
+        }
+      })
       this.resetTimer()
     },
     startTimer() {

@@ -2,7 +2,14 @@ import request from './core/axios';
 
 const apiPrefix = "/api/server/match"
 
-export function submit(params) {
+export function validate(params) {
+    return request({
+        url: `${apiPrefix}/validate?catalog=${params}`,
+        method: 'get'
+    })
+}
+
+export function submitTask(params) {
     return request({
         url: `${apiPrefix}/submit`,
         method: 'post',

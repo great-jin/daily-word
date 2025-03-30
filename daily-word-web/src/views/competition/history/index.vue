@@ -68,8 +68,14 @@
             align="center"
         >
           <template #default="{ row }">
-            <el-tag :type="row.result ? 'success' : 'danger'">
-              {{ row.result ? '胜利' : '失败' }}
+            <el-tag v-if="row.score === null" type="warning">
+              {{ '进行中' }}
+            </el-tag>
+            <el-tag v-else-if="row.score === 0" type="info">
+              {{ '-' }}
+            </el-tag>
+            <el-tag v-else :type="row.score > 0 ? 'success' : 'danger'">
+              {{ row.score > 0 ? '胜利' : '失败' }}
             </el-tag>
           </template>
         </el-table-column>
@@ -78,7 +84,12 @@
             align="center"
         >
           <template #default="{ row }">
-            <el-button type="primary" @click="showDetail(row)" link>详情</el-button>
+            <el-button
+                type="primary"
+                @click="showDetail(row)"
+                :disabled="row.rankType === 0"
+                link
+            >详情</el-button>
           </template>
         </el-table-column>
       </el-table>

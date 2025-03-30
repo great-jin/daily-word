@@ -106,6 +106,7 @@ import {getUid} from "@/util/AuthUtil";
 import {getWsUrl} from "@/util/SocketUtils";
 import {Encrypt} from "@/util/AES";
 import {startTask} from "@/api/wordApi";
+import {validate} from "@/api/matchApi";
 
 export default {
   data() {
@@ -191,7 +192,19 @@ export default {
         this.$refs.inputRefs[index - 1].focus()
       }
     },
-    startTask() {
+    async startTask() {
+      let isValid = false
+      await validate(this.reqParams.catalogue).then(res => {
+        if (res.data !== null && res.data) {
+          // 校验是否可开启新对局
+          isValid = true
+        }
+      })
+      if (!isValid) {
+        this.$message.warning('尚有多局未结束挑战，请稍后再试')
+        return;
+      }
+
       if (this.isSingle) {
         // 单人不进行匹配
         const _params = {
@@ -206,12 +219,14 @@ export default {
         return
       }
 
+      // 加载提示
       const _load = this.loading
       _load.active = true
+
+      // 匹配连接
       const url = getWsUrl()
       const userId = getUid(false)
       const socket = new WebSocket(`${url}/rank?key=${userId}`);
-
       socket.addEventListener('open', () => {
         // 发起匹配
         socket.send(Encrypt(JSON.stringify(this.reqParams)))
@@ -253,6 +268,7 @@ export default {
       _load.intervalId = null
     },
     toAnswerPage(data) {
+      data.rankScore = this.rankScore
       this.$router.push({
         name: 'Answer',
         state: {

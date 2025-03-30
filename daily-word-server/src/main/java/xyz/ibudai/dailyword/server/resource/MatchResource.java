@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
+import xyz.ibudai.dailyword.model.dto.AnswerDTO;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
+import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.repository.service.MatchRecordService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
@@ -20,14 +22,25 @@ public class MatchResource {
     private final MatchRecordService matchRecordService;
 
 
+    /**
+     * Check has undone task
+     *
+     * @param catalogue the catalogue
+     * @return the boolean
+     */
+    @GetMapping("validate")
+    public Boolean checkAvailable(@RequestParam("catalog") Catalogue catalogue) {
+        return matchRecordService.checkAvailable(catalogue);
+    }
+
+    /**
+     * Submit.
+     *
+     * @param answerDTO the answer dto
+     */
     @PostMapping("submit")
-    public void submit() {
-        // TODO 2025/3/27 提交对局
-
-        // 根据对局 Key 查询库是否对手完成
-        // 无匹配数据保存自身对局并生成记录
-
-
+    public void submit(@RequestBody AnswerDTO answerDTO) {
+        matchRecordService.finishMatch(answerDTO);
     }
 
     /**
@@ -45,7 +58,7 @@ public class MatchResource {
 
         PageHelper.startPage(pageNo, pageSize);
         List<MatchRecord> list = matchRecordService.lambdaQuery()
-                .eq(MatchRecord::getId, SecurityUtil.getLoginUser())
+                .eq(MatchRecord::getUserId, SecurityUtil.getLoginUser())
                 .eq(MatchRecord::getSeason, SystemConfig.getSeason())
                 .list();
         return new PageInfo<>(list);

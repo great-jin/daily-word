@@ -53,6 +53,9 @@ public class MatchRecord extends Model<MatchRecord> {
     @TableField("cost_second")
     private Integer costSecond;
 
+    @TableField("correct_count")
+    private Integer correctCount;
+
     @TableField("score")
     private Integer score;
 
