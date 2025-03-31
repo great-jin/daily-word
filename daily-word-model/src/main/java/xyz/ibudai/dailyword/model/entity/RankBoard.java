@@ -24,9 +24,6 @@ import java.time.LocalDateTime;
 @TableName("rank_board")
 public class RankBoard extends Model<RankBoard> {
 
-    @TableField(exist = false)
-    private String index;
-
     @TableId(type = IdType.AUTO)
     private Integer id;
 
@@ -73,6 +70,28 @@ public class RankBoard extends Model<RankBoard> {
                 .matchCount(0)
                 .matchWin(0)
                 .matchLost(0)
+                .build();
+    }
+
+    public static RankBoard initByRecord(MatchRecord matchRecord) {
+        int win, lost;
+        if (matchRecord.getScore() > 0) {
+            win = 1;
+            lost = 0;
+        } else {
+            win = 0;
+            lost = 1;
+        }
+        return RankBoard.builder()
+                .userId(matchRecord.getUserId())
+                .season(SystemConfig.getSeason())
+                .catalog(matchRecord.getCatalog())
+                .score(matchRecord.getScore())
+                .matchCount(1)
+                .score(matchRecord.getScore())
+                .matchWin(win)
+                .matchLost(lost)
+                .createTime(LocalDateTime.now())
                 .build();
     }
 }
