@@ -17,15 +17,14 @@ import xyz.ibudai.dailyword.auth.util.CodeUtil;
 import xyz.ibudai.dailyword.basic.consts.RegexConst;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
-import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;
 import xyz.ibudai.dailyword.repository.service.InviteCodeService;
 import xyz.ibudai.dailyword.repository.service.UserDetailService;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -64,23 +63,6 @@ public class AuthenticServiceImpl implements AuthenticService {
             throw new IllegalArgumentException("User [" + username + "] doesn't exist.");
         }
         return authUser;
-    }
-
-    @Override
-    public boolean login(AuthUser user) {
-        try {
-            AuthUser dbUser = authUserService.queryByName(user.getUsername());
-            if (dbUser == null) {
-                throw new IllegalAccessException("User [" + user.getUsername() + "] doesn't exist.");
-            }
-
-            String userPwd = user.getPassword();
-            String dbUserPwd = AESUtil.desEncrypt(dbUser.getPassword()).trim();
-            return Objects.equals(userPwd, dbUserPwd);
-        } catch (Exception e) {
-            log.error("登录验证异常", e);
-            throw new RuntimeException("Login verify failed.", e);
-        }
     }
 
     @Override
@@ -125,16 +107,36 @@ public class AuthenticServiceImpl implements AuthenticService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean register(UserDetail user) {
-        InviteCode code = inviteCodeService.lambdaQuery()
-                .eq(InviteCode::getCode, user.getInviteCode())
-                .eq(InviteCode::getActive, Boolean.TRUE)
-                .one();
-        if (Objects.isNull(code)) {
-            throw new IllegalStateException("The invite code illegal.");
+    public Integer register(RegisterVo registerVo) {
+        List<AuthUser> list = authUserService.lambdaQuery()
+                .eq(AuthUser::getUsername, registerVo.getUsername())
+                .list();
+        if (!CollectionUtils.isEmpty(list)) {
+            return 1;
         }
 
-        return false;
+        // 创建登录账号
+        AuthUser authUser = AuthUser.initUser();
+        authUser.setUsername(registerVo.getUsername());
+        authUser.setPassword(registerVo.getPassword());
+        boolean userSaved = authUserService.save(authUser);
+
+        // 创建用户信息
+        Integer userId = authUser.getId();
+        UserDetail userDetail = new UserDetail();
+        userDetail.setUserId(userId);
+        userDetail.setUserName(registerVo.getUsername());
+        userDetail.setEmail(registerVo.getEmail());
+        userDetail.setInviteCode(registerVo.getInviteCode());
+        boolean detailSaved = userDetailService.save(userDetail);
+
+        // 更新邀请码为无效
+        inviteCodeService.lambdaUpdate()
+                .set(InviteCode::getActive, false)
+                .eq(InviteCode::getCode, registerVo.getInviteCode())
+                .update();
+
+        return userSaved && detailSaved ? 2 : 3;
     }
 
     @Override

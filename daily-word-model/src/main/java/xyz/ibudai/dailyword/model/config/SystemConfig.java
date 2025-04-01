@@ -11,7 +11,7 @@ public class SystemConfig {
     static {
         // 读取月份计算赛季
         YearMonth targetMonth = YearMonth.of(2025, 3);
-        SEASON = Math.toIntExact(ChronoUnit.MONTHS.between(YearMonth.now(), targetMonth)) + 1;
+        SEASON = -1 * Math.toIntExact(ChronoUnit.MONTHS.between(YearMonth.now(), targetMonth)) + 1;
     }
 
 

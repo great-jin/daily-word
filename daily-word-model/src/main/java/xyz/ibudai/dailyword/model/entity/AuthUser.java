@@ -1,5 +1,6 @@
 package xyz.ibudai.dailyword.model.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,6 +8,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import xyz.ibudai.dailyword.model.enums.SysRole;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,7 +29,7 @@ public class AuthUser implements Serializable, UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @TableField("user_name")
@@ -43,16 +45,16 @@ public class AuthUser implements Serializable, UserDetails {
     private String authority;
 
     @TableField("account_non_expired")
-    private Boolean accountNonExpired;
+    private boolean accountNonExpired;
 
     @TableField("account_non_locked")
-    private Boolean accountNonLocked;
+    private boolean accountNonLocked;
 
     @TableField("credentials_non_expired")
-    private Boolean credentialsNonExpired;
+    private boolean credentialsNonExpired;
 
     @TableField("is_enabled")
-    private Boolean isEnabled;
+    private boolean isEnabled;
 
 
     @Override
@@ -85,6 +87,24 @@ public class AuthUser implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return Boolean.TRUE.equals(this.isEnabled);
+    }
+
+
+    /**
+     * Init user auth user.
+     *
+     * @return the auth user
+     */
+    public static AuthUser initUser() {
+        AuthUser authUser = new AuthUser();
+        authUser.setRole(SysRole.USER.name());
+        authUser.setAuthority(SysRole.USER.name());
+        authUser.setAccountNonExpired(true);
+        authUser.setAccountNonLocked(true);
+        authUser.setCredentialsNonExpired(true);
+        authUser.setCredentialsNonExpired(true);
+        authUser.setEnabled(true);
+        return authUser;
     }
 }
 

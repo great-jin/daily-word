@@ -36,12 +36,6 @@
             label-width="100px"
             style="margin-top: 20px"
         >
-          <el-form-item label="用户名:" prop="username">
-            <el-input
-                v-model="registerForm.username"
-                placeholder="请输入用户名"
-            />
-          </el-form-item>
           <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="mail">
             <el-row style="width: 100%">
               <el-col :span="18">
@@ -63,7 +57,13 @@
           <el-form-item label="验证码:" prop="captcha">
             <el-input
                 v-model="registerForm.captcha"
-                placeholder="请输入验证码"
+                placeholder="请输入邮箱验证码"
+            />
+          </el-form-item>
+          <el-form-item label="用户名:" prop="username">
+            <el-input
+                v-model="registerForm.username"
+                placeholder="请输入用户名"
             />
           </el-form-item>
           <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
@@ -111,6 +111,10 @@
 </template>
 
 <script>
+import {register, validateCode} from "@/api/authUserApi";
+import {Encrypt} from "@/util/AES";
+import {isEmail} from "@/util/commonUtil";
+
 export default {
   data() {
     return {
@@ -137,9 +141,6 @@ export default {
         ],
         mail: [
           {required: true, message: '邮箱不能为空', trigger: 'blur'},
-        ],
-        captcha: [
-          {required: true, message: '验证码不能为空', trigger: 'blur'},
         ],
         inviteCode: [
           {required: true, message: '邀请码不能为空', trigger: 'blur'},
@@ -196,41 +197,89 @@ export default {
         this.$refs.regForm.clearValidate()
       }
     },
-    submit() {
+    async submit() {
       // 邀请码校验
       if (this.active === 0) {
-        const inviteCode = this.registerForm.inviteCode
-        if (inviteCode === null || inviteCode === '') {
-          this.$message.error('邀请码必填')
-          return
-        } else {
-          if (inviteCode !== 'invincible') {
-            this.$message.warning('邀请码无效')
-            return
-          }
-        }
-
-        // TODO 2025/3/30 校验邀请码
-        this.active++
+        await this.handlerInviteCode()
         return
       }
 
       // 表单校验
       if (this.active === 1) {
-        this.$refs.regForm.validate(valid => {
-          if (valid) {
-            // TODO 2025/3/30 执行注册
-
-            this.active++
-          } else {
-            this.$message.error('请填写信息后重试')
-          }
-        })
+        await this.handlerLogin()
       }
 
       if (this.active === 2) {
         this.cancel()
       }
+    },
+    async handlerInviteCode() {
+      const inviteCode = this.registerForm.inviteCode
+      if (inviteCode === null || inviteCode === '') {
+        this.$message.error('邀请码必填')
+        return
+      }
+      let isCodeValid = true
+      await validateCode(inviteCode).then(res => {
+        if (res.data == null || !res.data) {
+          isCodeValid = false
+        }
+      })
+      if (!isCodeValid) {
+        this.$message.error('邀请码无效')
+        return
+      }
+
+      // 邀请码验证成功
+      this.active++
+    },
+    async handlerLogin() {
+      this.$refs.regForm.validate(async valid => {
+        if (!valid) {
+          this.$message.error('请填写信息后重试！')
+          return
+        }
+        const _params = this.registerForm
+        if (!isEmail(_params.mail)) {
+          this.$message.error('邮箱格式非法，请检查后重试！')
+          return
+        }
+        if (_params.password !== _params.passwordCheck) {
+          this.$message.error('两次密码不一致，请检查后重试！')
+          return
+        }
+        if (_params.password.length < 6) {
+          this.$message.error('密码长度不能小于 6 位!')
+          return
+        }
+        if (_params.password.length > 50) {
+          this.$message.error('密码长度不能超过 50 位!')
+          return
+        }
+
+        let registerSuccess = false
+        _params.passwordCheck = null
+        _params.password = Encrypt(_params.password)
+        await register(_params).then(res => {
+          switch (res.data) {
+            case 1:
+              this.$message.error('用户名已存在！')
+              break
+            case 2:
+              registerSuccess = true
+              break
+            case 3:
+              this.$message.error('注册失败，请稍后重新！')
+              break
+          }
+        })
+        if (!registerSuccess) {
+          return
+        }
+
+        // 注册成功
+        this.active++
+      })
     }
   }
 }

@@ -12,9 +12,12 @@ resources:
   security:
     loginUrl: /api/auth/login
     excludeUrls:
+      - /api/auth/validaCode
+      - /api/auth/register
+      - /api/auth/forgot
       - /api/server/word/translation
     commonUrls:
-      - ${server.servlet.context-path}/api/auth/*
+      - ${server.servlet.context-path}/api/server/**
     userUrls:
       - ${server.servlet.context-path}/api/server/**
     adminUrls:

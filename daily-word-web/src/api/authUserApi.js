@@ -8,6 +8,13 @@ export function login(params) {
     })
 }
 
+export function validateCode(params) {
+    return request({
+        url: `/api/auth/validaCode?inviteCode=${params}`,
+        method: 'get',
+    })
+}
+
 export function sendMail(params) {
     return request({
         url: `/api/auth/sendMail?mail=${params}`,

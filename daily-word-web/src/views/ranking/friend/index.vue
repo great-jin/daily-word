@@ -50,15 +50,16 @@
             align="center"
         >
           <template #default="{ row }">
-            <el-button
-                type="primary"
-                @click="tableOptions('invite', row)"
-                link
-            >
-              邀请
-            </el-button>
+            <!-- <el-button
+                            type="primary"
+                            @click="tableOptions('invite', row)"
+                            link
+                        >
+                          邀请
+                        </el-button>-->
             <el-popconfirm
-                title="确认删除?"
+                width="200"
+                title="确认删除此好友吗?"
                 cancel-button-text="否"
                 confirm-button-text="是"
                 @confirm="tableOptions('delete', row)"
@@ -110,10 +111,11 @@ export default {
       this.$message.info('功能开发中，敬请期待！')
     },
     requestList() {
-      this.$refs.requestDrawer.show(null)
+      this.$message.info('功能开发中，敬请期待！')
+      // this.$refs.requestDrawer.show(null)
     },
     selectRow(row, column, event) {
-      this.$refs.detailDrawer.show(row)
+      // this.$refs.detailDrawer.show(row)
     },
     tableOptions(type, row) {
       switch (type) {
