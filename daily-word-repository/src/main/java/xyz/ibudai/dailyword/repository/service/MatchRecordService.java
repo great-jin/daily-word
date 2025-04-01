@@ -5,7 +5,9 @@ import xyz.ibudai.dailyword.model.dto.AnswerDTO;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
+import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,5 +40,13 @@ public interface MatchRecordService extends IService<MatchRecord> {
      * @param answerDTO the answer dto
      */
     void finishMatch(AnswerDTO answerDTO);
+
+    /**
+     * Gets details.
+     *
+     * @param matchId the match id
+     * @return the details
+     */
+    List<MatchDetailVo> getDetails(String matchId);
 }
 

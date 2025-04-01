@@ -12,8 +12,8 @@ import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
-import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.RankBoardDao;
+import xyz.ibudai.dailyword.repository.service.AuthUserService;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> implements RankBoardService {
 
-    private final AuthUserDao authUserDao;
+    private final AuthUserService authUserService;
 
 
     @Override
@@ -70,6 +70,10 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
                 .map(RankBoard::getUserId)
                 .collect(Collectors.toSet());
         Integer userId = SecurityUtil.getLoginUser();
+        int i = 1;
+        for (RankBoard item : list) {
+            item.setIndex(String.valueOf(i++));
+        }
         if (userIds.contains(userId)) {
             return list;
         }
@@ -84,9 +88,10 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
             userRank = RankBoard.init();
             userRank.setUserId(userId);
             userRank.setCatalog(catalog);
-            AuthUser authUser = authUserDao.selectById(userId);
+            AuthUser authUser = authUserService.getById(userId);
             userRank.setUserName(authUser.getUsername());
         }
+        userRank.setIndex("-");
         list.add(userRank);
         return list;
     }
@@ -106,6 +111,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
             }
         }
 
+        Map<Integer, String> userMap = authUserService.groupByIds(recordMap.keySet());
         // 查询用户排行榜
         List<RankBoard> userRankList = this.lambdaQuery()
                 .eq(RankBoard::getScore, SystemConfig.getSeason())
@@ -114,11 +120,6 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
                 .list();
         Map<Integer, RankBoard> rankBoardMap = userRankList.stream()
                 .collect(Collectors.toMap(RankBoard::getUserId, it -> it, (o, r) -> o));
-        // 用户信息
-        List<AuthUser> authUsers = authUserDao.selectBatchIds(recordMap.keySet());
-        Map<Integer, String> userMap = authUsers.stream()
-                .collect(Collectors.toMap(AuthUser::getId, AuthUser::getUsername, (o, r) -> o));
-
         // 赛季未匹配过
         Set<Integer> newUserIds = new HashSet<>();
         List<RankBoard> newRankBoardList = new ArrayList<>();

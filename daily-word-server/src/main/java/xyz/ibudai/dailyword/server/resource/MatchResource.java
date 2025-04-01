@@ -9,6 +9,7 @@ import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.dto.AnswerDTO;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
+import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.repository.service.MatchRecordService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
@@ -60,7 +61,19 @@ public class MatchResource {
         List<MatchRecord> list = matchRecordService.lambdaQuery()
                 .eq(MatchRecord::getUserId, SecurityUtil.getLoginUser())
                 .eq(MatchRecord::getSeason, SystemConfig.getSeason())
+                .orderByDesc(MatchRecord::getCreateTime)
                 .list();
         return new PageInfo<>(list);
+    }
+
+    /**
+     * Gets detail.
+     *
+     * @param matchId the match id
+     * @return the detail
+     */
+    @GetMapping("getDetail")
+    public List<MatchDetailVo> getDetail(@RequestParam("matchId") String matchId) {
+        return matchRecordService.getDetails(matchId);
     }
 }

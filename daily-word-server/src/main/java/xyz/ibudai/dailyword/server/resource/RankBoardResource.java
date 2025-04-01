@@ -1,5 +1,6 @@
 package xyz.ibudai.dailyword.server.resource;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
@@ -15,13 +16,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/server/rankBoard")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RankBoardResource {
 
-    /**
-     * 服务对象
-     */
-    @Autowired
-    private RankBoardService rankBoardService;
+    private final RankBoardService rankBoardService;
 
 
     /**

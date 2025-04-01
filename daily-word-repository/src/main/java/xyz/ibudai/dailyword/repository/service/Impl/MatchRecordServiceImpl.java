@@ -12,13 +12,16 @@ import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.enums.RankMode;
+import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.repository.dao.MatchRecordDao;
+import xyz.ibudai.dailyword.repository.service.AuthUserService;
 import xyz.ibudai.dailyword.repository.service.MatchRecordService;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * (MatchRecord)表服务实现类
@@ -31,6 +34,7 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRecord> implements MatchRecordService {
 
+    private final AuthUserService authUserService;
     private final RankBoardService rankBoardService;
 
 
@@ -134,7 +138,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
      * @param userRecord   the user record
      * @param otherRecords the other records
      */
-    public void allDoneHandler(AnswerDTO answerDTO, MatchRecord userRecord, List<MatchRecord> otherRecords) {
+    private void allDoneHandler(AnswerDTO answerDTO, MatchRecord userRecord, List<MatchRecord> otherRecords) {
         otherRecords.add(userRecord);
         MatchRecord winner = otherRecords.stream()
                 // 根据答对数量降序
@@ -158,6 +162,33 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
         if (!Objects.equals(userRecord.getRankType(), 0)) {
             rankBoardService.updateRankBoard(otherRecords);
         }
+    }
+
+    @Override
+    public List<MatchDetailVo> getDetails(String matchId) {
+        List<MatchRecord> recordList = this.lambdaQuery()
+                .eq(MatchRecord::getGroupId, matchId)
+                .list();
+        if (CollectionUtils.isEmpty(recordList)) {
+            return Collections.emptyList();
+        }
+
+        Set<Integer> userIds = recordList.stream()
+                .map(MatchRecord::getUserId)
+                .collect(Collectors.toSet());
+        Map<Integer, String> userMap = authUserService.groupByIds(userIds);
+        // 构建前端对象
+        List<MatchDetailVo> resultList = new ArrayList<>();
+        for (MatchRecord item : recordList) {
+            MatchDetailVo detailVo = MatchDetailVo.builder()
+                    .userName(userMap.get(item.getUserId()))
+                    .costSecond(item.getCostSecond())
+                    .correctCount(item.getCorrectCount())
+                    .score(item.getScore())
+                    .build();
+            resultList.add(detailVo);
+        }
+        return resultList;
     }
 }
 

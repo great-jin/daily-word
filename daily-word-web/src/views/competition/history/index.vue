@@ -13,21 +13,21 @@
           :row-class-name="tableRowStyle"
       >
         <el-table-column
-            prop="rankType"
-            label="匹配方式"
-            align="center"
-        >
-          <template #default="{ row }">
-            {{ getRankType(row.rankType) }}
-          </template>
-        </el-table-column>
-        <el-table-column
             prop="roomMode"
             label="匹配模式"
             align="center"
         >
           <template #default="{ row }">
-            {{ getRankMode(row.roomMode) }}
+            <el-tag type="primary">{{ row.rankMode }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+            prop="rankType"
+            label="匹配方式"
+            align="center"
+        >
+          <template #default="{ row }">
+            {{ row.rankType }}
           </template>
         </el-table-column>
         <el-table-column
@@ -82,6 +82,7 @@
         <el-table-column
             label="操作"
             align="center"
+            fixed="right"
         >
           <template #default="{ row }">
             <el-button
@@ -89,7 +90,8 @@
                 @click="showDetail(row)"
                 :disabled="row.rankType === 0"
                 link
-            >详情</el-button>
+            >详情
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -140,16 +142,18 @@ export default {
     this.listTableData()
   },
   methods: {
-    getRankMode,
-    getRankType,
-    listTableData() {
+    async listTableData() {
       const _req = {
         pageNo: this.pagination.pageNo,
         pageSize: this.pagination.pageSize
       }
-      listMatchHistory(_req).then(res => {
+      await listMatchHistory(_req).then(res => {
         const pageData = res.data
         this.historyData = pageData.list
+        this.historyData.forEach(it => {
+          it.rankMode = getRankMode(it.rankMode)
+          it.rankType = getRankType(it.rankType)
+        })
         this.pagination.total = pageData.total
       })
     },
@@ -159,7 +163,6 @@ export default {
       } else if (type === 'page') {
         this.pagination.pageNo = value
       }
-      // 分页重查
       this.listTableData()
     },
     tableRowStyle({rowIndex}) {

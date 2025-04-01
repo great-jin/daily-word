@@ -192,7 +192,9 @@ export default {
       this.dialogVisible = false
       this.active = 0
       this.registerForm = {}
-      this.$refs.regForm.clearValidate()
+      if (this.$refs.regForm !== undefined) {
+        this.$refs.regForm.clearValidate()
+      }
     },
     submit() {
       // 邀请码校验

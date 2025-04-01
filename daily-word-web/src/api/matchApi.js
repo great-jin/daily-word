@@ -24,3 +24,10 @@ export function listMatchHistory(params) {
         params: params
     })
 }
+
+export function getMatchDetail(params) {
+    return request({
+        url: `${apiPrefix}/getDetail?matchId=${params}`,
+        method: 'get'
+    })
+}
