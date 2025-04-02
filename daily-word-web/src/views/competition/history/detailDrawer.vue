@@ -10,25 +10,27 @@
       </template>
 
       <el-row>
-        <el-col :span="12">
-          词汇分类:&nbsp;
-          <el-tag type="success">{{ record.catalog }}</el-tag>
+        <el-col :span="12" class="label-container">
+          <span class="label">匹配模式:</span>
+          <el-tag type="info">{{ record.rankMode }}</el-tag>
         </el-col>
-        <el-col :span="12">
-          单词组数:&nbsp;
-          <el-tag type="success">{{ record.wordCount }}</el-tag>
+        <el-col :span="12" class="label-container">
+          <span class="label">匹配方式:</span>
+          <el-tag type="info">{{ record.rankType }}</el-tag>
         </el-col>
       </el-row>
+
       <el-row style="margin-top: 20px">
-        <el-col :span="12">
-          匹配模式:&nbsp;
-          <el-tag type="success">{{ record.rankMode }}</el-tag>
+        <el-col :span="12" class="label-container">
+          <span class="label">词汇分类:</span>
+          <el-tag type="info">{{ record.catalog }}</el-tag>
         </el-col>
-        <el-col :span="12">
-          匹配方式:&nbsp;
-          <el-tag type="success">{{ record.rankType }}</el-tag>
+        <el-col :span="12" class="label-container">
+          <span class="label">单词组数:</span>
+          <el-tag type="info">{{ record.wordCount }} / 组</el-tag>
         </el-col>
       </el-row>
+
     </el-card>
 
     <el-card
@@ -47,17 +49,17 @@
       <el-row>
         <el-col :span="8">
           <p>正确数: &nbsp;
-            <el-tag type="success">{{ item.correctCount }}</el-tag>
+            <el-tag type="info">{{ item.correctCount }} 题</el-tag>
           </p>
         </el-col>
         <el-col :span="8">
           <p>耗时: &nbsp;
-            <el-tag type="success">{{ item.costSecond }}</el-tag>
+            <el-tag type="info">{{ item.costSecond }}</el-tag>
           </p>
         </el-col>
         <el-col :span="8">
-          <p>积分: &nbsp;
-            <el-tag type="success">{{ item.score }}</el-tag>
+          <p>得分: &nbsp;
+            <el-tag type="info">{{ item.score }} 分</el-tag>
           </p>
         </el-col>
       </el-row>
@@ -67,6 +69,7 @@
 
 <script>
 import {getMatchDetail} from "@/api/matchApi";
+import {formatSeconds} from "@/util/commonUtil";
 
 export default {
   data() {
@@ -82,6 +85,9 @@ export default {
       this.record = data
       await getMatchDetail(data.groupId).then(res => {
         this.matchDetail = res.data
+        this.matchDetail.forEach(it => {
+          it.costSecond = formatSeconds(it.costSecond)
+        })
       })
     }
   }
@@ -89,4 +95,15 @@ export default {
 </script>
 
 <style scoped>
+.label-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+}
+
+.label {
+  display: inline-block;
+  width: 80px; /* 统一宽度，确保对齐 */
+  text-align: right; /* 文字右对齐 */
+  margin-right: 8px; /* 标签间距 */
+}
 </style>

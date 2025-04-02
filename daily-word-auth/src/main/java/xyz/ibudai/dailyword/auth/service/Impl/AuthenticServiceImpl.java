@@ -19,6 +19,7 @@ import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.enums.RegisterStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;
 import xyz.ibudai.dailyword.repository.service.InviteCodeService;
@@ -112,7 +113,8 @@ public class AuthenticServiceImpl implements AuthenticService {
                 .eq(AuthUser::getUsername, registerVo.getUsername())
                 .list();
         if (!CollectionUtils.isEmpty(list)) {
-            return 1;
+            // Username has been used
+            return RegisterStatus.NAME_USED.getCode();
         }
 
         // 创建登录账号
@@ -136,7 +138,9 @@ public class AuthenticServiceImpl implements AuthenticService {
                 .eq(InviteCode::getCode, registerVo.getInviteCode())
                 .update();
 
-        return userSaved && detailSaved ? 2 : 3;
+        return userSaved && detailSaved
+                ? RegisterStatus.SUCCESS.getCode()
+                : RegisterStatus.FAILED.getCode();
     }
 
     @Override

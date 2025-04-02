@@ -216,7 +216,7 @@ export default {
     async handlerInviteCode() {
       const inviteCode = this.registerForm.inviteCode
       if (inviteCode === null || inviteCode === '') {
-        this.$message.error('邀请码必填')
+        this.$message.warning('邀请码必填')
         return
       }
       let isCodeValid = true
@@ -226,7 +226,7 @@ export default {
         }
       })
       if (!isCodeValid) {
-        this.$message.error('邀请码无效')
+        this.$message.warning('邀请码无效')
         return
       }
 
@@ -236,24 +236,24 @@ export default {
     async handlerLogin() {
       this.$refs.regForm.validate(async valid => {
         if (!valid) {
-          this.$message.error('请填写信息后重试！')
+          this.$message.warning('请填写信息后重试！')
           return
         }
         const _params = this.registerForm
         if (!isEmail(_params.mail)) {
-          this.$message.error('邮箱格式非法，请检查后重试！')
+          this.$message.warning('邮箱格式非法，请检查后重试！')
           return
         }
         if (_params.password !== _params.passwordCheck) {
-          this.$message.error('两次密码不一致，请检查后重试！')
+          this.$message.warning('两次密码不一致，请检查后重试！')
           return
         }
         if (_params.password.length < 6) {
-          this.$message.error('密码长度不能小于 6 位!')
+          this.$message.warning('密码长度不能小于 6 位!')
           return
         }
         if (_params.password.length > 50) {
-          this.$message.error('密码长度不能超过 50 位!')
+          this.$message.warning('密码长度不能超过 50 位!')
           return
         }
 
@@ -263,12 +263,12 @@ export default {
         await register(_params).then(res => {
           switch (res.data) {
             case 1:
-              this.$message.error('用户名已存在！')
-              break
-            case 2:
               registerSuccess = true
               break
             case 3:
+              this.$message.error('用户名已存在！')
+              break
+            default:
               this.$message.error('注册失败，请稍后重新！')
               break
           }

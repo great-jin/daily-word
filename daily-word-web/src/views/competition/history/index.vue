@@ -88,7 +88,6 @@
             <el-button
                 type="primary"
                 @click="showDetail(row)"
-                :disabled="row.rankType === 0"
                 link
             >详情
             </el-button>
@@ -121,6 +120,7 @@ import {getRankMode} from "@/dict/rankModeDict";
 import {listMatchHistory} from "@/api/matchApi";
 import DetailDrawer from "./detailDrawer.vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
+import {formatSeconds} from "@/util/commonUtil";
 
 export default {
   components: {
@@ -153,6 +153,7 @@ export default {
         this.historyData.forEach(it => {
           it.rankMode = getRankMode(it.rankMode)
           it.rankType = getRankType(it.rankType)
+          it.costSecond = formatSeconds(it.costSecond)
         })
         this.pagination.total = pageData.total
       })

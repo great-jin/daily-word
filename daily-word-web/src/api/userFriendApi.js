@@ -2,7 +2,7 @@ import request from './core/axios';
 
 const prefix = "/api/server/userFriend"
 
-export function list(params) {
+export function listFriends() {
     return request({
         url: `${prefix}/list`,
         method: 'get'

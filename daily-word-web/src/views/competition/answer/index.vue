@@ -213,14 +213,12 @@ export default {
       this.finishTask()
     },
     finishTask() {
-      console.log('data', 1)
       const _params = {
         matchId: this.rankInfo.matchId,
         correctCount: this.submitRecords.filter(it => it.correct === true).length,
         costTime: this.clock.time,
         score: this.rankInfo.score
       }
-      console.log('data', _params)
       submitTask(_params).then(res => {
         if (res.code === 200) {
           this.$refs.resultDialog.show()

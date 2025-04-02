@@ -1,6 +1,5 @@
 package xyz.ibudai.dailyword.repository.service.Impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,8 +8,8 @@ import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
-import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
+import xyz.ibudai.dailyword.repository.service.AuthUserService;
 import xyz.ibudai.dailyword.repository.service.UserFriendService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
@@ -28,7 +27,7 @@ import java.util.List;
 public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend> implements UserFriendService {
 
     @Autowired
-    private AuthUserDao authUserDao;
+    private AuthUserService authUserService;
 
 
     @Override
@@ -38,13 +37,19 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
             return Collections.emptyList();
         }
 
-        QueryWrapper<AuthUser> wrapper = new QueryWrapper<AuthUser>()
-                .select("id", "user_name")
-                .in("id", userIdList);
-        List<AuthUser> authUsers = authUserDao.selectList(wrapper);
+        List<AuthUser> authUsers = authUserService.lambdaQuery()
+                .select(AuthUser::getId, AuthUser::getUsername)
+                .in(AuthUser::getId, userIdList)
+                .list();
+        // 构建前端实体
         List<UserFriendVo> result = new ArrayList<>();
         for (AuthUser user : authUsers) {
-            result.add(new UserFriendVo(user.getId(), user.getUsername(), true));
+            UserFriendVo friendVo = UserFriendVo.builder()
+                    .userId(user.getId())
+                    .userName(user.getUsername())
+                    .online(false)
+                    .build();
+            result.add(friendVo);
         }
         return result;
     }

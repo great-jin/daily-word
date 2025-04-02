@@ -38,7 +38,7 @@
             align="center"
         >
           <template #default="{ row }">
-            <el-tag :type="row.online ? 'success' : 'danger'">
+            <el-tag :type="row.online ? 'success' : 'info'">
               {{ row.online ? '在线' : '离线' }}
             </el-tag>
           </template>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import {deleteById, list} from "@/api/userFriendApi"
+import {deleteById, listFriends} from "@/api/userFriendApi"
 import DetailDrawer from "./components/detailDrawer.vue";
 import RequestDrawer from "./components/requestDrawer.vue";
 
@@ -95,12 +95,8 @@ export default {
     this.listTableData()
   },
   methods: {
-    close() {
-      this.visible = false
-      this.friendData = []
-    },
     listTableData() {
-      list().then(res => {
+      listFriends().then(res => {
         this.friendData = res.data
       })
     },
