@@ -1,14 +1,31 @@
 package xyz.ibudai.dailyword.basic.tool;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * The type Coll tool.
  */
 public class CollTool {
+
+
+    /**
+     * Find batch list.
+     *
+     * @param <T>       the type parameter
+     * @param list      the list
+     * @param batchSize the batch size
+     * @return the list
+     */
+    public static <T> List<T> findBatch(List<T> list, int batchSize) {
+        Set<Integer> indies = new HashSet<>(batchSize);
+        Random random = new Random();
+        while (indies.size() < batchSize) {
+            indies.add(random.nextInt(list.size()));
+        }
+        return indies.stream()
+                .map(list::get)
+                .toList();
+    }
 
     /**
      * Partition list.

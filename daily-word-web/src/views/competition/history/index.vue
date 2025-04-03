@@ -13,9 +13,11 @@
           :row-class-name="tableRowStyle"
       >
         <el-table-column
-            prop="roomMode"
+            prop="rankMode"
             label="匹配模式"
             align="center"
+            width="120"
+            fixed="left"
         >
           <template #default="{ row }">
             <el-tag type="primary">{{ row.rankMode }}</el-tag>
@@ -25,11 +27,9 @@
             prop="rankType"
             label="匹配方式"
             align="center"
-        >
-          <template #default="{ row }">
-            {{ row.rankType }}
-          </template>
-        </el-table-column>
+            width="120"
+            fixed="left"
+        />
         <el-table-column
             prop="catalog"
             label="词汇"
@@ -80,6 +80,12 @@
           </template>
         </el-table-column>
         <el-table-column
+            prop="createTime"
+            label="对局时间"
+            align="center"
+            width="180"
+        />
+        <el-table-column
             label="操作"
             align="center"
             fixed="right"
@@ -88,6 +94,7 @@
             <el-button
                 type="primary"
                 @click="showDetail(row)"
+                :disabled="row.score === null"
                 link
             >详情
             </el-button>
@@ -154,6 +161,9 @@ export default {
           it.rankMode = getRankMode(it.rankMode)
           it.rankType = getRankType(it.rankType)
           it.costSecond = formatSeconds(it.costSecond)
+          it.createTime = it.createTime == null
+              ? '-'
+              : it.createTime.replace('T', ' ')
         })
         this.pagination.total = pageData.total
       })

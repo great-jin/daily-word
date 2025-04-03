@@ -12,8 +12,8 @@ public class CacheCleaner implements ApplicationListener<ContextClosedEvent> {
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
         try {
-            DicPreHeat.catalogueMap.clear();
-            xyz.ibudai.dailyword.server.cache.DicPreHeat.dictCache.clear();
+            DicPreHeat.CATALOG_MAP.clear();
+            DicPreHeat.DICT_CACHE.clear();
         } catch (Exception e) {
             log.error("CacheCleaner clear catalog went wrong", e);
         }

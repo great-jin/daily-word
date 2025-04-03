@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
+import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.util.List;
 
@@ -34,13 +35,23 @@ public class RankBoardResource {
     }
 
     /**
-     * 查询用户记录
+     * 查询登录用户记录
      *
-     * @return 所有数据 list
+     * @return 用户记录
      */
     @GetMapping("getUserRank")
     public RankBoard getUserRank() {
-        return rankBoardService.getUserRank();
+        return rankBoardService.getUserRank(SecurityUtil.getLoginUser());
+    }
+
+    /**
+     * 查询用户记录
+     *
+     * @return 用户记录
+     */
+    @GetMapping("getRankByUid")
+    public RankBoard getRankByUid(@RequestParam("userId") Integer userId) {
+        return rankBoardService.getUserRank(userId);
     }
 }
 

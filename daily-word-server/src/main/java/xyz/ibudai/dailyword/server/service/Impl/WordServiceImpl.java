@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import xyz.ibudai.dailyword.basic.tool.CollTool;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.DictDetail;
@@ -29,7 +30,7 @@ public class WordServiceImpl implements WordService {
 
     public List<DictDetail> getDictDetail() {
         List<DictDetail> detailList = new ArrayList<>();
-        for (Map.Entry<xyz.ibudai.dailyword.model.enums.Catalogue, Map<Integer, TaskWordDTO>> Catalogue : DicPreHeat.dictCache.entrySet()) {
+        for (Map.Entry<Catalogue, Map<Integer, TaskWordDTO>> Catalogue : DicPreHeat.DICT_CACHE.entrySet()) {
             Catalogue catalogue = Catalogue.getKey();
             int wordCount = Catalogue.getValue().size();
             DictDetail detail = new DictDetail(catalogue, wordCount);
@@ -40,7 +41,7 @@ public class WordServiceImpl implements WordService {
 
     public Word translation(String target) {
         String targetLowCase = target.toLowerCase(Locale.ROOT);
-        List<JsonNode> nodeList = DicPreHeat.catalogueMap.get(targetLowCase);
+        List<JsonNode> nodeList = DicPreHeat.CATALOG_MAP.get(targetLowCase);
         if (Objects.isNull(nodeList)) {
             return Word.notFound(target);
         }
@@ -95,12 +96,8 @@ public class WordServiceImpl implements WordService {
         }
 
         try {
-            Collection<TaskWordDTO> values = DicPreHeat.dictCache.get(catalogue).values();
-            return values.stream()
-                    // TODO 2025/3/25 随机生成偏移量
-                    .filter(it -> it.getOffset() >= 0)
-                    .limit(size)
-                    .toList();
+            Map<Integer, TaskWordDTO> map = DicPreHeat.DICT_CACHE.get(catalogue);
+            return CollTool.findBatch(new ArrayList<>(map.values()), size);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

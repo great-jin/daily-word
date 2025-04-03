@@ -35,11 +35,14 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
 
 
     @Override
-    public RankBoard getUserRank() {
+    public RankBoard getUserRank(Integer userId) {
+        if (Objects.isNull(userId)) {
+            return RankBoard.init();
+        }
         RankBoard rankBoard = new RankBoard();
         List<RankBoard> list = this.lambdaQuery()
                 .eq(RankBoard::getSeason, SystemConfig.getSeason())
-                .eq(RankBoard::getUserId, SecurityUtil.getLoginUser())
+                .eq(RankBoard::getUserId, userId)
                 .list();
         if (CollectionUtils.isEmpty(list)) {
             return RankBoard.init();

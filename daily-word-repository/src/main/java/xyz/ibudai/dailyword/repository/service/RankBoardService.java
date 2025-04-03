@@ -19,7 +19,7 @@ public interface RankBoardService extends IService<RankBoard> {
      *
      * @return the user rank
      */
-    RankBoard getUserRank();
+    RankBoard getUserRank(Integer userId);
 
     /**
      * List by catalog list.

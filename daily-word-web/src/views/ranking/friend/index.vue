@@ -18,7 +18,7 @@
         我的申请
       </el-button>
 
-      <DetailDrawer ref="detailDrawer"/>
+      <DetailDialog ref="detailDialog"/>
       <RequestDrawer ref="requestDrawer"/>
 
       <el-table
@@ -50,13 +50,6 @@
             align="center"
         >
           <template #default="{ row }">
-            <!-- <el-button
-                            type="primary"
-                            @click="tableOptions('invite', row)"
-                            link
-                        >
-                          邀请
-                        </el-button>-->
             <el-popconfirm
                 width="200"
                 title="确认删除此好友吗?"
@@ -77,12 +70,12 @@
 
 <script>
 import {deleteById, listFriends} from "@/api/userFriendApi"
-import DetailDrawer from "./components/detailDrawer.vue";
+import DetailDialog from "./components/detailDialog.vue";
 import RequestDrawer from "./components/requestDrawer.vue";
 
 export default {
   components: {
-    DetailDrawer,
+    DetailDialog,
     RequestDrawer
   },
   data() {
@@ -111,7 +104,12 @@ export default {
       // this.$refs.requestDrawer.show(null)
     },
     selectRow(row, column, event) {
-      // this.$refs.detailDrawer.show(row)
+      if (column.property === "operate") {
+        // 点击按钮时，不触发 selectRow
+        return
+      }
+
+      this.$refs.detailDialog.show(row)
     },
     tableOptions(type, row) {
       switch (type) {

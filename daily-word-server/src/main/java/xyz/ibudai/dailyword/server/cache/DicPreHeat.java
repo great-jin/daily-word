@@ -29,9 +29,9 @@ public class DicPreHeat implements ApplicationRunner {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public static final Map<String, List<JsonNode>> catalogueMap = new ConcurrentHashMap<>();
+    public static final Map<String, List<JsonNode>> CATALOG_MAP = new ConcurrentHashMap<>();
 
-    public static final Map<Catalogue, Map<Integer, TaskWordDTO>> dictCache = new ConcurrentHashMap<>();
+    public static final Map<Catalogue, Map<Integer, TaskWordDTO>> DICT_CACHE = new ConcurrentHashMap<>();
 
 
     @Override
@@ -76,14 +76,14 @@ public class DicPreHeat implements ApplicationRunner {
                     .get("name")
                     .asText();
             name = name.toLowerCase(Locale.ROOT);
-            List<JsonNode> nodeList = catalogueMap.get(name);
+            List<JsonNode> nodeList = CATALOG_MAP.get(name);
             if (Objects.isNull(nodeList) || nodeList.isEmpty()) {
                 nodeList = new ArrayList<>();
                 nodeList.add(node.get(i));
-                catalogueMap.put(name, nodeList);
+                CATALOG_MAP.put(name, nodeList);
             } else {
                 nodeList.add(node.get(i));
-                catalogueMap.put(name, nodeList);
+                CATALOG_MAP.put(name, nodeList);
             }
         }
     }
@@ -107,6 +107,6 @@ public class DicPreHeat implements ApplicationRunner {
             word.setCatalogue(type);
             cache.put(i, word);
         }
-        dictCache.put(type, cache);
+        DICT_CACHE.put(type, cache);
     }
 }

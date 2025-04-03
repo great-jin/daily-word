@@ -9,6 +9,13 @@ export function getUserRank() {
     })
 }
 
+export function getRankByUid(params) {
+    return request({
+        url: `${prefix}/getRankByUid?userId=${params}`,
+        method: 'get'
+    })
+}
+
 export function list(params) {
     return request({
         url: `${prefix}/list?catalog=${params}`,
