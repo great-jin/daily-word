@@ -35,12 +35,18 @@ public class MatchRecord extends Model<MatchRecord> {
     @TableField("group_id")
     private String groupId;
 
+    /**
+     * {@link xyz.ibudai.dailyword.model.enums.RankMode}
+     */
     @TableField("rank_mode")
     private String rankMode;
 
     @TableField("room_number")
     private String roomNumber;
 
+    /**
+     * {@link xyz.ibudai.dailyword.model.enums.RankType}
+     */
     @TableField("rank_type")
     private Integer rankType;
 
@@ -59,11 +65,14 @@ public class MatchRecord extends Model<MatchRecord> {
     @TableField("score")
     private Integer score;
 
+    @TableField("finished")
+    private Boolean finished;
+
     @TableField("create_time")
     private LocalDateTime createTime;
 
-    @TableField("finished")
-    private Boolean finished;
+    @TableField("update_time")
+    private LocalDateTime updateTime;
 
 }
 

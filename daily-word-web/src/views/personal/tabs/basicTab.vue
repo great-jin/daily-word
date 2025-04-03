@@ -1,30 +1,35 @@
 <template>
   <div>
-    <el-row>
-      <el-col :span="24">
-        <el-avatar
-            :size="80"
-            fit="fill"
-            :src="avatar"
-            @error="avatarErrorHandler"
-        />
-      </el-col>
-    </el-row>
-
-    <el-row style="margin-top: 20px">
-      <el-col :span="24">
-        <el-row
-            :gutter="20"
-            v-for="item in details"
-            style="margin: 16px 0"
+    <el-row style="padding: 10px 100px 10px 200px">
+      <el-col :span="16">
+        <el-form
+            ref="regForm"
+            :model="detailForm"
+            label-width="100px"
+            :disabled="disableForm"
         >
-          <el-col :span="12" style="text-align: right">
-            <span>{{ item.label }}:</span>
-          </el-col>
-          <el-col :span="12" style="text-align: left">
-            <span style="color: #7d7c7c">{{ item.value }}</span>
-          </el-col>
-        </el-row>
+          <el-form-item label="用&nbsp;户&nbsp;名:" prop="userName">
+            <el-input
+                v-model="detailForm.userName"
+            />
+          </el-form-item>
+          <el-form-item label="注册时间:" prop="registerTime">
+            <el-input
+                v-model="detailForm.registerTime"
+                disabled
+            />
+          </el-form-item>
+        </el-form>
+      </el-col>
+
+      <el-col :span="8" style="float: right">
+        <el-button
+            type="primary"
+            @click="saveModify"
+            :disabled="disableForm"
+        >保存
+        </el-button>
+        <el-button @click="enableModify">修改</el-button>
       </el-col>
     </el-row>
   </div>
@@ -36,46 +41,24 @@ import {getDetails} from "@/api/userDetailsApi";
 export default {
   data() {
     return {
-      avatar: '',
-      details: [
-        {
-          label: '用户名',
-          value: ''
-        },
-        {
-          label: '电子邮箱',
-          value: ''
-        },
-        {
-          label: '注册时间',
-          value: ''
-        }
-      ]
+      disableForm: true,
+      detailForm: {
+        userName: null,
+        registerTime: null,
+      }
     }
   },
   mounted() {
     getDetails().then(res => {
-      const userInfo = res.data
-      this.avatar = userInfo.avatar
-      this.details = [
-        {
-          label: '用户名',
-          value: userInfo.userName
-        },
-        {
-          label: '电子邮箱',
-          value: userInfo.email
-        },
-        {
-          label: '注册时间',
-          value: userInfo.registerTime.substring(0, 10)
-        }
-      ]
+      this.detailForm = res.data
     })
   },
   methods: {
-    avatarErrorHandler() {
-      this.userInfo.avatar = 'https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png'
+    enableModify() {
+      this.disableForm = false
+    },
+    saveModify() {
+      this.disableForm = true
     }
   }
 }

@@ -3,8 +3,10 @@ package xyz.ibudai.dailyword.repository.service.Impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.dto.AnswerDTO;
@@ -12,6 +14,7 @@ import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.enums.RankMode;
+import xyz.ibudai.dailyword.model.enums.RankType;
 import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.repository.dao.MatchRecordDao;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;
@@ -59,6 +62,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void initRecord(String matchId, Set<Integer> uIdList, RoomDTO roomDTO) {
         if (CollectionUtils.isEmpty(uIdList)) {
             return;
@@ -82,11 +86,14 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
             recordList.add(record);
         }
 
-        this.saveBatch(recordList);
+        MatchRecordService proxy = (MatchRecordService) AopContext.currentProxy();
+        proxy.saveBatch(recordList);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void finishMatch(AnswerDTO answerDTO) {
+        LocalDateTime nowadays = LocalDateTime.now();
         boolean allDone = true;
         MatchRecord userRecord = null;
         List<MatchRecord> otherRecords = new ArrayList<>();
@@ -95,6 +102,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
                 .eq(MatchRecord::getGroupId, answerDTO.getMatchId())
                 .list();
         for (MatchRecord item : recordList) {
+            item.setUpdateTime(nowadays);
             if (Objects.equals(item.getUserId(), SecurityUtil.getLoginUser())) {
                 userRecord = item;
                 continue;
@@ -115,21 +123,24 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
         userRecord.setFinished(Boolean.TRUE);
         userRecord.setCorrectCount(answerDTO.getCorrectCount());
         userRecord.setCostSecond(answerDTO.getCostTime());
-        if (otherRecords.isEmpty()) {
-            // 单人挑战
+
+        // 创建代理对象
+        MatchRecordService proxy = (MatchRecordService) AopContext.currentProxy();
+        if (Objects.equals(userRecord.getRankType(), RankType.MACHINE.getCount())) {
+            // 单人挑战，只更新自身后便结束
             userRecord.setScore(0);
-            this.updateById(userRecord);
+            proxy.updateById(userRecord);
             return;
         }
+
         if (!allDone) {
-            // 未完成则只更新自身答题结果
-            this.updateById(userRecord);
+            // 其它人未完成则只更新自身答题结果
+            proxy.updateById(userRecord);
             return;
         }
         // 所有人都结束
-        this.allDoneHandler(answerDTO, userRecord, otherRecords);
+        proxy.allDoneHandler(answerDTO, userRecord, otherRecords);
     }
-
 
     /**
      * All done handler.
@@ -138,7 +149,9 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
      * @param userRecord   the user record
      * @param otherRecords the other records
      */
-    private void allDoneHandler(AnswerDTO answerDTO, MatchRecord userRecord, List<MatchRecord> otherRecords) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void allDoneHandler(AnswerDTO answerDTO, MatchRecord userRecord, List<MatchRecord> otherRecords) {
         otherRecords.add(userRecord);
         MatchRecord winner = otherRecords.stream()
                 // 根据答对数量降序
@@ -156,12 +169,13 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
             // 输则对应积分为负
             item.setScore(score * -1);
         }
-        this.updateBatchById(otherRecords);
 
-        // 非单人匹配，更新用户排行榜
-        if (!Objects.equals(userRecord.getRankType(), 0)) {
-            rankBoardService.updateRankBoard(otherRecords);
-        }
+        // 更新匹配记录
+        MatchRecordService proxy = (MatchRecordService) AopContext.currentProxy();
+        proxy.updateBatchById(otherRecords);
+
+        // 更新排行榜
+        rankBoardService.updateRankBoard(otherRecords);
     }
 
     @Override

@@ -42,6 +42,15 @@ public interface MatchRecordService extends IService<MatchRecord> {
     void finishMatch(AnswerDTO answerDTO);
 
     /**
+     * All done handler.
+     *
+     * @param answerDTO    the answer dto
+     * @param userRecord   the user record
+     * @param otherRecords the other records
+     */
+    void allDoneHandler(AnswerDTO answerDTO, MatchRecord userRecord, List<MatchRecord> otherRecords);
+
+    /**
      * Gets details.
      *
      * @param matchId the match id

@@ -19,7 +19,7 @@
 
 <script>
 import BasicTab from "./tabs/basicTab.vue";
-import PrivateTab from "./tabs/privateTab.vue";
+import PrivateTab from "./tabs/privacyTab.vue";
 import LabTab from "@/views/personal/tabs/labTab.vue";
 
 export default {
@@ -40,6 +40,6 @@ export default {
 
 .tab-container {
   height: calc(100vh - 300px);
-  padding: 60px 240px;
+  padding: 60px 220px;
 }
 </style>
