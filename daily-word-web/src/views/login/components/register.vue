@@ -166,7 +166,13 @@ export default {
     sendMail() {
       this.$refs.regForm.validateField('mail', (valid) => {
         if (valid) {
+          if (!isEmail(this.registerForm.mail)) {
+            this.$message.warning('邮箱格式非法，请检查后重试！')
+            return
+          }
+
           // 按钮倒计时
+          this.$message.success('验证码已发送，请检查收件箱')
           this.startCountDown()
         }
       });
