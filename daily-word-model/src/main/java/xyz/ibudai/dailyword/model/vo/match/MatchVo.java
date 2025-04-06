@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MatchVo {
 
-    private String matchId;
+    private Integer matchId;
 
     private List<TaskWordDTO> taskWords;
 

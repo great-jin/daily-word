@@ -9,7 +9,7 @@ import xyz.ibudai.dailyword.repository.service.InviteCodeService;
 /**
  * (InviteCode)表服务实现类
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:04
  */
 @Service

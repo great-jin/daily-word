@@ -1,11 +1,13 @@
 package xyz.ibudai.dailyword.repository.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 import xyz.ibudai.dailyword.model.dto.AnswerDTO;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
+import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;
 
 import java.util.List;
 import java.util.Set;
@@ -13,10 +15,19 @@ import java.util.Set;
 /**
  * (MatchRecord)表服务接口
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:04
  */
 public interface MatchRecordService extends IService<MatchRecord> {
+
+    /**
+     * Paging page info.
+     *
+     * @param pageNo   the page no
+     * @param pageSize the page size
+     * @return the page info
+     */
+    PageInfo<MatchRecordVo> paging(Integer pageNo, Integer pageSize);
 
     /**
      * Check available boolean.
@@ -32,7 +43,7 @@ public interface MatchRecordService extends IService<MatchRecord> {
      * @param uIdList the u id list
      * @param roomDTO the room dto
      */
-    void initRecord(String matchId, Set<Integer> uIdList, RoomDTO roomDTO);
+    Integer initRecord(Set<Integer> uIdList, RoomDTO roomDTO);
 
     /**
      * Finish match.

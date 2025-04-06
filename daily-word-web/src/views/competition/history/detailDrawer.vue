@@ -83,7 +83,7 @@ export default {
     async show(data) {
       this.visible = true
       this.record = data
-      await getMatchDetail(data.groupId).then(res => {
+      await getMatchDetail(data.matchId).then(res => {
         this.matchDetail = res.data
         this.matchDetail.forEach(it => {
           it.costSecond = formatSeconds(it.costSecond)

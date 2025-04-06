@@ -7,7 +7,7 @@ import xyz.ibudai.dailyword.model.vo.RegisterVo;
 /**
  * (TbUser)表服务接口
  *
- * @author makejava
+ * @author budai
  * @since 2023 -01-31 14:31:28
  */
 public interface AuthenticService extends UserDetailsService {

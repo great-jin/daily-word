@@ -7,6 +7,14 @@ import java.util.*;
  */
 public class CollTool {
 
+    public static <T> Set<Integer> randoms(Collection<T> collection, int batchSize) {
+        Set<Integer> indies = new HashSet<>(batchSize);
+        Random random = new Random();
+        while (indies.size() < batchSize) {
+            indies.add(random.nextInt(collection.size()));
+        }
+        return indies;
+    }
 
     /**
      * Find batch list.
@@ -16,7 +24,8 @@ public class CollTool {
      * @param batchSize the batch size
      * @return the list
      */
-    public static <T> List<T> findBatch(List<T> list, int batchSize) {
+    public static <T> List<T> findBatch(Collection<T> collection, int batchSize) {
+        List<T> list = new ArrayList<>(collection);
         Set<Integer> indies = new HashSet<>(batchSize);
         Random random = new Random();
         while (indies.size() < batchSize) {

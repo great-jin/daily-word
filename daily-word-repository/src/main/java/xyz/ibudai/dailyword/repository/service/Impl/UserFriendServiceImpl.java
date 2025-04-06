@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * (UserFriend)表服务实现类
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:05
  */
 @Service

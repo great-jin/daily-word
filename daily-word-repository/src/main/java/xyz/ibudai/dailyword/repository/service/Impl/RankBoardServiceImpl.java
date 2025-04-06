@@ -10,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.MatchDetail;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
 import xyz.ibudai.dailyword.repository.dao.RankBoardDao;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;
+import xyz.ibudai.dailyword.repository.service.MatchDetailService;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * (RankBoard)表服务实现类
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:04
  */
 @Service
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
 public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> implements RankBoardService {
 
     private final AuthUserService authUserService;
+
+    private final MatchDetailService matchDetailService;
 
 
     @Override
@@ -105,12 +109,13 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
         if (CollectionUtils.isEmpty(recordList)) {
             return;
         }
+        MatchDetail matchDetail = matchDetailService.getById(recordList.get(0).getMatchId());
         String catalog = null;
         Map<Integer, MatchRecord> recordMap = new HashMap<>();
         for (MatchRecord record : recordList) {
             recordMap.put(record.getUserId(), record);
             if (StringUtils.isBlank(catalog)) {
-                catalog = record.getCatalog();
+                catalog = matchDetail.getCatalog();
             }
         }
 

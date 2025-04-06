@@ -88,7 +88,6 @@ public class RankBoard extends Model<RankBoard> {
         return RankBoard.builder()
                 .userId(matchRecord.getUserId())
                 .season(SystemConfig.getSeason())
-                .catalog(matchRecord.getCatalog())
                 .score(matchRecord.getScore())
                 .matchCount(1)
                 .score(matchRecord.getScore())

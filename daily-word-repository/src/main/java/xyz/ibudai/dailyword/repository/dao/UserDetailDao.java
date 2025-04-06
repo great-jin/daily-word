@@ -6,7 +6,7 @@ import xyz.ibudai.dailyword.model.entity.UserDetail;
 /**
  * (UserDetail)表数据库访问层
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:05
  */
 public interface UserDetailDao extends BaseMapper<UserDetail> {

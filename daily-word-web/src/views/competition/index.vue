@@ -135,6 +135,7 @@ export default {
 
 <style scoped>
 .container {
+.container {
   width: 100%;
   height: 100%;
 }

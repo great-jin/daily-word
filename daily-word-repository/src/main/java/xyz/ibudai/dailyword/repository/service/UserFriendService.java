@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * (UserFriend)表服务接口
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:05
  */
 public interface UserFriendService extends IService<UserFriend> {

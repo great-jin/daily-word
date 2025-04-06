@@ -38,8 +38,8 @@ public class MatchSchedule {
         }
 
         // 按对局分组
-        Map<String, List<MatchRecord>> groupMap = undoneList
-                .stream().collect(Collectors.groupingBy(MatchRecord::getGroupId));
+        Map<Integer, List<MatchRecord>> groupMap = undoneList
+                .stream().collect(Collectors.groupingBy(MatchRecord::getMatchId));
 
         // TODO 2025/4/3 超时用户默认判负
         // TODO 2025/4/3 人机挑战直接结束

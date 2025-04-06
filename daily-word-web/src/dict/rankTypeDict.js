@@ -22,23 +22,23 @@ export const TYPE_OPTIONS = [
 
 export const SIZE_OPTIONS = [
     {
+        label: '20个/组',
+        value: '20',
+        score: 5
+    },
+    {
+        label: '25个/组',
+        value: '25',
+        score: 10
+    },
+    {
         label: '30个/组',
         value: '30',
-        score: 5
+        score: 15
     },
     {
         label: '40个/组',
         value: '40',
-        score: 10
-    },
-    {
-        label: '50个/组',
-        value: '50',
-        score: 15
-    },
-    {
-        label: '80个/组',
-        value: '80',
         score: 20
     }
 ]

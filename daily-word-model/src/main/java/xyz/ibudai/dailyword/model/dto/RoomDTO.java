@@ -1,5 +1,6 @@
 package xyz.ibudai.dailyword.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.enums.RankMode;
@@ -34,4 +35,7 @@ public class RoomDTO {
      * 词汇组数
      */
     private Integer size;
+
+    @JsonIgnore
+    private String wordIndies;
 }

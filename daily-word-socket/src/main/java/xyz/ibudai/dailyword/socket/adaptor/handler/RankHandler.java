@@ -134,15 +134,16 @@ public class RankHandler extends ChannelAdaptor {
      */
     private String handlerSuccess(Integer uid, Set<Integer> users, RoomDTO roomDTO) throws JsonProcessingException {
         log.info("match success, userId: {}, list: {}", uid, users);
-        String matchId = UUID.randomUUID().toString();
+        ResponseData res = new ResponseData(RANK_MATCHED.getCode());
+        List<TaskWordDTO> dataList = wordService.getTaskContent(roomDTO.getCatalogue(), roomDTO.getSize());
 
         // 记录匹配信息
-        matchRecordService.initRecord(matchId, users, roomDTO);
+        List<Integer> offsets = dataList.stream().map(TaskWordDTO::getOffset).toList();
+        roomDTO.setWordIndies(StringUtils.join(offsets, ","));
+        Integer matchId = matchRecordService.initRecord(users, roomDTO);
 
         // 返回对局数据内容
-        ResponseData res = new ResponseData(RANK_MATCHED.getCode());
-        List<TaskWordDTO> taskWords = wordService.getTaskContent(roomDTO.getCatalogue(), roomDTO.getSize());
-        res.setData(new MatchVo(matchId, taskWords));
+        res.setData(new MatchVo(matchId, dataList));
         return objectMapper.writeValueAsString(res);
     }
 

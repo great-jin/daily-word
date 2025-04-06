@@ -88,6 +88,7 @@
         <el-table-column
             label="操作"
             align="center"
+            width="140"
             fixed="right"
         >
           <template #default="{ row }">
@@ -98,12 +99,30 @@
                 link
             >详情
             </el-button>
+
+            <el-dropdown @command="operateOption(row, $event)">
+              <el-button type="primary" class="operate-more" link>
+                更多
+                <el-icon>
+                  <arrow-down/>
+                </el-icon>
+              </el-button>
+
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="answer">查看答案</el-dropdown-item>
+                  <el-dropdown-item command="challenge">影子挑战</el-dropdown-item>
+                  <el-dropdown-item command="record">挑战记录</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 详情窗口 -->
       <DetailDrawer ref="detailDrawer"/>
+      <ResultDialog ref="resultDialog"/>
 
       <el-config-provider :locale="locale">
         <el-pagination
@@ -126,12 +145,14 @@ import {getRankType} from "@/dict/rankTypeDict";
 import {getRankMode} from "@/dict/rankModeDict";
 import {listMatchHistory} from "@/api/matchApi";
 import DetailDrawer from "./detailDrawer.vue";
+import ResultDialog from "./resultDialog.vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import {formatSeconds} from "@/util/commonUtil";
 
 export default {
   components: {
     DetailDrawer,
+    ResultDialog,
   },
   data() {
     return {
@@ -181,6 +202,19 @@ export default {
     },
     showDetail(data) {
       this.$refs.detailDrawer.show(data);
+    },
+    operateOption(data, event) {
+      switch (event) {
+        case 'answer':
+          this.$refs.resultDialog.show([]);
+          break
+        case 'challenge':
+          this.$message.success('2')
+          break
+        case 'record':
+          this.$message.success('3')
+          break
+      }
     }
   }
 }
@@ -212,5 +246,13 @@ export default {
 
 .even-row {
   background-color: #ffffff !important;
+}
+
+.operate-more {
+  height: 26px;
+  margin-left: 8px;
+  line-height: 26px;
+  display: flex;
+  align-items: center;
 }
 </style>

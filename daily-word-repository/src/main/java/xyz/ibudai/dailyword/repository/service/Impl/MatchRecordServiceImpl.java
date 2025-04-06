@@ -1,6 +1,8 @@
 package xyz.ibudai.dailyword.repository.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
@@ -11,13 +13,16 @@ import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
 import xyz.ibudai.dailyword.model.dto.AnswerDTO;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
+import xyz.ibudai.dailyword.model.entity.MatchDetail;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.enums.RankMode;
 import xyz.ibudai.dailyword.model.enums.RankType;
 import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
+import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;
 import xyz.ibudai.dailyword.repository.dao.MatchRecordDao;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;
+import xyz.ibudai.dailyword.repository.service.MatchDetailService;
 import xyz.ibudai.dailyword.repository.service.MatchRecordService;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
@@ -29,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * (MatchRecord)表服务实现类
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:04
  */
 @Slf4j
@@ -38,8 +43,21 @@ import java.util.stream.Collectors;
 public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRecord> implements MatchRecordService {
 
     private final AuthUserService authUserService;
-    private final RankBoardService rankBoardService;
 
+    private final RankBoardService rankBoardService;
+    private final MatchDetailService matchDetailService;
+
+
+    @Override
+    public PageInfo<MatchRecordVo> paging(Integer pageNo, Integer pageSize) {
+        PageHelper.startPage(pageNo, pageSize);
+
+        List<MatchRecordVo> dataList = this.baseMapper.listByUser(
+                SecurityUtil.getLoginUser(),
+                SystemConfig.getSeason()
+        );
+        return new PageInfo<>(dataList);
+    }
 
     @Override
     public Boolean checkAvailable(Catalogue catalogue) {
@@ -51,7 +69,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
         // 是否有进行中任务
         List<MatchRecord> undoneList = this.lambdaQuery()
                 .eq(MatchRecord::getUserId, SecurityUtil.getLoginUser())
-                .eq(MatchRecord::getCatalog, catalogue)
+                // TODO 过滤 catalog
                 .eq(MatchRecord::getSeason, SystemConfig.getSeason())
                 .eq(MatchRecord::getFinished, Boolean.FALSE)
                 .list();
@@ -63,43 +81,60 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void initRecord(String matchId, Set<Integer> uIdList, RoomDTO roomDTO) {
+    public Integer initRecord(Set<Integer> uIdList, RoomDTO roomDTO) {
         if (CollectionUtils.isEmpty(uIdList)) {
-            return;
+            return 0;
         }
 
+        // 房间信息
+        Integer roomNumber = roomDTO.getRoomNumber();
+        RankMode rankMode = roomDTO.getMode();
+        MatchDetail matchDetail = MatchDetail.builder()
+                .rankMode(Objects.isNull(rankMode) ? null : rankMode.name())
+                .roomNumber(Objects.isNull(roomNumber) ? null : String.valueOf(roomNumber))
+                .rankType(roomDTO.getRoomSize())
+                .catalog(roomDTO.getCatalogue().name())
+                .wordCount(roomDTO.getSize())
+                .wordIndies(roomDTO.getWordIndies())
+                .build();
+        matchDetailService.save(matchDetail);
+
+        // 用户记录
+        Integer matchId = matchDetail.getId();
         List<MatchRecord> recordList = new ArrayList<>();
         for (Integer uid : uIdList) {
-            Integer roomNumber = roomDTO.getRoomNumber();
-            RankMode rankMode = roomDTO.getMode();
             MatchRecord record = MatchRecord.builder()
                     .userId(uid)
                     .season(SystemConfig.getSeason())
-                    .groupId(matchId)
-                    .rankMode(Objects.isNull(rankMode) ? null : rankMode.name())
-                    .roomNumber(Objects.isNull(roomNumber) ? null : String.valueOf(roomNumber))
-                    .rankType(roomDTO.getRoomSize())
-                    .catalog(roomDTO.getCatalogue().name())
-                    .wordCount(roomDTO.getSize())
+                    .matchId(matchId)
                     .finished(false)
                     .build();
             recordList.add(record);
         }
-
         MatchRecordService proxy = (MatchRecordService) AopContext.currentProxy();
         proxy.saveBatch(recordList);
+
+        return matchId;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void finishMatch(AnswerDTO answerDTO) {
+        // 匹配对局信息
+        Integer matchId = answerDTO.getMatchId();
+        MatchDetail matchDetail = matchDetailService.getById(matchId);
+        if (Objects.isNull(matchDetail)) {
+            log.info("The match of {} not found", matchId);
+            return;
+        }
+
         LocalDateTime nowadays = LocalDateTime.now();
         boolean allDone = true;
         MatchRecord userRecord = null;
         List<MatchRecord> otherRecords = new ArrayList<>();
         // 状态分组
         List<MatchRecord> recordList = this.lambdaQuery()
-                .eq(MatchRecord::getGroupId, answerDTO.getMatchId())
+                .eq(MatchRecord::getMatchId, matchId)
                 .list();
         for (MatchRecord item : recordList) {
             item.setUpdateTime(nowadays);
@@ -126,7 +161,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
 
         // 创建代理对象
         MatchRecordService proxy = (MatchRecordService) AopContext.currentProxy();
-        if (Objects.equals(userRecord.getRankType(), RankType.MACHINE.getCount())) {
+        if (Objects.equals(matchDetail.getRankType(), RankType.MACHINE.getCount())) {
             // 单人挑战，只更新自身后便结束
             userRecord.setScore(0);
             proxy.updateById(userRecord);
@@ -181,7 +216,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
     @Override
     public List<MatchDetailVo> getDetails(String matchId) {
         List<MatchRecord> recordList = this.lambdaQuery()
-                .eq(MatchRecord::getGroupId, matchId)
+                .eq(MatchRecord::getMatchId, matchId)
                 .list();
         if (CollectionUtils.isEmpty(recordList)) {
             return Collections.emptyList();

@@ -12,12 +12,24 @@ import java.util.List;
 @AllArgsConstructor
 public class TaskWordDTO {
 
+    /**
+     * 类型
+     */
     private Catalogue catalogue;
 
+    /**
+     * 下标
+     */
     private Integer offset;
 
+    /**
+     * 单词
+     */
     private String value;
 
+    /**
+     * 翻译
+     */
     private List<String> translation;
 
 }

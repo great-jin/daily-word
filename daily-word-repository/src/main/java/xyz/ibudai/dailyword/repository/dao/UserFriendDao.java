@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * (UserFriend)表数据库访问层
  *
- * @author makejava
+ * @author budai
  * @since 2025-03-16 09:26:05
  */
 public interface UserFriendDao extends BaseMapper<UserFriend> {

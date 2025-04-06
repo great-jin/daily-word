@@ -32,29 +32,8 @@ public class MatchRecord extends Model<MatchRecord> {
     @TableField("season")
     private Integer season;
 
-    @TableField("group_id")
-    private String groupId;
-
-    /**
-     * {@link xyz.ibudai.dailyword.model.enums.RankMode}
-     */
-    @TableField("rank_mode")
-    private String rankMode;
-
-    @TableField("room_number")
-    private String roomNumber;
-
-    /**
-     * {@link xyz.ibudai.dailyword.model.enums.RankType}
-     */
-    @TableField("rank_type")
-    private Integer rankType;
-
-    @TableField("catalog")
-    private String catalog;
-
-    @TableField("word_count")
-    private Integer wordCount;
+    @TableField("match_id")
+    private Integer matchId;
 
     @TableField("cost_second")
     private Integer costSecond;

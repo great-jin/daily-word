@@ -3,6 +3,7 @@ package xyz.ibudai.dailyword.server.service.Impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.dailyword.basic.tool.CollTool;
@@ -75,7 +76,6 @@ public class WordServiceImpl implements WordService {
 
     @Override
     public MatchVo starTask(Catalogue catalogue, Integer size) {
-        String matchId = UUID.randomUUID().toString();
         Set<Integer> users = Set.of(SecurityUtil.getLoginUser());
         // 房间信息
         RoomDTO roomDTO = new RoomDTO();
@@ -83,11 +83,14 @@ public class WordServiceImpl implements WordService {
         roomDTO.setCatalogue(catalogue);
         roomDTO.setSize(size);
 
-        // 初始化挑战记录
-        matchRecordService.initRecord(matchId, users, roomDTO);
+        List<TaskWordDTO> dataList = this.getTaskContent(catalogue, size);
 
-        // 返回挑战内容
-        return new MatchVo(matchId, this.getTaskContent(catalogue, size));
+        // 初始化记录
+        List<Integer> offsets = dataList.stream().map(TaskWordDTO::getOffset).toList();
+        roomDTO.setWordIndies(StringUtils.join(offsets, ","));
+        Integer matchId = matchRecordService.initRecord(users, roomDTO);
+
+        return new MatchVo(matchId, dataList);
     }
 
     public List<TaskWordDTO> getTaskContent(Catalogue catalogue, Integer size) {
@@ -96,8 +99,22 @@ public class WordServiceImpl implements WordService {
         }
 
         try {
-            Map<Integer, TaskWordDTO> map = DicPreHeat.DICT_CACHE.get(catalogue);
-            return CollTool.findBatch(new ArrayList<>(map.values()), size);
+            Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
+                    .get(catalogue)
+                    .values();
+            Set<Integer> indies = CollTool.randoms(collection, size);
+            List<TaskWordDTO> taskList = new ArrayList<>();
+            // TODO 匹配性能优化？
+            for (TaskWordDTO item : collection) {
+                if (Objects.equals(taskList.size(), indies.size())) {
+                    break;
+                }
+                if (indies.contains(item.getOffset())) {
+                    taskList.add(item);
+                }
+            }
+
+            return taskList;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

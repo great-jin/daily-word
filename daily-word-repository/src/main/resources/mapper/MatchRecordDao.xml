@@ -6,17 +6,42 @@
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="season" column="season" jdbcType="INTEGER"/>
-        <result property="groupId" column="group_id" jdbcType="VARCHAR"/>
-        <result property="rankMode" column="rank_mode" jdbcType="VARCHAR"/>
-        <result property="roomNumber" column="room_number" jdbcType="VARCHAR"/>
-        <result property="rankType" column="rank_type" jdbcType="INTEGER"/>
-        <result property="catalog" column="catalog" jdbcType="VARCHAR"/>
-        <result property="wordCount" column="word_count" jdbcType="INTEGER"/>
+        <result property="matchId" column="group_id" jdbcType="VARCHAR"/>
         <result property="costSecond" column="cost_second" jdbcType="INTEGER"/>
         <result property="score" column="score" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="finished" column="finished" jdbcType="BOOLEAN"/>
     </resultMap>
 
+    <resultMap type="xyz.ibudai.dailyword.model.vo.match.MatchRecordVo" id="recordVoMap">
+        <result property="matchId" column="match_id" jdbcType="INTEGER"/>
+        <result property="rankMode" column="rank_mode" jdbcType="VARCHAR"/>
+        <result property="rankType" column="rank_type" jdbcType="INTEGER"/>
+        <result property="catalog" column="catalog" jdbcType="VARCHAR"/>
+        <result property="wordCount" column="word_count" jdbcType="INTEGER"/>
+        <result property="costSecond" column="cost_second" jdbcType="INTEGER"/>
+        <result property="correctCount" column="correct_count" jdbcType="INTEGER"/>
+        <result property="score" column="score" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="listByUser" resultMap="recordVoMap">
+        select
+            mr.match_id,
+            mr.cost_second,
+            mr.correct_count,
+            mr.score,
+            md.rank_mode,
+            md.rank_type,
+            md.catalog,
+            md.word_count
+        from match_record mr
+        left join match_detail md
+        on md.id = mr.match_id
+        where
+            mr.user_id = #{userId}
+            and mr.season = #{season}
+        order by
+            mr.create_time desc
+    </select>
 </mapper>
 
