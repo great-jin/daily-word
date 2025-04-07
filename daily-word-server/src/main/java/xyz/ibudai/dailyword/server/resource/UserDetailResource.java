@@ -3,9 +3,13 @@ package xyz.ibudai.dailyword.server.resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.dailyword.files.util.FileServer;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.props.FilesProps;
 import xyz.ibudai.dailyword.repository.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * (UserDetail)表控制层
@@ -18,6 +22,9 @@ import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailResource {
 
+    private final FilesProps filesProps;
+    private final FileServer fileServer;
+
     private final UserDetailService userDetailService;
 
 
@@ -28,7 +35,15 @@ public class UserDetailResource {
      */
     @GetMapping("get")
     public UserDetail getById() {
-        return userDetailService.getById(SecurityUtil.getLoginUser());
+        UserDetail user = userDetailService.getById(SecurityUtil.getLoginUser());
+
+        String url = fileServer.signUrl(
+                user.getAvatar(),
+                filesProps.getAvatarDir(),
+                TimeUnit.HOURS.toMillis(1)
+        );
+        user.setAvatar(url);
+        return user;
     }
 }
 

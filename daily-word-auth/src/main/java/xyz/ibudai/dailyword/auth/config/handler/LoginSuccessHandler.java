@@ -23,7 +23,9 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
+    private final TokenUtil tokenUtil;
     private final ObjectMapper objectMapper;
+
     private final UserDetailDao userDetailDao;
 
 
@@ -39,7 +41,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                     .password(AESUtil.desEncrypt(user.getPassword()).trim())
                     .build();
             String key = objectMapper.writeValueAsString(userDTO);
-            refreshToken = TokenUtil.createJWT(key);
+            refreshToken = tokenUtil.createJWT(key);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

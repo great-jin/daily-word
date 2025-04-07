@@ -35,6 +35,7 @@ public class TokenFilter implements Filter {
 
     private final FilterProps filterProps;
 
+    private final TokenUtil tokenUtil;
     private final ObjectMapper objectMapper;
 
 
@@ -61,7 +62,7 @@ public class TokenFilter implements Filter {
         if (Objects.nonNull(token) && !token.isBlank()) {
             boolean isValid = true;
             try {
-                TokenUtil.parseJWT(token);
+                tokenUtil.parseJWT(token);
             } catch (ExpiredJwtException e) {
                 isValid = false;
             }
@@ -120,7 +121,7 @@ public class TokenFilter implements Filter {
             return;
         }
 
-        Claims claims = TokenUtil.parseJWT(authentic);
+        Claims claims = tokenUtil.parseJWT(authentic);
         AuthUser authUser = objectMapper.readValue(claims.getSubject(), AuthUser.class);
         // 设置用户上下文信息
         UsernamePasswordAuthenticationToken authentication =

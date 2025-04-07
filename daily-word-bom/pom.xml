@@ -26,6 +26,8 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <caffeine.version>2.8.5</caffeine.version>
 
+        <thumbnailator.version>0.4.14</thumbnailator.version>
+
         <netty.version>4.1.89.Final</netty.version>
     </properties>
 
@@ -89,6 +91,13 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
+            </dependency>
+
+            <!-- Image compress -->
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

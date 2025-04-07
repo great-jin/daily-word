@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -26,16 +27,14 @@ public class ResponseHandle implements ResponseBodyAdvice<Object> {
     @SneakyThrows
     @Override
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
-        ResponseData responseData;
-        responseData = ResponseData.success(o);
         if (o instanceof String) {
             // String 类型需要转为 Json 格式返回
-            return objectMapper.writeValueAsString(responseData);
-        } else if (o instanceof ResponseData) {
-            // 异常处理中已经包了一层这里直接返回
+            return objectMapper.writeValueAsString(ResponseData.success(o));
+        } else if (o instanceof ResponseData || o instanceof FileSystemResource) {
+            // [已封装 || 文件] 不做处理
             return o;
         } else {
-            return responseData;
+            return ResponseData.success(o);
         }
     }
 }

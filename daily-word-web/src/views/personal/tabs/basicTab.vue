@@ -1,5 +1,15 @@
 <template>
   <div>
+    <el-row style="margin-bottom: 14px">
+      <el-col :span="24">
+        <el-avatar
+            :size="80"
+            fit="fill"
+            :src="detailForm.avatar"
+        />
+      </el-col>
+    </el-row>
+
     <el-row style="padding: 10px 100px 10px 200px">
       <el-col :span="16">
         <el-form

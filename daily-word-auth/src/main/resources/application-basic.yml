@@ -1,14 +1,21 @@
-# 认证配置
 resources:
+  # Cors config
   host:
     # deploy to server need config to "*"
     cors:
       - http://localhost:8080
       - http://127.0.0.1:8080
+  # JWT config
+  jwt:
+    issuer: budai
+    secret: ibudai
+  # Login verify
   filter:
     excludes:
       - ${server.servlet.context-path}/api/auth/*
       - ${server.servlet.context-path}/api/server/word/translation
+      - ${server.servlet.context-path}/api/files/*
+  # Authentic config
   security:
     loginUrl: /api/auth/login
     excludeUrls:
@@ -16,6 +23,7 @@ resources:
       - /api/auth/register
       - /api/auth/forgot
       - /api/server/word/translation
+      - /api/files/*
     commonUrls:
       - ${server.servlet.context-path}/api/server/**
     userUrls:

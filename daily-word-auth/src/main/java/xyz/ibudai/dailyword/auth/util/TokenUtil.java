@@ -1,6 +1,10 @@
 package xyz.ibudai.dailyword.auth.util;
 
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import xyz.ibudai.dailyword.model.props.JwtProps;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -9,12 +13,12 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TokenUtil {
 
-    /**
-     * 密钥
-     */
-    public static final String JWT_KEY = "ibudai";
+    private final JwtProps jwtProps;
+
     /**
      * 默认过期时间
      */
@@ -26,7 +30,7 @@ public class TokenUtil {
      *
      * @param data the data
      */
-    public static String createJWT(String data) {
+    public String createJWT(String data) {
         return createJWT(data, null);
     }
 
@@ -36,7 +40,7 @@ public class TokenUtil {
      * @param data      the data
      * @param ttlMillis the expired time
      */
-    public static String createJWT(String data, Long ttlMillis) {
+    public String createJWT(String data, Long ttlMillis) {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         JwtBuilder builder = getJwtBuilder(data, ttlMillis, uuid);
         return builder.compact();
@@ -47,7 +51,7 @@ public class TokenUtil {
      *
      * @param token the token
      */
-    public static Claims parseJWT(String token) {
+    public Claims parseJWT(String token) {
         SecretKey secretKey = generalKey();
         return Jwts.parser()
                 .setSigningKey(secretKey)
@@ -58,31 +62,29 @@ public class TokenUtil {
     /**
      * 生成加密后的秘钥
      */
-    private static SecretKey generalKey() {
-        byte[] encodedKey = Base64.getDecoder().decode(JWT_KEY);
+    private SecretKey generalKey() {
+        byte[] encodedKey = Base64.getDecoder().decode(jwtProps.getSecret());
         return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
     }
 
-    private static JwtBuilder getJwtBuilder(String subject, Long ttlMillis, String uuid) {
-        SignatureAlgorithm algorithm = SignatureAlgorithm.HS256;
-        SecretKey secretKey = generalKey();
+    private JwtBuilder getJwtBuilder(String subject, Long ttlMillis, String uuid) {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         if (ttlMillis == null) {
             ttlMillis = JWT_TTL;
         }
-        long expMillis = nowMillis + ttlMillis;
-        Date expDate = new Date(expMillis);
+
+        Date expDate = new Date(nowMillis + ttlMillis);
         return Jwts.builder()
                 .setId(uuid)
                 // 计算内容
                 .setSubject(subject)
                 // 签发者
-                .setIssuer("budai")
+                .setIssuer(jwtProps.getIssuer())
                 // 签发时间
                 .setIssuedAt(now)
                 // 加密算法签名
-                .signWith(algorithm, secretKey)
+                .signWith(SignatureAlgorithm.HS256, generalKey())
                 .setExpiration(expDate);
     }
 }
