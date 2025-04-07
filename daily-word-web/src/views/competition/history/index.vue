@@ -145,7 +145,7 @@ import {getRankType} from "@/dict/rankTypeDict";
 import {getRankMode} from "@/dict/rankModeDict";
 import {listMatchHistory} from "@/api/matchApi";
 import DetailDrawer from "./detailDrawer.vue";
-import ResultDialog from "./resultDialog.vue";
+import ResultDialog from "./answerDialog.vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import {formatSeconds} from "@/util/commonUtil";
 
@@ -203,10 +203,10 @@ export default {
     showDetail(data) {
       this.$refs.detailDrawer.show(data);
     },
-    operateOption(data, event) {
+    operateOption(row, event) {
       switch (event) {
         case 'answer':
-          this.$refs.resultDialog.show([]);
+          this.$refs.resultDialog.show(row.matchId);
           break
         case 'challenge':
           this.$message.success('2')

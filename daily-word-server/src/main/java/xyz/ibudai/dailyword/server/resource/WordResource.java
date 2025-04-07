@@ -55,4 +55,15 @@ public class WordResource {
                              @RequestParam("size") Integer size) {
         return wordService.starTask(catalogue, size);
     }
+
+    /**
+     * Gets answer.
+     *
+     * @param matchId the match id
+     * @return the answer
+     */
+    @GetMapping("getAnswer")
+    public List<TaskWordDTO> getAnswer(@RequestParam("matchId") String matchId) {
+        return wordService.getAnswer(matchId);
+    }
 }

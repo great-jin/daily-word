@@ -83,33 +83,39 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: '30px'}">
+        <el-row :style="{marginTop: 'auto'}">
           <el-col :span="24">
-            <span>{{ currentIndex + 1 }} / {{ planData.length }}</span>
-          </el-col>
-        </el-row>
+            <el-row >
+              <el-col :span="24">
+                <span>{{ currentIndex + 1 }} / {{ planData.length }}</span>
+              </el-col>
+            </el-row>
 
-        <el-row :style="{marginTop: '30px'}">
-          <el-col :span="24">
-            <span>
-              <strong>作答耗时:</strong>
-              {{ formattedTime }}
-            </span>
+            <el-row :style="{margin: '30px 0'}">
+              <el-col :span="24">
+                <span>
+                  <strong>作答耗时:</strong>
+                  {{ formattedTime }}
+                </span>
+              </el-col>
+            </el-row>
           </el-col>
         </el-row>
       </el-col>
 
       <el-col :span="6">
         <div class="word-container">
-          <el-checkbox
-              v-for="(item, index) in subjectItems"
-              :key="index"
-              v-model="answeredItems[index]"
-              @change="changCurrentWord(index)"
-              size="large"
-          >
-            {{ item }}
-          </el-checkbox>
+          <el-row :gutter="20">
+            <el-col :span="11" v-for="(item, index) in subjectItems" :key="index">
+              <el-checkbox
+                  v-model="answeredItems[index]"
+                  @change="changCurrentWord(index)"
+                  size="large"
+              >
+                {{ item }}
+              </el-checkbox>
+            </el-col>
+          </el-row>
         </div>
       </el-col>
     </el-row>
@@ -372,6 +378,9 @@ export default {
   padding: 0 100px;
   background: #daedf9;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .input-word {

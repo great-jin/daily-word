@@ -44,10 +44,13 @@ function request(axiosConfig) {
         return res.data
     }, err => {
         // 请求信息弹窗提示
-        const errorBody = err.response.data
+        let message = err.response
+        if (message !== undefined && message !== null) {
+            message = message.data.message
+        }
         ElNotification({
             title: 'Internal Server Error',
-            message: errorBody.message,
+            message: message,
             type: 'error'
         })
     })

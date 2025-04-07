@@ -23,3 +23,10 @@ export function startTask(params) {
         params: params
     })
 }
+
+export function getTaskAnswer(params) {
+    return request({
+        url: `${apiPrefix}/getAnswer?matchId=${params}`,
+        method: 'get'
+    })
+}

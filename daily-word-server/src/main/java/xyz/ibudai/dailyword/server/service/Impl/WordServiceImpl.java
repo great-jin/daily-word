@@ -8,24 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.dailyword.basic.tool.CollTool;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
+import xyz.ibudai.dailyword.model.entity.MatchDetail;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.DictDetail;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.model.vo.word.WordDescribe;
+import xyz.ibudai.dailyword.repository.service.MatchDetailService;
 import xyz.ibudai.dailyword.repository.service.MatchRecordService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.cache.DicPreHeat;
 import xyz.ibudai.dailyword.server.service.WordService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordServiceImpl implements WordService {
 
+    private final MatchDetailService matchDetailService;
     private final MatchRecordService matchRecordService;
 
 
@@ -98,25 +102,41 @@ public class WordServiceImpl implements WordService {
             size = 20;
         }
 
-        try {
-            Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
-                    .get(catalogue)
-                    .values();
-            Set<Integer> indies = CollTool.randoms(collection, size);
-            List<TaskWordDTO> taskList = new ArrayList<>();
-            // TODO 匹配性能优化？
-            for (TaskWordDTO item : collection) {
-                if (Objects.equals(taskList.size(), indies.size())) {
-                    break;
-                }
-                if (indies.contains(item.getOffset())) {
-                    taskList.add(item);
-                }
-            }
+        Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
+                .get(catalogue)
+                .values();
+        return extract(catalogue, CollTool.randoms(collection, size));
+    }
 
-            return taskList;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    @Override
+    public List<TaskWordDTO> getAnswer(String matchId) {
+        MatchDetail matchDetail = matchDetailService.getById(matchId);
+        if (Objects.isNull(matchDetail)) {
+            return Collections.emptyList();
         }
+
+        String wordIndies = matchDetail.getWordIndies();
+        Set<Integer> offsets = Arrays.stream(wordIndies.split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+        Catalogue catalogue = Catalogue.valueOf(matchDetail.getCatalog());
+        return extract(catalogue, offsets);
+    }
+
+
+    private List<TaskWordDTO> extract(Catalogue catalogue, Set<Integer> offsets) {
+        Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
+                .get(catalogue)
+                .values();
+        List<TaskWordDTO> taskList = new ArrayList<>();
+        for (TaskWordDTO item : collection) {
+            if (Objects.equals(taskList.size(), offsets.size())) {
+                break;
+            }
+            if (offsets.contains(item.getOffset())) {
+                taskList.add(item);
+            }
+        }
+        return taskList;
     }
 }

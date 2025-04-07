@@ -1,7 +1,7 @@
 <template>
   <el-drawer
       v-model="visible"
-      size="30%"
+      size="40%"
       style="overflow-y: scroll;"
   >
     <el-card>

@@ -45,4 +45,12 @@ public interface WordService {
      * @return the task content
      */
     List<TaskWordDTO> getTaskContent(Catalogue catalogue, Integer size);
+
+    /**
+     * Gets answer.
+     *
+     * @param matchId the match id
+     * @return the answer
+     */
+    List<TaskWordDTO> getAnswer(String matchId);
 }
