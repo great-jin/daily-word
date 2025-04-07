@@ -4,8 +4,18 @@ const prefix = "/api/server/userDetail"
 
 export function getDetails() {
     return request({
-        url: `${prefix}/get`,
+        url: `${prefix}/getById`,
         method: 'get'
     })
 }
 
+export function uploadAvatar(params) {
+    return request({
+        url: `${prefix}/uploadAvatar`,
+        method: 'post',
+        data: params,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}

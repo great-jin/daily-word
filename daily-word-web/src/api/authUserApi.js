@@ -1,8 +1,10 @@
 import request from './core/axios';
 
+const apiPrefix = "/api/auth"
+
 export function login(params) {
     return request({
-        url: '/api/auth/login',
+        url: `${apiPrefix}/login`,
         method: 'post',
         params: params
     })
@@ -10,21 +12,21 @@ export function login(params) {
 
 export function validateCode(params) {
     return request({
-        url: `/api/auth/validaCode?inviteCode=${params}`,
+        url: `${apiPrefix}/validaCode?inviteCode=${params}`,
         method: 'get',
     })
 }
 
 export function sendMail(params) {
     return request({
-        url: `/api/auth/sendMail?mail=${params}`,
+        url: `${apiPrefix}/sendMail?mail=${params}`,
         method: 'get',
     })
 }
 
 export function register(params) {
     return request({
-        url: '/api/auth/register',
+        url: '${apiPrefix}/register',
         method: 'post',
         data: params
     })
