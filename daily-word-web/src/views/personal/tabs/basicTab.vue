@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row style="margin-bottom: 14px">
+    <el-row>
       <el-col :span="24" style="display: flex; justify-content: center;">
         <el-upload
             v-model:file-list="fileList"
@@ -21,14 +21,14 @@
       </el-col>
     </el-row>
 
-
-    <el-row style="padding: 10px 100px 10px 200px">
-      <el-col :span="16">
+    <el-row style="padding: 10px 80px">
+      <el-col :span="24">
         <el-form
             ref="regForm"
             :model="detailForm"
             label-width="100px"
             :disabled="disableForm"
+            style="max-width: 400px; margin: 20px auto"
         >
           <el-form-item label="用&nbsp;户&nbsp;名:" prop="userName">
             <el-input
@@ -47,16 +47,19 @@
             />
           </el-form-item>
         </el-form>
-      </el-col>
 
-      <el-col :span="8" style="float: right">
         <el-button
             type="primary"
             @click="saveModify"
             :disabled="disableForm"
+            style="margin: 20px 20px 0 0"
         >保存
         </el-button>
-        <el-button @click="enableModify">修改</el-button>
+        <el-button
+            @click="enableModify"
+            :disabled="!disableForm"
+            style="margin-top: 20px"
+        >修改</el-button>
       </el-col>
     </el-row>
   </div>

@@ -13,22 +13,17 @@
           :row-class-name="tableRowStyle"
       >
         <el-table-column
-            prop="rankMode"
-            label="匹配模式"
-            align="center"
-            width="120"
-            fixed="left"
-        >
-          <template #default="{ row }">
-            <el-tag type="primary">{{ row.rankMode }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
             prop="rankType"
             label="匹配方式"
             align="center"
             width="120"
             fixed="left"
+        />
+        <el-table-column
+            prop="rankMode"
+            label="匹配模式"
+            align="center"
+            width="120"
         />
         <el-table-column
             prop="catalog"

@@ -64,8 +64,16 @@
                   v-model="answeredItems[index]"
                   @change="changCurrentWord(index)"
                   size="large"
+                  :true-label="true"
+                  :false-label="false"
+                  disabled
               >
-                {{ item }}
+                <template #default>
+                  {{ item }}
+                  <span style="margin-left: 8px;">
+                    {{ answeredItems[index] ? '✔' : '✘' }}
+                  </span>
+                </template>
               </el-checkbox>
             </el-col>
           </el-row>
@@ -106,8 +114,13 @@ export default {
 
       for (let i = 1; i <= this.answerData.length; i++) {
         this.subjectItems.push(`第 ${i} 题`)
-        this.answeredItems[i - 1] = true
       }
+      // TODO 读取实际正确下标
+      const correct = [1, 2, 4, 8, 16]
+      for (let i = 1; i <= correct.length; i++) {
+        this.answeredItems[correct[i]] = true
+      }
+
       this.wordIndex = 0
       this.setActiveWord()
     },
@@ -139,7 +152,6 @@ export default {
     // 切换当前单词
     changCurrentWord(index) {
       this.wordIndex = index
-      this.answeredItems[index] = true
       this.setActiveWord()
     },
     setActiveWord() {

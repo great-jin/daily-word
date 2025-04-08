@@ -22,6 +22,7 @@
         <result property="costSecond" column="cost_second" jdbcType="INTEGER"/>
         <result property="correctCount" column="correct_count" jdbcType="INTEGER"/>
         <result property="score" column="score" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <select id="listByUser" resultMap="recordVoMap">
@@ -30,6 +31,7 @@
             mr.cost_second,
             mr.correct_count,
             mr.score,
+            mr.create_time,
             md.rank_mode,
             md.rank_type,
             md.catalog,

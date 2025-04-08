@@ -1,70 +1,81 @@
 <template>
   <div>
-    <el-row style="padding: 10px 100px 10px 200px">
-      <el-col :span="18">
-        <el-form
-            ref="privacyForm"
-            :model="privacyForm"
-            label-width="100px"
-            :disabled="disableForm"
-        >
-          <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="email">
-            <el-row style="width: 100%">
-              <el-col :span="18">
-                <el-input
-                    v-model="privacyForm.email"
-                    disabled
-                />
-              </el-col>
-              <el-col :span="6" style="display: flex; align-items: center; padding-left: 10px">
-                <el-button
-                    style="width: 100%"
-                    :disabled="countDown > 0"
-                    @click="sendMail"
-                >{{ countDown > 0 ? `${countDown} s` : '发送验证码' }}
-                </el-button>
-              </el-col>
-            </el-row>
-          </el-form-item>
-          <el-form-item label="验证码:" prop="captcha">
-            <el-input
-                v-model="privacyForm.captcha"
-                placeholder="请输入邮箱验证码"
-            />
-          </el-form-item>
-          <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
-            <el-input
-                type="password"
-                v-model="privacyForm.password"
-                placeholder="请输入密码"
-            />
-          </el-form-item>
-          <el-form-item label="确认密码:" prop="passwordCheck">
-            <el-input
-                type="password"
-                v-model="privacyForm.passwordCheck"
-                placeholder="请再次输入密码"
-            />
-          </el-form-item>
-        </el-form>
-      </el-col>
+    <div>
+      <el-row>
+        <el-col :span="24">
+          <el-form
+              ref="privacyForm"
+              label-width="100px"
+              :model="privacyForm"
+              :disabled="disableForm"
+              style="max-width: 500px; margin: 20px auto"
+          >
+            <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="email">
+              <el-row style="width: 100%">
+                <el-col :span="18">
+                  <el-input
+                      v-model="privacyForm.email"
+                      disabled
+                  />
+                </el-col>
+                <el-col :span="6" style="display: flex; align-items: center; padding-left: 10px">
+                  <el-button
+                      style="width: 100%"
+                      :disabled="countDown > 0"
+                      @click="sendMail"
+                  >{{ countDown > 0 ? `${countDown} s` : '发送' }}
+                  </el-button>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item label="验证码:" prop="captcha">
+              <el-input
+                  v-model="privacyForm.captcha"
+                  placeholder="请输入邮箱验证码"
+              />
+            </el-form-item>
+            <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
+              <el-input
+                  type="password"
+                  v-model="privacyForm.password"
+                  placeholder="请输入密码"
+              />
+            </el-form-item>
+            <el-form-item label="确认密码:" prop="passwordCheck">
+              <el-input
+                  type="password"
+                  v-model="privacyForm.passwordCheck"
+                  placeholder="请再次输入密码"
+              />
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
 
-      <el-col :span="6">
-        <el-button
-            @click="enableModify"
-        >修改</el-button>
-        <el-button
-            type="primary"
-            @click="saveModify"
-            :disabled="disableForm"
-        >保存
-        </el-button>
-        <el-button
-            type="danger"
-            @click="enableModify"
-        >注销</el-button>
-      </el-col>
-    </el-row>
+      <el-row style="margin-top: 20px">
+        <el-col :span="24">
+          <el-button
+              type="primary"
+              @click="saveModify"
+              :disabled="disableForm"
+              style="margin-right: 20px"
+          >保存
+          </el-button>
+          <el-button
+              @click="enableModify"
+              :disabled="!disableForm"
+              style="margin-right: 20px"
+          >修改
+          </el-button>
+          <el-button
+              type="danger"
+              :disabled="disableForm"
+              @click="enableModify"
+          >注销
+          </el-button>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 

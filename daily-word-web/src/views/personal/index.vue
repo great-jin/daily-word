@@ -40,6 +40,6 @@ export default {
 
 .tab-container {
   height: calc(100vh - 300px);
-  padding: 60px 220px;
+  padding: 60px 240px;
 }
 </style>

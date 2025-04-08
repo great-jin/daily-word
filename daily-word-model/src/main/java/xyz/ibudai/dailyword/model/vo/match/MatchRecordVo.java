@@ -2,6 +2,8 @@ package xyz.ibudai.dailyword.model.vo.match;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class MatchRecordVo {
 
@@ -20,5 +22,7 @@ public class MatchRecordVo {
     private Integer correctCount;
 
     private Integer score;
+
+    private LocalDateTime createTime;
 
 }
