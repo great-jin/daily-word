@@ -245,28 +245,16 @@ export default {
           this.$message.warning('请填写信息后重试！')
           return
         }
-        const _params = this.registerForm
-        if (!isEmail(_params.mail)) {
-          this.$message.warning('邮箱格式非法，请检查后重试！')
-          return
-        }
-        if (_params.password !== _params.passwordCheck) {
-          this.$message.warning('两次密码不一致，请检查后重试！')
-          return
-        }
-        if (_params.password.length < 6) {
-          this.$message.warning('密码长度不能小于 6 位!')
-          return
-        }
-        if (_params.password.length > 50) {
-          this.$message.warning('密码长度不能超过 50 位!')
+        // 校验非法则退出
+        if (!this.formatValidate()) {
           return
         }
 
+        // 用户注册
         let registerSuccess = false
-        _params.passwordCheck = null
-        _params.password = Encrypt(_params.password)
-        await register(_params).then(res => {
+        this.registerForm.passwordCheck = null
+        this.registerForm.password = Encrypt(this.registerForm.password)
+        await register(this.registerForm).then(res => {
           switch (res.data) {
             case 1:
               registerSuccess = true
@@ -286,6 +274,37 @@ export default {
         // 注册成功
         this.active++
       })
+    },
+    formatValidate() {
+      const _params = this.registerForm
+
+      // 邮箱格式校验
+      if (!isEmail(_params.mail)) {
+        this.$message.warning('邮箱格式非法，请检查后重试！')
+        return false
+      }
+
+      // 用户名格式校验
+      if (!(/^[A-Za-z0-9]+$/.test(_params.username))) {
+        this.$message.warning('用户名仅支持字母与数字！')
+        return false
+      }
+
+      // 密码格式校验
+      const pwd = _params.password
+      if (pwd !== _params.passwordCheck) {
+        this.$message.warning('两次密码不一致，请检查后重试！')
+        return false
+      }
+      if (pwd.length < 6 || pwd.length > 50) {
+        this.$message.warning('密码长度需大于 6 位且小于 50 位!')
+        return false
+      }
+      if (!(/^[A-Za-z0-9.!#]+$/.test(pwd))) {
+        this.$message.warning('密码只允许数字与字母，特殊符号仅支持 (. ! #) 三者')
+        return false
+      }
+      return true
     }
   }
 }

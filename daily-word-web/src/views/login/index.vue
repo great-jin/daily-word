@@ -161,6 +161,7 @@ export default {
         case 'compact':
           this.radioValue = this.radioValue === true;
           if (!this.radioValue) {
+            // 未展示过则弹窗
             this.$refs.compactModal.show();
           }
           break
