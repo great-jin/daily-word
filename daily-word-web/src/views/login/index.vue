@@ -87,6 +87,7 @@ import ForgotModal from './components/forgot.vue';
 import CompactModal from './components/compact.vue';
 import {login} from "@/api/authUserApi";
 import {Encrypt} from '@/util/AES.js';
+import {SHA256} from "@/util/hashUtil";
 import {setToken} from "@/util/AuthUtil";
 
 export default {
@@ -129,7 +130,7 @@ export default {
         // 表单验证通过，执行提交逻辑
         const user = {
           username: this.loginForm.username,
-          password: Encrypt(this.loginForm.password),
+          password: SHA256(Encrypt(this.loginForm.password)),
         }
         login(user).then(res => {
           const _data = res.data

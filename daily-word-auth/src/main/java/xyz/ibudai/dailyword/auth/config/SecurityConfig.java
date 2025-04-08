@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import xyz.ibudai.dailyword.auth.config.handler.AuthExceptionHandler;
 import xyz.ibudai.dailyword.auth.config.handler.LoginFailureHandler;
 import xyz.ibudai.dailyword.auth.config.handler.LoginSuccessHandler;
-import xyz.ibudai.dailyword.auth.encrypt.AESEncoder;
+import xyz.ibudai.dailyword.auth.encrypt.HashEncoder;
 import xyz.ibudai.dailyword.auth.filter.TokenFilter;
 import xyz.ibudai.dailyword.model.enums.SysRole;
 import xyz.ibudai.dailyword.model.props.SecurityProps;
@@ -52,7 +52,7 @@ public class SecurityConfig {
         // 设置动态用户信息
         authProvider.setUserDetailsService(authenticService);
         // 设置加密机制
-        authProvider.setPasswordEncoder(new AESEncoder());
+        authProvider.setPasswordEncoder(new HashEncoder());
         return authProvider;
     }
 

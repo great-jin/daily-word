@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import xyz.ibudai.dailyword.basic.encrypt.SHAUtil;
 import xyz.ibudai.dailyword.basic.enums.ContentType;
 import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
@@ -38,7 +39,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             userDTO = AuthUserDTO.builder()
                     .userId(user.getId())
                     .username(user.getUsername())
-                    .password(AESUtil.desEncrypt(user.getPassword()).trim())
+                    // 密码为 SHA-256 哈希值
+                    .password(SHAUtil.hash(user.getPassword().trim()))
                     .build();
             String key = objectMapper.writeValueAsString(userDTO);
             refreshToken = tokenUtil.createJWT(key);
@@ -48,17 +50,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         // 更新登录时间
         userDetailDao.updateOnlineTime(user.getId());
 
+        AuthUserDTO userVo = new AuthUserDTO();
         try {
-            userDTO = new AuthUserDTO();
-            userDTO.setKey(AESUtil.encrypt(user.getId().toString()));
-            userDTO.setRefreshToken(refreshToken);
-            String auth = user.getUsername() + ":" + user.getPassword();
-            userDTO.setAuthentic(Base64.getEncoder().encodeToString(auth.getBytes()));
+            userVo.setKey(AESUtil.encrypt(user.getId().toString()));
+            userVo.setRefreshToken(refreshToken);
+            // token = Base64(username:password)
+            String auth = userDTO.getUsername() + ":" + userDTO.getPassword();
+            userVo.setAuthentic(Base64.getEncoder().encodeToString(auth.getBytes()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         // 回传用户信息
-        ResponseData result = ResponseData.success(userDTO);
+        ResponseData result = ResponseData.success(userVo);
         response.setContentType(ContentType.JSON.getVal());
         response.getWriter().write(objectMapper.writeValueAsString(result));
     }
