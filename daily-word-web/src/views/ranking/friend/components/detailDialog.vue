@@ -4,9 +4,17 @@
       width="40%"
   >
     <template #header>
-      <span style="font-weight: bold; font-size: 18px">
-        {{ userInfo.userName }}
-      </span>
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <el-avatar
+            :size="40"
+            fit="fill"
+            :src="userInfo.avatar"
+            style="margin-right: 14px;"
+        />
+        <span style="font-weight: bold; font-size: 18px; line-height: 1;">
+          {{ userInfo.userName }}
+        </span>
+      </div>
     </template>
 
     <el-row :gutter="12" style="margin: 10px">
@@ -53,6 +61,7 @@ export default {
     return {
       visible: false,
       userInfo: {
+        avatar: '',
         userName: ''
       },
       rankInfo: {

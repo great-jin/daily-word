@@ -13,7 +13,7 @@
               <el-col :span="18">
                 <el-input
                     v-model="privacyForm.email"
-                    placeholder="请输入邮箱"
+                    disabled
                 />
               </el-col>
               <el-col :span="6" style="display: flex; align-items: center; padding-left: 10px">

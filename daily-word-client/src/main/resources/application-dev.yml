@@ -52,5 +52,5 @@ files:
   secret: ibudai
   home: /Workspace/files
   avatarDir: avatar
-  scale: 0.2
-  quality: 0.3
+  scale: 0.5
+  quality: 0.5

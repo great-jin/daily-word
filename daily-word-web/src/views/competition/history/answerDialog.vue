@@ -8,7 +8,10 @@
     <el-row>
       <el-col :span="17" class="container">
         <!-- 单词翻译 -->
-        <el-row :style="{marginTop: '80px'}" v-if="answerData.length > 0">
+        <el-row
+            v-if="answerData.length > 0"
+            :style="{marginTop: '90px'}"
+        >
           <el-col :span="24">
             <div v-for="item in answerData[wordIndex].translation" style="text-align: center">
               <strong>
@@ -41,7 +44,7 @@
               </el-col>
             </el-row>
 
-            <el-row :style="{marginTop: '30px'}">
+            <el-row :style="{marginTop: '40px'}">
               <el-col :span="24">
                 <el-button type="primary" @click="changeIndex('back')">上一题</el-button>
                 <el-button @click="read">朗&nbsp;&nbsp;读</el-button>

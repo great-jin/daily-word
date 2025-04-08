@@ -1,21 +1,25 @@
 package xyz.ibudai.dailyword.repository.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.files.util.FileServer;
+import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
+import xyz.ibudai.dailyword.model.props.FilesProps;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
-import xyz.ibudai.dailyword.repository.service.AuthUserService;
+import xyz.ibudai.dailyword.repository.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.service.UserFriendService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * (UserFriend)表服务实现类
@@ -24,10 +28,13 @@ import java.util.List;
  * @since 2025-03-16 09:26:05
  */
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend> implements UserFriendService {
 
-    @Autowired
-    private AuthUserService authUserService;
+    private final FilesProps filesProps;
+    private final FileServer fileServer;
+
+    private final UserDetailService userDetailService;
 
 
     @Override
@@ -37,17 +44,22 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
             return Collections.emptyList();
         }
 
-        List<AuthUser> authUsers = authUserService.lambdaQuery()
-                .select(AuthUser::getId, AuthUser::getUsername)
-                .in(AuthUser::getId, userIdList)
+        List<UserDetail> list = userDetailService.lambdaQuery()
+                .in(UserDetail::getUserId, userIdList)
                 .list();
         // 构建前端实体
         List<UserFriendVo> result = new ArrayList<>();
-        for (AuthUser user : authUsers) {
+        for (UserDetail user : list) {
+            String avatarUrl = fileServer.signUrl(
+                    user.getAvatar(),
+                    filesProps.getAvatarDir(),
+                    TimeUnit.HOURS.toMillis(1)
+            );
             UserFriendVo friendVo = UserFriendVo.builder()
-                    .userId(user.getId())
-                    .userName(user.getUsername())
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
                     .online(false)
+                    .avatar(avatarUrl)
                     .build();
             result.add(friendVo);
         }

@@ -15,5 +15,7 @@ public class UserFriendVo {
 
     private String userName;
 
+    private String avatar;
+
     private Boolean online;
 }

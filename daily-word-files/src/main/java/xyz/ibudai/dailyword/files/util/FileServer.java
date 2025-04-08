@@ -33,7 +33,7 @@ public class FileServer {
                 // 压缩质量
                 .outputQuality(filesProps.getQuality())
                 // 输出格式
-                .outputFormat("jpg")
+                .outputFormat("jpeg")
                 .toOutputStream(out);
     }
 

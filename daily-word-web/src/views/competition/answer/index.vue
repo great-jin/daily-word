@@ -2,56 +2,7 @@
   <div style="height: 100%;">
     <el-row style="height: 100%;">
       <el-col :span="18" class="container">
-        <el-row :style="{marginTop: '50px'}">
-          <el-col :span="24">
-            <el-button type="primary" @click="changeCurrentIndex('back')">上一题</el-button>
-            <el-button type="primary" @click="changeCurrentIndex('next')">下一题</el-button>
-            <el-popconfirm
-                title="请确认结束对局并提交！"
-                confirm-button-text="是"
-                cancel-button-text="否"
-                placement="top"
-                width="200"
-                @confirm="submit"
-            >
-              <template #reference>
-                <el-button key="submit" type="primary">提&nbsp;&nbsp;交</el-button>
-              </template>
-            </el-popconfirm>
-          </el-col>
-        </el-row>
-
-        <el-row :style="{marginTop: '50px'}">
-          <el-col :span="24">
-            <el-popconfirm
-                title="提示将降低答题得分"
-                confirm-button-text="是"
-                cancel-button-text="否"
-                placement="top"
-                width="200"
-                @confirm="clickOption('hit')"
-            >
-              <template #reference>
-                <el-button>提示</el-button>
-              </template>
-            </el-popconfirm>
-            <el-popconfirm
-                title="朗读将降低答题得分"
-                confirm-button-text="是"
-                cancel-button-text="否"
-                placement="top"
-                width="200"
-                @confirm="clickOption('read')"
-            >
-              <template #reference>
-                <el-button>朗读</el-button>
-              </template>
-            </el-popconfirm>
-            <el-button @click="clickOption('clear')">清空</el-button>
-          </el-col>
-        </el-row>
-
-        <el-row :style="{marginTop: '100px'}">
+        <el-row :style="{marginTop: '120px'}">
           <el-col :span="24">
             <div
                 v-if="planData.length > 0"
@@ -67,7 +18,7 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: '20px'}">
+        <el-row>
           <el-col :span="24">
             <el-input
                 ref="inputRefs"
@@ -83,20 +34,80 @@
           </el-col>
         </el-row>
 
-        <el-row :style="{marginTop: 'auto'}">
+        <el-row>
           <el-col :span="24">
-            <el-row >
+            <!-- 题数下标 -->
+            <el-row>
               <el-col :span="24">
                 <span>{{ currentIndex + 1 }} / {{ planData.length }}</span>
               </el-col>
             </el-row>
 
+            <!-- 计时器 -->
             <el-row :style="{margin: '30px 0'}">
               <el-col :span="24">
                 <span>
                   <strong>作答耗时:</strong>
                   {{ formattedTime }}
                 </span>
+              </el-col>
+            </el-row>
+
+            <el-row :style="{margin: '100px 0 40px 0'}">
+              <el-col :span="24">
+                <!-- 辅助功能 -->
+                <el-row>
+                  <el-col :span="24">
+                    <el-popconfirm
+                        title="提示将降低答题得分"
+                        confirm-button-text="是"
+                        cancel-button-text="否"
+                        placement="top"
+                        width="200"
+                        @confirm="clickOption('hit')"
+                    >
+                      <template #reference>
+                        <el-button type="warning">提示</el-button>
+                      </template>
+                    </el-popconfirm>
+                    <el-popconfirm
+                        title="朗读将降低答题得分"
+                        confirm-button-text="是"
+                        cancel-button-text="否"
+                        placement="top"
+                        width="200"
+                        @confirm="clickOption('read')"
+                    >
+                      <template #reference>
+                        <el-button type="warning">朗读</el-button>
+                      </template>
+                    </el-popconfirm>
+                    <el-button
+                        type="warning"
+                        @click="clickOption('clear')"
+                    >清空</el-button>
+                  </el-col>
+                </el-row>
+
+                <!-- 题目切换 -->
+                <el-row :style="{marginTop: '60px'}">
+                  <el-col :span="24">
+                    <el-button type="primary" @click="changeCurrentIndex('back')">上一题</el-button>
+                    <el-button type="primary" @click="changeCurrentIndex('next')">下一题</el-button>
+                    <el-popconfirm
+                        title="请确认结束对局并提交！"
+                        confirm-button-text="是"
+                        cancel-button-text="否"
+                        placement="top"
+                        width="200"
+                        @confirm="submit"
+                    >
+                      <template #reference>
+                        <el-button key="submit" type="primary">提&nbsp;&nbsp;交</el-button>
+                      </template>
+                    </el-popconfirm>
+                  </el-col>
+                </el-row>
               </el-col>
             </el-row>
           </el-col>

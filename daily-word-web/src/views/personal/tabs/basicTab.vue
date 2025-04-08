@@ -35,6 +35,11 @@
                 v-model="detailForm.userName"
             />
           </el-form-item>
+          <el-form-item label="电子邮箱:" prop="email">
+            <el-input
+                v-model="detailForm.email"
+            />
+          </el-form-item>
           <el-form-item label="注册时间:" prop="registerTime">
             <el-input
                 v-model="detailForm.registerTime"
@@ -67,6 +72,7 @@ export default {
       detailForm: {
         avatar: null,
         userName: null,
+        email: null,
         registerTime: null,
       },
       fileList: []
@@ -74,7 +80,9 @@ export default {
   },
   mounted() {
     getDetails().then(res => {
-      this.detailForm = res.data
+      const _data = res.data
+      _data.registerTime = _data.registerTime.substring(0, 10)
+      this.detailForm = _data
     })
   },
   methods: {

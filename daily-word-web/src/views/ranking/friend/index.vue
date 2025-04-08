@@ -27,11 +27,20 @@
           :row-class-name="tableRowStyle"
           @row-click="selectRow"
       >
-        <el-table-column
-            prop="userName"
-            label="用户名"
-            align="center"
-        />
+        <el-table-column label="用户名" align="center">
+          <template #default="{ row }">
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <el-avatar
+                  :size="30"
+                  :src="row.avatar"
+                  fit="cover"
+                  style="margin-right: 10px;"
+              />
+              <span>{{ row.userName }}</span>
+            </div>
+          </template>
+        </el-table-column>
+
         <el-table-column
             prop="online"
             label="状态"

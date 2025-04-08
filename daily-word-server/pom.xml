@@ -19,11 +19,6 @@
         </dependency>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-files</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.ibudai</groupId>
             <artifactId>daily-word-repository</artifactId>
             <version>${project.version}</version>
         </dependency>
