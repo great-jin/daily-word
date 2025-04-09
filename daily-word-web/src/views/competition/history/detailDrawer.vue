@@ -69,7 +69,7 @@
 
 <script>
 import {getMatchDetail} from "@/api/matchApi";
-import {formatSeconds} from "@/util/commonUtil";
+import {formatSeconds} from "@/util/CommonUtil";
 
 export default {
   data() {

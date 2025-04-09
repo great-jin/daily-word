@@ -22,15 +22,15 @@ public class FileResources {
     /**
      * Gets temp file.
      *
-     * @param fileName the file name
      * @param bucket   the bucket
+     * @param fileName the file name
      * @param expire   the expiry
      * @param secret   the secret
      * @return the temp file
      */
-    @GetMapping(value = "/{fileName:.+}")
-    public ResponseEntity<?> getFile(@PathVariable String fileName,
-                                     @RequestParam("bucket") String bucket,
+    @GetMapping(value = "/{bucket}/{fileName:.+}")
+    public ResponseEntity<?> getFile(@PathVariable String bucket,
+                                     @PathVariable String fileName,
                                      @RequestParam(required = false) Long expire,
                                      @RequestParam(required = false) String secret) {
         if (expire == null || secret == null) {

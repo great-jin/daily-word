@@ -109,6 +109,9 @@ public class AuthenticServiceImpl implements AuthenticService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer register(RegisterVo registerVo) {
+        // TODO 正则二次校验用户名与密码是否合规
+
+
         List<AuthUser> list = authUserService.lambdaQuery()
                 .eq(AuthUser::getUsername, registerVo.getUsername())
                 .list();

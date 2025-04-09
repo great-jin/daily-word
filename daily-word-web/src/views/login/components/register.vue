@@ -113,7 +113,7 @@
 <script>
 import {register, validateCode} from "@/api/authUserApi";
 import {Encrypt} from "@/util/AES";
-import {isEmail} from "@/util/commonUtil";
+import {isEmail, isNameValid, isPwdValid} from "@/util/RegexUtil";
 
 export default {
   data() {
@@ -285,7 +285,7 @@ export default {
       }
 
       // 用户名格式校验
-      if (!(/^[A-Za-z0-9]+$/.test(_params.username))) {
+      if (!isNameValid(_params.username)) {
         this.$message.warning('用户名仅支持字母与数字！')
         return false
       }
@@ -300,7 +300,7 @@ export default {
         this.$message.warning('密码长度需大于 6 位且小于 50 位!')
         return false
       }
-      if (!(/^[A-Za-z0-9.!#]+$/.test(pwd))) {
+      if (!isPwdValid(pwd)) {
         this.$message.warning('密码只允许数字与字母，特殊符号仅支持 (. ! #) 三者')
         return false
       }

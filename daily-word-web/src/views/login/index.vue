@@ -87,7 +87,7 @@ import ForgotModal from './components/forgot.vue';
 import CompactModal from './components/compact.vue';
 import {login} from "@/api/authUserApi";
 import {Encrypt} from '@/util/AES.js';
-import {SHA256} from "@/util/hashUtil";
+import {SHA256} from "@/util/HashUtil";
 import {setToken} from "@/util/AuthUtil";
 
 export default {

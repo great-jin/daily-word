@@ -142,7 +142,7 @@ import {listMatchHistory} from "@/api/matchApi";
 import DetailDrawer from "./detailDrawer.vue";
 import ResultDialog from "./answerDialog.vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
-import {formatSeconds} from "@/util/commonUtil";
+import {formatSeconds} from "@/util/CommonUtil";
 
 export default {
   components: {

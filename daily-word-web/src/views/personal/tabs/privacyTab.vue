@@ -81,7 +81,7 @@
 
 <script>
 import {getDetails} from "@/api/userDetailsApi";
-import {isEmail} from "@/util/commonUtil";
+import {isEmail} from "@/util/RegexUtil";
 
 export default {
   data() {

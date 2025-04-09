@@ -54,9 +54,9 @@ public class FileServer {
         String key = filePath + expire + filesProps.getSecret();
         String secret = DigestUtils.md5DigestAsHex(key.getBytes());
         return filesProps.getHost()
+                + "/" + bucket
                 + "/" + filePath
-                + "?" + String.format("bucket=%s", bucket)
-                + "&" + String.format("expire=%s", expire)
+                + "?" + String.format("expire=%s", expire)
                 + "&" + String.format("secret=%s", secret);
     }
 }

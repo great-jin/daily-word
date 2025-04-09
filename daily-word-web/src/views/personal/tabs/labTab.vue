@@ -77,6 +77,7 @@
               fixed="right"
           >
             <template #default="{ row }">
+              <el-button type="primary" @click="reActive(row)" link>激活</el-button>
               <el-button type="primary" @click="removeCode(row)" link>删除</el-button>
             </template>
           </el-table-column>
@@ -107,6 +108,23 @@ export default {
         createTime: '2025-04-02',
         expireTime: '2025-04-09'
       })
+    },
+    reActive(data) {
+      switch (data.status) {
+        case 1:
+          this.$message.warning('激活码未使用，无效重新激活！')
+          break
+        case 2:
+          this.$message.warning('激活码已使用，无法激活！')
+          break
+        case 3:
+          const target = this.tableData.find(item => item.code === data.code);
+          if (target !== null) {
+            target.status = 1
+            this.$message.success('激活成功！')
+          }
+          break
+      }
     },
     removeCode(data) {
       this.tableData = this.tableData.filter(it => it.code !== data.code)

@@ -53,8 +53,7 @@
             @click="saveModify"
             :disabled="disableForm"
             style="margin: 20px 20px 0 0"
-        >保存
-        </el-button>
+        >保存</el-button>
         <el-button
             @click="enableModify"
             :disabled="!disableForm"
@@ -100,6 +99,10 @@ export default {
       const isImage = file.type.startsWith('image/')
       if (!isImage) {
         this.$message.warning('只能上传图片文件！')
+        return
+      }
+      if (file.size / 1000 / 1000 > 15) {
+        this.$message.warning('图片大小不能超过 15 MB！')
         return
       }
 

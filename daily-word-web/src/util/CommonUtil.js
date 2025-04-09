@@ -1,7 +1,3 @@
-export function isEmail(email) {
-    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-}
-
 export function formatSeconds(seconds) {
     if (isNaN(seconds) || seconds < 0) return "00:00:00";
 
