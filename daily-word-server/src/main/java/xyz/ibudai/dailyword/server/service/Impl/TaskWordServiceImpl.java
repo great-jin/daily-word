@@ -19,21 +19,21 @@ import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.model.vo.word.WordDescribe;
 import xyz.ibudai.dailyword.repository.dao.MatchDetailDao;
-import xyz.ibudai.dailyword.repository.mongo.MongoManager;
+import xyz.ibudai.dailyword.repository.mongo.MongoRepository;
 import xyz.ibudai.dailyword.server.cache.DictTool;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.cache.DicPreHeat;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
-import xyz.ibudai.dailyword.server.service.WordService;
+import xyz.ibudai.dailyword.server.service.TaskWordService;
 
 import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class WordServiceImpl implements WordService {
+public class TaskWordServiceImpl implements TaskWordService {
 
-    private final MongoManager mongoManager;
+    private final MongoRepository mongoRepository;
 
     private final MatchDetailDao matchDetailDao;
     private final MatchRecordService matchRecordService;
@@ -133,7 +133,7 @@ public class WordServiceImpl implements WordService {
         Map<String, Object> condition = new HashMap<>();
         condition.put("match_id", matchId);
         condition.put("user_id", SecurityUtil.getLoginUser());
-        AnswerRecord answerRecord = mongoManager.find(AnswerRecord.class, condition);
+        AnswerRecord answerRecord = mongoRepository.find(AnswerRecord.class, condition);
         List<SubjectContent> submits = answerRecord.getSubjectList();
 
         // 是否答对

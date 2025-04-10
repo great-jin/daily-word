@@ -9,7 +9,6 @@ import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.basic.tool.DateTimeTool;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
-import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
@@ -32,7 +31,6 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend> implements UserFriendService {
 
-    private final OssProps ossProps;
     private final OssServer ossServer;
 
     private final UserDetailService userDetailService;

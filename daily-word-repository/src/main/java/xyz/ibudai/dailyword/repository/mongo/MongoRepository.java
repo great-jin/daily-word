@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class MongoManager {
+public class MongoRepository {
 
     private final MongoTemplate mongoTemplate;
 

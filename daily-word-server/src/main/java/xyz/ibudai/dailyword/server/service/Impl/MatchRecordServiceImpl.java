@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRecord> implements MatchRecordService {
 
-    private final MongoService mongoService;
+    private final AnswerRecordService answerRecordService;
 
     private final AuthUserService authUserService;
 
@@ -156,7 +156,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
         }
 
         // 计算答题数据，保存 mongo
-        int correctCount = mongoService.getCorrectCount(matchId, answerDTO.getContentList());
+        int correctCount = answerRecordService.getCorrectCount(matchId, answerDTO.getContentList());
         userRecord.setFinished(Boolean.TRUE);
         userRecord.setCorrectCount(correctCount);
         userRecord.setCostSecond(answerDTO.getCostTime());

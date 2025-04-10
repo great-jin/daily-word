@@ -4,7 +4,7 @@ import xyz.ibudai.dailyword.model.mongo.SubjectContent;
 
 import java.util.List;
 
-public interface MongoService {
+public interface AnswerRecordService {
 
     /**
      * Gets correct count.

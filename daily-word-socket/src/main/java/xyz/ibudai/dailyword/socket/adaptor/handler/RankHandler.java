@@ -20,7 +20,7 @@ import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
-import xyz.ibudai.dailyword.server.service.WordService;
+import xyz.ibudai.dailyword.server.service.TaskWordService;
 import xyz.ibudai.dailyword.socket.adaptor.ChannelAdaptor;
 import xyz.ibudai.dailyword.socket.consts.BeanConst;
 import xyz.ibudai.dailyword.socket.enums.Protocol;
@@ -39,7 +39,7 @@ public class RankHandler extends ChannelAdaptor {
 
     private final ObjectMapper objectMapper;
 
-    private final WordService wordService;
+    private final TaskWordService taskWordService;
     private final MatchRecordService matchRecordService;
 
 
@@ -135,7 +135,7 @@ public class RankHandler extends ChannelAdaptor {
     private String handlerSuccess(Integer uid, Set<Integer> users, RoomDTO roomDTO) throws JsonProcessingException {
         log.info("match success, userId: {}, list: {}", uid, users);
         ResponseData res = new ResponseData(RANK_MATCHED.getCode());
-        List<TaskWordDTO> dataList = wordService.getTaskContent(roomDTO.getCatalogue(), roomDTO.getSize());
+        List<TaskWordDTO> dataList = taskWordService.getTaskContent(roomDTO.getCatalogue(), roomDTO.getSize());
 
         // 记录匹配信息
         List<Integer> offsets = dataList.stream().map(TaskWordDTO::getOffset).toList();

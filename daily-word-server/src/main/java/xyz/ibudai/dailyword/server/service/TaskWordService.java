@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * The type Word service.
  */
-public interface WordService {
+public interface TaskWordService {
 
     /**
      * Gets dict detail.

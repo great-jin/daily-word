@@ -2,12 +2,11 @@ package xyz.ibudai.dailyword.server.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.*;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.Word;
-import xyz.ibudai.dailyword.server.service.WordService;
+import xyz.ibudai.dailyword.server.service.TaskWordService;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public class WordResource {
 
     @Autowired
-    private WordService wordService;
+    private TaskWordService taskWordService;
 
 
     /**
@@ -29,7 +28,7 @@ public class WordResource {
      */
     @GetMapping("getDictDetail")
     public List<DictDetail> getDictDetail() {
-        return wordService.getDictDetail();
+        return taskWordService.getDictDetail();
     }
 
     /**
@@ -40,7 +39,7 @@ public class WordResource {
      */
     @GetMapping("translation")
     public Word translation(@RequestParam("word") String word) {
-        return wordService.translation(word);
+        return taskWordService.translation(word);
     }
 
     /**
@@ -53,7 +52,7 @@ public class WordResource {
     @PostMapping("startTask")
     public MatchVo startTask(@RequestParam("catalogue") Catalogue catalogue,
                              @RequestParam("size") Integer size) {
-        return wordService.starTask(catalogue, size);
+        return taskWordService.starTask(catalogue, size);
     }
 
     /**
@@ -64,6 +63,6 @@ public class WordResource {
      */
     @GetMapping("getAnswer")
     public AnswerVo getAnswer(@RequestParam("matchId") Integer matchId) {
-        return wordService.getAnswer(matchId);
+        return taskWordService.getAnswer(matchId);
     }
 }

@@ -9,18 +9,18 @@ import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.mongo.AnswerRecord;
 import xyz.ibudai.dailyword.model.mongo.SubjectContent;
 import xyz.ibudai.dailyword.repository.dao.MatchDetailDao;
-import xyz.ibudai.dailyword.repository.mongo.MongoManager;
+import xyz.ibudai.dailyword.repository.mongo.MongoRepository;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.cache.DictTool;
-import xyz.ibudai.dailyword.server.service.MongoService;
+import xyz.ibudai.dailyword.server.service.AnswerRecordService;
 
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class MongoServiceImpl implements MongoService {
+public class AnswerRecordServiceImpl implements AnswerRecordService {
 
-    private final MongoManager mongoManager;
+    private final MongoRepository mongoRepository;
 
     private final MatchDetailDao matchDetailDao;
 
@@ -54,7 +54,7 @@ public class MongoServiceImpl implements MongoService {
         answerRecord.setMatchId(matchId);
         answerRecord.setUserId(SecurityUtil.getLoginUser());
         answerRecord.setSubjectList(contentList);
-        mongoManager.insert(answerRecord);
+        mongoRepository.insert(answerRecord);
         return count;
     }
 }
