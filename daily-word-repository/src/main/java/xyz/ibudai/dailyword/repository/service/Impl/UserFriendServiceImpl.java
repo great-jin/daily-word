@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import xyz.ibudai.dailyword.files.util.FileServer;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
-import xyz.ibudai.dailyword.model.props.FilesProps;
+import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
+import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
 import xyz.ibudai.dailyword.repository.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.service.UserFriendService;
@@ -19,7 +19,6 @@ import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * (UserFriend)表服务实现类
@@ -31,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend> implements UserFriendService {
 
-    private final FilesProps filesProps;
-    private final FileServer fileServer;
+    private final OssProps ossProps;
+    private final OssServer ossServer;
 
     private final UserDetailService userDetailService;
 
@@ -50,11 +49,7 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
         // 构建前端实体
         List<UserFriendVo> result = new ArrayList<>();
         for (UserDetail user : list) {
-            String avatarUrl = fileServer.signUrl(
-                    user.getAvatar(),
-                    filesProps.getAvatarDir(),
-                    TimeUnit.HOURS.toMillis(1)
-            );
+            String avatarUrl = ossServer.signAvatarUrl(user.getAvatar());
             UserFriendVo friendVo = UserFriendVo.builder()
                     .userId(user.getUserId())
                     .userName(user.getUserName())

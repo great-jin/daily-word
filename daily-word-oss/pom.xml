@@ -9,7 +9,7 @@
         <relativePath>../daily-word-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>daily-word-files</artifactId>
+    <artifactId>daily-word-oss</artifactId>
 
     <dependencies>
         <dependency>

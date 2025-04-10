@@ -24,9 +24,6 @@ import java.time.LocalDateTime;
 @TableName("rank_board")
 public class RankBoard extends Model<RankBoard> {
 
-    @TableField(exist = false)
-    private String index;
-
     @TableId(type = IdType.AUTO)
     private Integer id;
 

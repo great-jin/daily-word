@@ -9,18 +9,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.model.entity.MatchDetail;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
+import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.vo.RankBoardVo;
+import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.RankBoardDao;
 import xyz.ibudai.dailyword.repository.service.AuthUserService;
 import xyz.ibudai.dailyword.repository.service.MatchDetailService;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
+import xyz.ibudai.dailyword.repository.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -33,8 +37,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> implements RankBoardService {
 
-    private final AuthUserService authUserService;
+    private final OssServer ossServer;
 
+    private final AuthUserService authUserService;
+    private final UserDetailService userDetailService;
     private final MatchDetailService matchDetailService;
 
 
@@ -66,40 +72,43 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
     }
 
     @Override
-    public List<RankBoard> listByCatalog(String catalog) {
-        List<RankBoard> list = this.lambdaQuery()
-                .eq(RankBoard::getSeason, SystemConfig.getSeason())
-                .eq(RankBoard::getCatalog, catalog)
-                .orderByDesc(RankBoard::getScore)
-                .last("LIMIT 100")
-                .list();
-        Set<Integer> userIds = list.stream()
-                .map(RankBoard::getUserId)
-                .collect(Collectors.toSet());
+    public List<RankBoardVo> listByCatalog(String catalog) {
         Integer userId = SecurityUtil.getLoginUser();
-        int i = 1;
-        for (RankBoard item : list) {
-            item.setIndex(String.valueOf(i++));
+        UserDetail userDetail = userDetailService.getById(userId);
+
+        // 排行榜数据
+        int index = 1;
+        boolean containBoard = false;
+        List<RankBoardVo> list = this.baseMapper.listTopFifty(catalog, SystemConfig.getSeason());
+        for (RankBoardVo item : list) {
+            if (Objects.equals(item.getUserName(), userDetail.getUserName())) {
+                containBoard = true;
+            }
+            item.setIndex(String.valueOf(index++));
+            item.setAvatar(ossServer.signAvatarUrl(item.getAvatar()));
         }
-        if (userIds.contains(userId)) {
+        if (containBoard) {
             return list;
         }
 
-        // 最后一条展示用户
+        // 前 50 不包含自身且存在匹配记录
         RankBoard userRank = this.lambdaQuery()
                 .eq(RankBoard::getSeason, SystemConfig.getSeason())
                 .eq(RankBoard::getCatalog, catalog)
                 .eq(RankBoard::getUserId, userId)
                 .one();
         if (Objects.isNull(userRank)) {
-            userRank = RankBoard.init();
-            userRank.setUserId(userId);
-            userRank.setCatalog(catalog);
-            AuthUser authUser = authUserService.getById(userId);
-            userRank.setUserName(authUser.getUsername());
+            return list;
         }
-        userRank.setIndex("-");
-        list.add(userRank);
+
+        // 构建 VO 对象
+        RankBoardVo boardVo = new RankBoardVo();
+        boardVo.setIndex("-");
+        boardVo.setUserName(userDetail.getUserName());
+        boardVo.setMatchCount(userRank.getMatchCount());
+        boardVo.setScore(userRank.getScore());
+        boardVo.setAvatar(ossServer.signAvatarUrl(userDetail.getAvatar()));
+        list.add(boardVo);
         return list;
     }
 

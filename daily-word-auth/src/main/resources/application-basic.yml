@@ -14,7 +14,7 @@ resources:
     excludes:
       - ${server.servlet.context-path}/api/auth/*
       - ${server.servlet.context-path}/api/server/word/translation
-      - ${server.servlet.context-path}/api/files/**
+      - ${server.servlet.context-path}/api/oss/**
   # Authentic config
   security:
     loginUrl: /api/auth/login
@@ -23,7 +23,7 @@ resources:
       - /api/auth/register
       - /api/auth/forgot
       - /api/server/word/translation
-      - /api/files/**
+      - /api/oss/**
     commonUrls:
       - ${server.servlet.context-path}/api/server/**
     userUrls:

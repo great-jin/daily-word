@@ -7,7 +7,7 @@
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="userName" column="user_name" jdbcType="VARCHAR"/>
         <result property="season" column="season" jdbcType="INTEGER"/>
-        <result property="catalog" column="catalog_id" jdbcType="VARCHAR"/>
+        <result property="catalog" column="catalog" jdbcType="VARCHAR"/>
         <result property="score" column="score" jdbcType="INTEGER"/>
         <result property="matchCount" column="match_count" jdbcType="INTEGER"/>
         <result property="matchWin" column="match_win" jdbcType="INTEGER"/>
@@ -16,5 +16,20 @@
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <select id="listTopFifty" resultType="xyz.ibudai.dailyword.model.vo.RankBoardVo">
+        select
+            ud.avatar,
+            rb.user_name,
+            rb.score,
+            rb.match_count
+        from rank_board rb
+        left join user_detail ud
+        on rb.user_id = ud.user_id
+        where
+            rb.season = #{season}
+            and rb.catalog = #{catalog}
+        order by score desc
+        limit 50
+    </select>
 </mapper>
 

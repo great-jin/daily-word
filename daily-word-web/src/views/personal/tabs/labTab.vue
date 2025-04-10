@@ -13,7 +13,7 @@
 
           <el-tooltip
               effect="dark"
-              content="每个用户每个月拥有 10 个邀请码名额"
+              content="每个用户每个月拥有 6 个邀请码名额"
               placement="top"
           >
             <div style="display: flex; align-items: center;">
@@ -77,7 +77,12 @@
               fixed="right"
           >
             <template #default="{ row }">
-              <el-button type="primary" @click="reActive(row)" link>激活</el-button>
+              <el-button
+                  type="primary"
+                  @click="reActive(row)"
+                  :disabled="row.status !== 3"
+                  link
+              >激活</el-button>
               <el-button type="primary" @click="removeCode(row)" link>删除</el-button>
             </template>
           </el-table-column>
@@ -97,8 +102,8 @@ export default {
   },
   methods: {
     generate() {
-      if (this.tableData.length >= 10) {
-        this.$message.warning('最多生成 10 份邀请码!')
+      if (this.tableData.length >= 6) {
+        this.$message.warning('最多生成 6 份邀请码!')
         return
       }
 
@@ -110,20 +115,10 @@ export default {
       })
     },
     reActive(data) {
-      switch (data.status) {
-        case 1:
-          this.$message.warning('激活码未使用，无效重新激活！')
-          break
-        case 2:
-          this.$message.warning('激活码已使用，无法激活！')
-          break
-        case 3:
-          const target = this.tableData.find(item => item.code === data.code);
-          if (target !== null) {
-            target.status = 1
-            this.$message.success('激活成功！')
-          }
-          break
+      const target = this.tableData.find(item => item.code === data.code);
+      if (target !== null) {
+        target.status = 1
+        this.$message.success('激活成功！')
       }
     },
     removeCode(data) {

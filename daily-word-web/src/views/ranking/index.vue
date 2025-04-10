@@ -5,7 +5,7 @@
         <el-tooltip
             class="box-item"
             effect="dark"
-            content="仅展示前 100 名用户"
+            content="仅展示前 50 名用户"
             placement="bottom"
         >
           <span>积分排行榜</span>

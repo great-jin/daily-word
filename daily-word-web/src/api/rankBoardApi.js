@@ -16,7 +16,7 @@ export function getRankByUid(params) {
     })
 }
 
-export function list(params) {
+export function listRankBoard(params) {
     return request({
         url: `${apiPrefix}/list?catalog=${params}`,
         method: 'get'

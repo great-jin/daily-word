@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.ibudai.dailyword.files.util.FileServer;
+import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
-import xyz.ibudai.dailyword.model.props.FilesProps;
+import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.repository.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailResource {
 
-    private final FilesProps filesProps;
-    private final FileServer fileServer;
+    private final OssProps ossProps;
+    private final OssServer ossServer;
 
     private final UserDetailService userDetailService;
 
@@ -39,13 +39,7 @@ public class UserDetailResource {
     @GetMapping("getById")
     public UserDetail getById() {
         UserDetail user = userDetailService.getById(SecurityUtil.getLoginUser());
-
-        String url = fileServer.signUrl(
-                user.getAvatar(),
-                filesProps.getAvatarDir(),
-                TimeUnit.HOURS.toMillis(1)
-        );
-        user.setAvatar(url);
+        user.setAvatar(ossServer.signAvatarUrl(user.getAvatar()));
         return user;
     }
 
@@ -62,18 +56,14 @@ public class UserDetailResource {
 
 
         UserDetail user = userDetailService.getById(SecurityUtil.getLoginUser());
-        String avatarPath = filesProps.getHome() + File.separator + filesProps.getAvatarDir();
+        String avatarPath = ossProps.getHome() + File.separator + ossProps.getAvatarDir();
         File avatarFile = new File(avatarPath, user.getAvatar());
         try (
                 InputStream in = file.getInputStream();
                 OutputStream out = Files.newOutputStream(avatarFile.toPath())
         ) {
-            fileServer.compress(in, out);
-            return fileServer.signUrl(
-                    user.getAvatar(),
-                    filesProps.getAvatarDir(),
-                    TimeUnit.HOURS.toMillis(1)
-            );
+            ossServer.compress(in, out);
+            return ossServer.signAvatarUrl(user.getAvatar());
         }
     }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
+import xyz.ibudai.dailyword.model.vo.RankBoardVo;
 import xyz.ibudai.dailyword.repository.service.RankBoardService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
@@ -30,7 +31,7 @@ public class RankBoardResource {
      * @return 所有数据 list
      */
     @GetMapping("list")
-    public List<RankBoard> list(String catalog) {
+    public List<RankBoardVo> list(String catalog) {
         return rankBoardService.listByCatalog(catalog);
     }
 

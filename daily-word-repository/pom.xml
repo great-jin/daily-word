@@ -14,12 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-files</artifactId>
+            <artifactId>daily-word-oss</artifactId>
             <version>${project.version}</version>
         </dependency>
 

@@ -3,6 +3,7 @@ package xyz.ibudai.dailyword.repository.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
+import xyz.ibudai.dailyword.model.vo.RankBoardVo;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface RankBoardService extends IService<RankBoard> {
      * @param catalog the catalog
      * @return the list
      */
-    List<RankBoard> listByCatalog(String catalog);
+    List<RankBoardVo> listByCatalog(String catalog);
 
     /**
      * Update rank board.

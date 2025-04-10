@@ -2,6 +2,9 @@ package xyz.ibudai.dailyword.repository.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
+import xyz.ibudai.dailyword.model.vo.RankBoardVo;
+
+import java.util.List;
 
 /**
  * (RankBoard)表数据库访问层
@@ -11,5 +14,13 @@ import xyz.ibudai.dailyword.model.entity.RankBoard;
  */
 public interface RankBoardDao extends BaseMapper<RankBoard> {
 
+    /**
+     * List top fifty.
+     *
+     * @param catalog the catalog
+     * @param season  the season
+     * @return the list
+     */
+    List<RankBoardVo> listTopFifty(String catalog, Integer season);
 }
 

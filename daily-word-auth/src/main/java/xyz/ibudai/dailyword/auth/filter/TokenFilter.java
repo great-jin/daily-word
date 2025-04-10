@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
 import xyz.ibudai.dailyword.basic.enums.ContentType;
 import xyz.ibudai.dailyword.basic.enums.HttpHeader;
 import xyz.ibudai.dailyword.basic.enums.LoginStatus;
@@ -29,7 +30,7 @@ import java.util.Objects;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TokenFilter implements Filter {
+public class TokenFilter extends OncePerRequestFilter {
 
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -39,26 +40,19 @@ public class TokenFilter implements Filter {
     private final ObjectMapper objectMapper;
 
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
-    }
-
     /**
      * 每次请求读取请求头 Token 验证是否登录
      */
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        if (this.excludesUrl(req.getRequestURI())) {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (this.excludesUrl(request.getRequestURI())) {
             // 免认证服务
-            filterChain.doFilter(req, servletResponse);
+            filterChain.doFilter(request, response);
             return;
         }
 
         String msg;
-        String token = req.getHeader(HttpHeader.TOKEN.getFrontend());
+        String token = request.getHeader(HttpHeader.TOKEN.getFrontend());
         if (Objects.nonNull(token) && !token.isBlank()) {
             boolean isValid = true;
             try {
@@ -68,8 +62,8 @@ public class TokenFilter implements Filter {
             }
             if (isValid) {
                 // Token verify success
-                this.setUserContext(req.getHeader(HttpHeader.AUTHENTIC.getFrontend()));
-                filterChain.doFilter(req, servletResponse);
+                this.setUserContext(request.getHeader(HttpHeader.AUTHENTIC.getFrontend()));
+                filterChain.doFilter(request, response);
                 return;
             }
 
@@ -81,11 +75,6 @@ public class TokenFilter implements Filter {
         response.setStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value());
         ResponseData result = ResponseData.denied(msg);
         response.getWriter().write(objectMapper.writeValueAsString(result));
-    }
-
-    @Override
-    public void destroy() {
-        Filter.super.destroy();
     }
 
 

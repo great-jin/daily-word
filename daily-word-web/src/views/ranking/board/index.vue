@@ -6,16 +6,28 @@
           class="rank-table"
           :row-class-name="tableRowClassName"
       >
+        <el-table-column label="用户" align="center">
+          <template #default="{ row }">
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <el-avatar
+                  :size="30"
+                  :src="row.avatar"
+                  fit="cover"
+                  style="margin-right: 8px;"
+              />
+              <span>{{ row.userName }}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
             prop="index"
             label="排名"
             align="center"
-        />
-        <el-table-column
-            prop="userName"
-            label="用户名"
-            align="center"
-        />
+        >
+          <template #default="{ row }">
+            <el-tag type="primary">{{ row.index}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
             prop="matchCount"
             label="局数"
@@ -32,7 +44,7 @@
 </template>
 
 <script>
-import {list} from "@/api/rankBoardApi"
+import {listRankBoard} from "@/api/rankBoardApi"
 
 export default {
   props: {
@@ -49,7 +61,7 @@ export default {
   },
   methods: {
     listTable() {
-      list(this.activeType).then(res => {
+      listRankBoard(this.activeType).then(res => {
         this.rankData = res.data
       })
     },
