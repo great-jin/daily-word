@@ -63,7 +63,7 @@ public class WordResource {
      * @return the answer
      */
     @GetMapping("getAnswer")
-    public List<TaskWordDTO> getAnswer(@RequestParam("matchId") String matchId) {
+    public AnswerVo getAnswer(@RequestParam("matchId") Integer matchId) {
         return wordService.getAnswer(matchId);
     }
 }

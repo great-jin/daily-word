@@ -1,5 +1,7 @@
 package xyz.ibudai.dailyword.auth.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,9 @@ import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.enums.RegisterStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
-import xyz.ibudai.dailyword.repository.service.AuthUserService;
-import xyz.ibudai.dailyword.repository.service.InviteCodeService;
-import xyz.ibudai.dailyword.repository.service.UserDetailService;
+import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
+import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
+import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
 
 import java.util.List;
 import java.util.UUID;
@@ -52,14 +54,14 @@ public class AuthenticServiceImpl implements AuthenticService {
 
     private final JavaMailSender mailSender;
 
-    private final AuthUserService authUserService;
-    private final UserDetailService userDetailService;
-    private final InviteCodeService inviteCodeService;
+    private final AuthUserDao authUserDao;
+    private final UserDetailDao userDetailDao;
+    private final InviteCodeDao inviteCodeDao;
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthUser authUser = authUserService.queryByName(username);
+        AuthUser authUser = authUserDao.queryByName(username);
         if (authUser == null) {
             throw new IllegalArgumentException("User [" + username + "] doesn't exist.");
         }
@@ -72,9 +74,10 @@ public class AuthenticServiceImpl implements AuthenticService {
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Email is Illegal.");
         }
-        List<UserDetail> list = userDetailService.lambdaQuery()
-                .eq(UserDetail::getEmail, address)
-                .list();
+        List<UserDetail> list = userDetailDao.selectList(
+                new QueryWrapper<UserDetail>()
+                        .eq("email", address)
+        );
         if (!CollectionUtils.isEmpty(list)) {
             throw new IllegalArgumentException("Email has been registered.");
         }
@@ -112,9 +115,10 @@ public class AuthenticServiceImpl implements AuthenticService {
         // TODO 正则二次校验用户名与密码是否合规
 
 
-        List<AuthUser> list = authUserService.lambdaQuery()
-                .eq(AuthUser::getUsername, registerVo.getUsername())
-                .list();
+        List<AuthUser> list = authUserDao.selectList(
+                new QueryWrapper<AuthUser>()
+                        .eq("user_name", registerVo.getUsername())
+        );
         if (!CollectionUtils.isEmpty(list)) {
             // Username has been used
             return RegisterStatus.NAME_USED.getCode();
@@ -124,7 +128,7 @@ public class AuthenticServiceImpl implements AuthenticService {
         AuthUser authUser = AuthUser.initUser();
         authUser.setUsername(registerVo.getUsername());
         authUser.setPassword(registerVo.getPassword());
-        boolean userSaved = authUserService.save(authUser);
+        boolean userSaved = authUserDao.insert(authUser) > 0;
 
         // 创建用户信息
         Integer userId = authUser.getId();
@@ -133,13 +137,14 @@ public class AuthenticServiceImpl implements AuthenticService {
         userDetail.setUserName(registerVo.getUsername());
         userDetail.setEmail(registerVo.getEmail());
         userDetail.setInviteCode(registerVo.getInviteCode());
-        boolean detailSaved = userDetailService.save(userDetail);
+        boolean detailSaved = userDetailDao.insert(userDetail) > 0;
 
         // 更新邀请码为无效
-        inviteCodeService.lambdaUpdate()
-                .set(InviteCode::getActive, false)
-                .eq(InviteCode::getCode, registerVo.getInviteCode())
-                .update();
+        inviteCodeDao.update(
+                new UpdateWrapper<InviteCode>()
+                        .set("active", false)
+                        .eq("code", registerVo.getInviteCode())
+        );
 
         return userSaved && detailSaved
                 ? RegisterStatus.SUCCESS.getCode()

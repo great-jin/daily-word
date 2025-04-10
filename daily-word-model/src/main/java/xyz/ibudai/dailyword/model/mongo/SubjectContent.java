@@ -7,6 +7,6 @@ public class SubjectContent {
 
     private Integer offset;
 
-    private String content;
+    private String answer;
 
 }

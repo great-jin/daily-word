@@ -1,10 +1,10 @@
-package xyz.ibudai.dailyword.repository.service.Impl;
+package xyz.ibudai.dailyword.server.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
-import xyz.ibudai.dailyword.repository.service.InviteCodeService;
+import xyz.ibudai.dailyword.server.service.InviteCodeService;
 
 /**
  * (InviteCode)表服务实现类

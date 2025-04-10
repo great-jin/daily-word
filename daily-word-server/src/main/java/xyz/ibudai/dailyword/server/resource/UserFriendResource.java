@@ -3,7 +3,7 @@ package xyz.ibudai.dailyword.server.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
-import xyz.ibudai.dailyword.repository.service.UserFriendService;
+import xyz.ibudai.dailyword.server.service.UserFriendService;
 
 import java.util.List;
 

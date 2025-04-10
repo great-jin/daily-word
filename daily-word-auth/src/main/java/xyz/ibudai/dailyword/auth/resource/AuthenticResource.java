@@ -1,5 +1,6 @@
 package xyz.ibudai.dailyword.auth.resource;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -9,7 +10,7 @@ import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
-import xyz.ibudai.dailyword.repository.service.InviteCodeService;
+import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
 
 import java.util.List;
 
@@ -21,8 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthenticResource {
 
+    private final InviteCodeDao inviteCodeDao;
+
     private final AuthenticService authenticService;
-    private final InviteCodeService inviteCodeService;
 
 
     /**
@@ -42,10 +44,10 @@ public class AuthenticResource {
      */
     @GetMapping("validaCode")
     public Boolean validaCode(@RequestParam("inviteCode") String inviteCode) {
-        List<InviteCode> list = inviteCodeService.lambdaQuery()
-                .eq(InviteCode::getCode, inviteCode)
-                .eq(InviteCode::getActive, Boolean.TRUE)
-                .list();
+        QueryWrapper<InviteCode> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("code", inviteCode);
+        queryWrapper.eq("active", Boolean.TRUE);
+        List<InviteCode> list = inviteCodeDao.selectList(queryWrapper);
         return !CollectionUtils.isEmpty(list);
     }
 

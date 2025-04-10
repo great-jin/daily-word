@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.repository.service.Impl;
+package xyz.ibudai.dailyword.server.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +13,9 @@ import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.model.vo.UserFriendVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
-import xyz.ibudai.dailyword.repository.service.UserDetailService;
-import xyz.ibudai.dailyword.repository.service.UserFriendService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.server.service.UserDetailService;
+import xyz.ibudai.dailyword.server.service.UserFriendService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -28,8 +28,18 @@ public class TaskWordDTO {
     private String value;
 
     /**
+     * 单词长度
+     */
+    private Integer wordLength;
+
+    /**
      * 翻译
      */
     private List<String> translation;
+
+    /**
+     * 是否正确
+     */
+    private Boolean correct;
 
 }

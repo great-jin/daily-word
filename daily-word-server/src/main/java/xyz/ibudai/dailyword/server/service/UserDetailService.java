@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.repository.service;
+package xyz.ibudai.dailyword.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.ibudai.dailyword.model.entity.UserDetail;

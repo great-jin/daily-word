@@ -1,6 +1,9 @@
 package xyz.ibudai.dailyword.model.dto;
 
 import lombok.Data;
+import xyz.ibudai.dailyword.model.mongo.SubjectContent;
+
+import java.util.List;
 
 /**
  * The type Answer dto.
@@ -14,11 +17,6 @@ public class AnswerDTO {
     private Integer matchId;
 
     /**
-     * 答对数量
-     */
-    private Integer correctCount;
-
-    /**
      * 耗费时间
      */
     private Integer costTime;
@@ -27,5 +25,10 @@ public class AnswerDTO {
      * 得分
      */
     private Integer score;
+
+    /**
+     * The Content list.
+     */
+    List<SubjectContent> contentList;
 
 }

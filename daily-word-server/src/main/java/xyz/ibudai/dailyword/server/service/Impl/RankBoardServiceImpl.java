@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.repository.service.Impl;
+package xyz.ibudai.dailyword.server.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +16,14 @@ import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.vo.RankBoardVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.RankBoardDao;
-import xyz.ibudai.dailyword.repository.service.AuthUserService;
-import xyz.ibudai.dailyword.repository.service.MatchDetailService;
-import xyz.ibudai.dailyword.repository.service.RankBoardService;
-import xyz.ibudai.dailyword.repository.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.server.service.AuthUserService;
+import xyz.ibudai.dailyword.server.service.MatchDetailService;
+import xyz.ibudai.dailyword.server.service.RankBoardService;
+import xyz.ibudai.dailyword.server.service.UserDetailService;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**

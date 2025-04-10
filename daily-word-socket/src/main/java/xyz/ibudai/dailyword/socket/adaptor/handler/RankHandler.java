@@ -19,7 +19,7 @@ import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
-import xyz.ibudai.dailyword.repository.service.MatchRecordService;
+import xyz.ibudai.dailyword.server.service.MatchRecordService;
 import xyz.ibudai.dailyword.server.service.WordService;
 import xyz.ibudai.dailyword.socket.adaptor.ChannelAdaptor;
 import xyz.ibudai.dailyword.socket.consts.BeanConst;

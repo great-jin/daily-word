@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.repository.service.Impl;
+package xyz.ibudai.dailyword.server.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -21,11 +21,9 @@ import xyz.ibudai.dailyword.model.enums.RankType;
 import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;
 import xyz.ibudai.dailyword.repository.dao.MatchRecordDao;
-import xyz.ibudai.dailyword.repository.service.AuthUserService;
-import xyz.ibudai.dailyword.repository.service.MatchDetailService;
-import xyz.ibudai.dailyword.repository.service.MatchRecordService;
-import xyz.ibudai.dailyword.repository.service.RankBoardService;
+import xyz.ibudai.dailyword.server.service.MatchDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.server.service.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,6 +39,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRecord> implements MatchRecordService {
+
+    private final MongoService mongoService;
 
     private final AuthUserService authUserService;
 
@@ -155,8 +155,10 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
             return;
         }
 
+        // 计算答题数据，保存 mongo
+        int correctCount = mongoService.getCorrectCount(matchId, answerDTO.getContentList());
         userRecord.setFinished(Boolean.TRUE);
-        userRecord.setCorrectCount(answerDTO.getCorrectCount());
+        userRecord.setCorrectCount(correctCount);
         userRecord.setCostSecond(answerDTO.getCostTime());
 
         // 创建代理对象

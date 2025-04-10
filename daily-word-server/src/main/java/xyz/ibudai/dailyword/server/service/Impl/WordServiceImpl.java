@@ -10,26 +10,32 @@ import xyz.ibudai.dailyword.basic.tool.CollTool;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.entity.MatchDetail;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
+import xyz.ibudai.dailyword.model.mongo.AnswerRecord;
+import xyz.ibudai.dailyword.model.mongo.SubjectContent;
+import xyz.ibudai.dailyword.model.vo.AnswerVo;
 import xyz.ibudai.dailyword.model.vo.DictDetail;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.model.vo.word.WordDescribe;
-import xyz.ibudai.dailyword.repository.service.MatchDetailService;
-import xyz.ibudai.dailyword.repository.service.MatchRecordService;
+import xyz.ibudai.dailyword.repository.dao.MatchDetailDao;
+import xyz.ibudai.dailyword.repository.mongo.MongoManager;
+import xyz.ibudai.dailyword.server.cache.DictTool;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.cache.DicPreHeat;
+import xyz.ibudai.dailyword.server.service.MatchRecordService;
 import xyz.ibudai.dailyword.server.service.WordService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WordServiceImpl implements WordService {
 
-    private final MatchDetailService matchDetailService;
+    private final MongoManager mongoManager;
+
+    private final MatchDetailDao matchDetailDao;
     private final MatchRecordService matchRecordService;
 
 
@@ -105,38 +111,42 @@ public class WordServiceImpl implements WordService {
         Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
                 .get(catalogue)
                 .values();
-        return extract(catalogue, CollTool.randoms(collection, size));
+        List<TaskWordDTO> extract = DictTool.extract(catalogue, CollTool.randoms(collection, size));
+        for (TaskWordDTO item : extract) {
+            item.setWordLength(item.getValue().length());
+        }
+        return extract;
     }
 
     @Override
-    public List<TaskWordDTO> getAnswer(String matchId) {
-        MatchDetail matchDetail = matchDetailService.getById(matchId);
+    public AnswerVo getAnswer(Integer matchId) {
+        MatchDetail matchDetail = matchDetailDao.selectById(matchId);
         if (Objects.isNull(matchDetail)) {
-            return Collections.emptyList();
+            return null;
         }
 
-        String wordIndies = matchDetail.getWordIndies();
-        Set<Integer> offsets = Arrays.stream(wordIndies.split(","))
-                .map(Integer::parseInt)
-                .collect(Collectors.toSet());
+        // 答案
         Catalogue catalogue = Catalogue.valueOf(matchDetail.getCatalog());
-        return extract(catalogue, offsets);
-    }
+        List<TaskWordDTO> answers = DictTool.extract(catalogue, matchDetail.getWordIndies());
 
+        // 用户提交
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("match_id", matchId);
+        condition.put("user_id", SecurityUtil.getLoginUser());
+        AnswerRecord answerRecord = mongoManager.find(AnswerRecord.class, condition);
+        List<SubjectContent> submits = answerRecord.getSubjectList();
 
-    private List<TaskWordDTO> extract(Catalogue catalogue, Set<Integer> offsets) {
-        Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
-                .get(catalogue)
-                .values();
-        List<TaskWordDTO> taskList = new ArrayList<>();
-        for (TaskWordDTO item : collection) {
-            if (Objects.equals(taskList.size(), offsets.size())) {
-                break;
-            }
-            if (offsets.contains(item.getOffset())) {
-                taskList.add(item);
-            }
+        // 是否答对
+        Map<Integer, String> submitMap = new HashMap<>();
+        submits.forEach(it -> submitMap.put(it.getOffset(), it.getAnswer()));
+        for (TaskWordDTO answer : answers) {
+            answer.setCorrect(Objects.equals(answer.getValue(), submitMap.get(answer.getOffset())));
         }
-        return taskList;
+
+        // 构建 VO
+        AnswerVo answerVo = new AnswerVo();
+        answerVo.setAnswers(answers);
+        answerVo.setSubmits(submits);
+        return answerVo;
     }
 }

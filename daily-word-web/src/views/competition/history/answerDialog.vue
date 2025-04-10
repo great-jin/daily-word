@@ -9,11 +9,11 @@
       <el-col :span="17" class="container">
         <!-- 单词翻译 -->
         <el-row
-            v-if="answerData.length > 0"
+            v-if="correctData.length > 0"
             :style="{marginTop: '90px'}"
         >
           <el-col :span="24">
-            <div v-for="item in answerData[wordIndex].translation" style="text-align: center">
+            <div v-for="item in correctData[wordIndex].translation" style="text-align: center">
               <strong>
                 <span style="width: 100%; font-size: 16px">{{ item }}</span>
               </strong>
@@ -22,25 +22,43 @@
         </el-row>
 
         <!-- 单词内容 -->
-        <el-row :style="{marginTop: '40px'}">
-          <el-col :span="24">
-            <el-input
-                ref="inputRefs"
-                v-for="(item, index) in wordValues"
-                :key="index"
-                v-model="wordValues[index].value"
-                :maxlength="1"
-                class="input-word"
-                disabled
-            />
-          </el-col>
-        </el-row>
+        <div :style="{marginTop: '40px'}">
+          <el-row>
+            <el-col :span="24">
+              正确答案: &nbsp;&nbsp;
+              <el-input
+                  ref="inputRefs"
+                  v-for="(item, index) in wordValues"
+                  :key="index"
+                  v-model="wordValues[index].value"
+                  :maxlength="1"
+                  class="input-word"
+                  disabled
+              />
+            </el-col>
+          </el-row>
+
+          <el-row style="margin-top: 20px">
+            <el-col :span="24">
+              您的作答: &nbsp;&nbsp;
+              <el-input
+                  ref="inputRefs"
+                  v-for="(item, index) in inputValues"
+                  :key="index"
+                  v-model="inputValues[index].value"
+                  :maxlength="1"
+                  class="input-word"
+                  disabled
+              />
+            </el-col>
+          </el-row>
+        </div>
 
         <el-row :style="{marginTop: 'auto'}">
           <el-col :span="24">
             <el-row>
               <el-col :span="24" style="text-align: center;">
-                <span>{{ wordIndex + 1 }} / {{ answerData.length }}</span>
+                <span>{{ wordIndex + 1 }} / {{ correctData.length }}</span>
               </el-col>
             </el-row>
 
@@ -59,13 +77,15 @@
       <el-col :span="7">
         <div class="word-container">
           <el-row :gutter="20">
-            <el-col :span="11" v-for="(item, index) in subjectItems" :key="index">
+            <el-col
+                :span="11"
+                v-for="(item, index) in subjectItems"
+                :key="index"
+            >
               <el-checkbox
                   v-model="answeredItems[index]"
                   @change="changCurrentWord(index)"
                   size="large"
-                  :true-label="true"
-                  :false-label="false"
                   disabled
               >
                 <template #default>
@@ -92,9 +112,11 @@ export default {
   data() {
     return {
       visible: false,
-      answerData: [],
+      correctData: [],
+      inputData: [],
       wordIndex: 0,
       wordValues: [],
+      inputValues: [],
       subjectItems: [],
       answeredItems: []
     }
@@ -108,17 +130,14 @@ export default {
     async fillData(matchId) {
       await getTaskAnswer(matchId).then(res => {
         if (res !== undefined && res !== null) {
-          this.answerData = res.data
+          this.correctData = res.data.answers
+          this.inputData = res.data.submits
         }
       })
 
-      for (let i = 1; i <= this.answerData.length; i++) {
+      for (let i = 1; i <= this.correctData.length; i++) {
         this.subjectItems.push(`第 ${i} 题`)
-      }
-      // TODO 读取实际正确下标
-      const correct = [1, 2, 4, 8, 16]
-      for (let i = 1; i <= correct.length; i++) {
-        this.answeredItems[correct[i]] = true
+        this.answeredItems[i - 1] = this.correctData[i - 1].correct === true
       }
 
       this.wordIndex = 0
@@ -126,11 +145,11 @@ export default {
     },
     clearData() {
       this.wordIndex = 0
-      this.answerData = []
+      this.correctData = []
       this.subjectItems = []
     },
     read() {
-      speakEn(this.answerData[this.wordIndex].value)
+      speakEn(this.correctData[this.wordIndex].value)
     },
     changeIndex(type) {
       if (type === 'back') {
@@ -142,7 +161,7 @@ export default {
         this.wordIndex--
       } else {
         // 下一题
-        if (this.wordIndex >= this.answerData.length - 1) {
+        if (this.wordIndex >= this.correctData.length - 1) {
           return
         }
         this.wordIndex++
@@ -155,8 +174,20 @@ export default {
       this.setActiveWord()
     },
     setActiveWord() {
-      const item = this.answerData[this.wordIndex]
+      const item = this.correctData[this.wordIndex]
       this.wordValues = item.value.split('').map(char => ({value: char}));
+
+      // 用户输入内容
+      let inputWord = ''
+      const inputItem = this.inputData.find(it => it.offset === item.offset)
+      if (inputItem !== undefined && inputItem !== null) {
+        inputWord = inputItem.answer
+      } else {
+        for (let i = 0; i < item.value.length; i++) {
+          inputWord += ' '
+        }
+      }
+      this.inputValues = inputWord.split('').map(char => ({value: char}));
     }
   }
 }
@@ -174,7 +205,7 @@ export default {
 
 .input-word {
   width: 34px;
-  margin-right: 10px;
+  margin-right: 4px;
   text-align: center;
 }
 

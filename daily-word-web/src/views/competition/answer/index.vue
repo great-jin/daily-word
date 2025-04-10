@@ -55,43 +55,10 @@
 
             <el-row :style="{margin: '100px 0 40px 0'}">
               <el-col :span="24">
-                <!-- 辅助功能 -->
-                <el-row>
-                  <el-col :span="24">
-                    <el-popconfirm
-                        title="提示将降低答题得分"
-                        confirm-button-text="是"
-                        cancel-button-text="否"
-                        placement="top"
-                        width="200"
-                        @confirm="clickOption('hit')"
-                    >
-                      <template #reference>
-                        <el-button type="warning">提示</el-button>
-                      </template>
-                    </el-popconfirm>
-                    <el-popconfirm
-                        title="朗读将降低答题得分"
-                        confirm-button-text="是"
-                        cancel-button-text="否"
-                        placement="top"
-                        width="200"
-                        @confirm="clickOption('read')"
-                    >
-                      <template #reference>
-                        <el-button type="warning">朗读</el-button>
-                      </template>
-                    </el-popconfirm>
-                    <el-button
-                        type="warning"
-                        @click="clickOption('clear')"
-                    >清空</el-button>
-                  </el-col>
-                </el-row>
-
                 <!-- 题目切换 -->
                 <el-row :style="{marginTop: '60px'}">
                   <el-col :span="24">
+                    <el-button type="warning" @click="clickOption('clear')">清空</el-button>
                     <el-button type="primary" @click="changeCurrentIndex('back')">上一题</el-button>
                     <el-button type="primary" @click="changeCurrentIndex('next')">下一题</el-button>
                     <el-popconfirm
@@ -209,7 +176,7 @@ export default {
         this.subjectItems.push(`第 ${i} 题`)
       }
       this.currentIndex = 0
-      this.textLength = this.planData[this.currentIndex].value.length
+      this.textLength = this.planData[this.currentIndex].wordLength
       this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
       this.startTimer()
     },
@@ -232,9 +199,9 @@ export default {
     finishTask() {
       const _params = {
         matchId: this.rankInfo.matchId,
-        correctCount: this.submitRecords.filter(it => it.correct === true).length,
         costTime: this.clock.time,
-        score: this.rankInfo.score
+        score: this.rankInfo.score,
+        contentList: this.submitRecords
       }
       submitTask(_params).then(res => {
         if (res.code === 200) {
@@ -317,7 +284,7 @@ export default {
       const _index = this.currentIndex
       const item = {
         position: _index,
-        correct: _data === this.planData[_index].value,
+        offset: this.planData[_index].offset,
         answer: _data
       }
       this.submitRecords = this.submitRecords.filter(it => it.position !== _index)
@@ -337,8 +304,7 @@ export default {
         this.inputValues = Array.from({length: word.length}, (_, i) => ({value: word[i]}))
       } else {
         // 未作答过
-        word = this.planData[this.currentIndex].value
-        this.textLength = word.length
+        this.textLength = this.planData[this.currentIndex].wordLength
         this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
       }
     },

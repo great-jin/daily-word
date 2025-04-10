@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.repository.service.Impl;
+package xyz.ibudai.dailyword.server.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.entity.AuthUser;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
-import xyz.ibudai.dailyword.repository.service.AuthUserService;
+import xyz.ibudai.dailyword.server.service.AuthUserService;
 
 import java.util.Collection;
 import java.util.HashMap;

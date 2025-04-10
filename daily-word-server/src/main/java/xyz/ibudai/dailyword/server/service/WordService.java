@@ -52,5 +52,5 @@ public interface WordService {
      * @param matchId the match id
      * @return the answer
      */
-    List<TaskWordDTO> getAnswer(String matchId);
+    AnswerVo getAnswer(Integer matchId);
 }

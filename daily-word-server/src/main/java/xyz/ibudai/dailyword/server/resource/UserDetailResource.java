@@ -7,12 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.props.OssProps;
-import xyz.ibudai.dailyword.repository.service.UserDetailService;
+import xyz.ibudai.dailyword.server.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.concurrent.TimeUnit;
 
 /**
  * (UserDetail)表控制层
