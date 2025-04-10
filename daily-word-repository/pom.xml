@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>xyz.ibudai</groupId>
+            <artifactId>daily-word-basic</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.ibudai</groupId>
             <artifactId>daily-word-oss</artifactId>
             <version>${project.version}</version>
         </dependency>

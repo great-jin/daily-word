@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import xyz.ibudai.dailyword.basic.tool.DateTimeTool;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
 import xyz.ibudai.dailyword.model.props.OssProps;
@@ -16,6 +17,7 @@ import xyz.ibudai.dailyword.repository.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.service.UserFriendService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +50,7 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
                 .list();
         // 构建前端实体
         List<UserFriendVo> result = new ArrayList<>();
+        LocalDateTime nowadays = LocalDateTime.now();
         for (UserDetail user : list) {
             String avatarUrl = ossServer.signAvatarUrl(user.getAvatar());
             UserFriendVo friendVo = UserFriendVo.builder()
@@ -55,6 +58,7 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
                     .userName(user.getUserName())
                     .online(false)
                     .avatar(avatarUrl)
+                    .lastOnline(DateTimeTool.interval(user.getLastOnlineTime(), nowadays))
                     .build();
             result.add(friendVo);
         }

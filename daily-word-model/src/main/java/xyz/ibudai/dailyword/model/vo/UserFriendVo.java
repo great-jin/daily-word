@@ -18,4 +18,6 @@ public class UserFriendVo {
     private String avatar;
 
     private Boolean online;
+
+    private String lastOnline;
 }

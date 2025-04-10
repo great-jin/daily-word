@@ -53,6 +53,11 @@
           </template>
         </el-table-column>
         <el-table-column
+            prop="lastOnline"
+            label="最近在线"
+            align="center"
+        />
+        <el-table-column
             prop="operate"
             label=""
             fixed="right"
