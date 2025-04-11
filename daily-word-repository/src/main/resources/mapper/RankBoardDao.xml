@@ -16,9 +16,9 @@
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <select id="listTopFifty" resultType="xyz.ibudai.dailyword.model.vo.RankBoardVo">
+    <select id="listTopFifty" resultType="xyz.ibudai.dailyword.model.vo.board.RankBoardVo">
         select
-            ud.avatar,
+            ud.avatar as avatar_url,
             rb.user_name,
             rb.score,
             rb.match_count

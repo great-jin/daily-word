@@ -8,7 +8,7 @@
         <el-avatar
             :size="40"
             fit="fill"
-            :src="userInfo.avatar"
+            :src="userInfo.avatarUrl"
             style="margin-right: 14px;"
         />
         <span style="font-weight: bold; font-size: 18px; line-height: 1;">
@@ -61,7 +61,7 @@ export default {
     return {
       visible: false,
       userInfo: {
-        avatar: '',
+        avatarUrl: '',
         userName: ''
       },
       rankInfo: {

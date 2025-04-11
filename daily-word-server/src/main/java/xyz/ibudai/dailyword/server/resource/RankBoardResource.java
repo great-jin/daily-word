@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
-import xyz.ibudai.dailyword.model.vo.RankBoardVo;
+import xyz.ibudai.dailyword.model.vo.board.RankBoardVo;
 import xyz.ibudai.dailyword.server.service.RankBoardService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 

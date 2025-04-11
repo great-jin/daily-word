@@ -86,7 +86,6 @@
                   v-model="answeredItems[index]"
                   @change="changCurrentWord(index)"
                   size="large"
-                  disabled
               >
                 <template #default>
                   {{ item }}
@@ -170,6 +169,7 @@ export default {
     },
     // 切换当前单词
     changCurrentWord(index) {
+      this.answeredItems[index] = !this.answeredItems[index]
       this.wordIndex = index
       this.setActiveWord()
     },

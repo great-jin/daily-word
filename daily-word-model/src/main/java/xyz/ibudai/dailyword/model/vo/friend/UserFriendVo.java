@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.vo;
+package xyz.ibudai.dailyword.model.vo.friend;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ public class UserFriendVo {
 
     private String userName;
 
-    private String avatar;
+    private String avatarUrl;
 
     private Boolean online;
 

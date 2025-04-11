@@ -38,6 +38,7 @@
           <el-form-item label="电子邮箱:" prop="email">
             <el-input
                 v-model="detailForm.email"
+                disabled
             />
           </el-form-item>
           <el-form-item label="注册时间:" prop="registerTime">
@@ -53,12 +54,12 @@
             @click="saveModify"
             :disabled="disableForm"
             style="margin: 20px 20px 0 0"
-        >保存</el-button>
+        >保存信息</el-button>
         <el-button
             @click="enableModify"
             :disabled="!disableForm"
             style="margin-top: 20px"
-        >修改</el-button>
+        >修改信息</el-button>
       </el-col>
     </el-row>
   </div>

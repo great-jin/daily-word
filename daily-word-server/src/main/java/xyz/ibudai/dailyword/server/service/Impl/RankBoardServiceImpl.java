@@ -13,7 +13,7 @@ import xyz.ibudai.dailyword.model.entity.MatchDetail;
 import xyz.ibudai.dailyword.model.entity.MatchRecord;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
-import xyz.ibudai.dailyword.model.vo.RankBoardVo;
+import xyz.ibudai.dailyword.model.vo.board.RankBoardVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.RankBoardDao;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
@@ -84,7 +84,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
                 containBoard = true;
             }
             item.setIndex(String.valueOf(index++));
-            item.setAvatar(ossServer.signAvatarUrl(item.getAvatar()));
+            item.setAvatarUrl(ossServer.signAvatarUrl(item.getAvatarUrl()));
         }
         if (containBoard) {
             return list;
@@ -106,7 +106,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
         boardVo.setUserName(userDetail.getUserName());
         boardVo.setMatchCount(userRank.getMatchCount());
         boardVo.setScore(userRank.getScore());
-        boardVo.setAvatar(ossServer.signAvatarUrl(userDetail.getAvatar()));
+        boardVo.setAvatarUrl(ossServer.signAvatarUrl(userDetail.getAvatar()));
         list.add(boardVo);
         return list;
     }

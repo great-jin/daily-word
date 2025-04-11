@@ -13,17 +13,17 @@
           :row-class-name="tableRowStyle"
       >
         <el-table-column
+            width="120"
             prop="rankType"
             label="匹配方式"
             align="center"
-            width="120"
             fixed="left"
         />
         <el-table-column
+            width="120"
             prop="rankMode"
             label="匹配模式"
             align="center"
-            width="120"
         />
         <el-table-column
             prop="catalog"
@@ -35,11 +35,17 @@
           </template>
         </el-table-column>
         <el-table-column
+            width="120"
             prop="wordCount"
             label="组数"
             align="center"
-        />
+        >
+          <template #default="{ row }">
+            {{ row.wordCount }}/组
+          </template>
+        </el-table-column>
         <el-table-column
+            width="120"
             prop="costSecond"
             label="耗时"
             align="center"
@@ -58,6 +64,19 @@
           </template>
         </el-table-column>
         <el-table-column
+            width="120"
+            prop="finished"
+            label="对局状态"
+            align="center"
+        >
+          <template #default="{ row }">
+            <el-tag :type="row.finished ? 'primary' : 'warning'">
+              {{ row.finished ? '结束' : '进行中' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+            width="120"
             prop="result"
             label="胜负"
             align="center"
@@ -66,9 +85,9 @@
             <el-tag v-if="row.score === null" type="warning">
               {{ '进行中' }}
             </el-tag>
-            <el-tag v-else-if="row.score === 0" type="info">
+            <span v-else-if="row.score === 0" type="info">
               {{ '-' }}
-            </el-tag>
+            </span>
             <el-tag v-else :type="row.score > 0 ? 'success' : 'danger'">
               {{ row.score > 0 ? '胜利' : '失败' }}
             </el-tag>
@@ -87,10 +106,11 @@
             fixed="right"
         >
           <template #default="{ row }">
+            <!-- 单人不支持查看详情 -->
             <el-button
                 type="primary"
                 @click="showDetail(row)"
-                :disabled="row.score === null"
+                :disabled="row.rankMode === '-'"
                 link
             >详情
             </el-button>
@@ -106,8 +126,6 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item command="answer">查看答案</el-dropdown-item>
-                  <el-dropdown-item command="challenge">影子挑战</el-dropdown-item>
-                  <el-dropdown-item command="record">挑战记录</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -138,7 +156,7 @@
 <script>
 import {getRankType} from "@/dict/rankTypeDict";
 import {getRankMode} from "@/dict/rankModeDict";
-import {listMatchHistory} from "@/api/matchApi";
+import {checkMatchStatus, checkStatus, listMatchHistory} from "@/api/matchApi";
 import DetailDrawer from "./detailDrawer.vue";
 import ResultDialog from "./answerDialog.vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
@@ -198,10 +216,17 @@ export default {
     showDetail(data) {
       this.$refs.detailDrawer.show(data);
     },
-    operateOption(row, event) {
+    async operateOption(row, event) {
       switch (event) {
         case 'answer':
-          this.$refs.resultDialog.show(row.matchId);
+          const matchId = row.matchId
+          await checkMatchStatus(matchId).then(res => {
+            if (res.code === 200 && res.data) {
+              this.$refs.resultDialog.show(matchId);
+            } else {
+              this.$message.info('对局未结束，暂不支持查看答案')
+            }
+          })
           break
         case 'challenge':
           this.$message.success('2')

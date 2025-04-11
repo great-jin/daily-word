@@ -4,47 +4,31 @@
       <el-row>
         <el-col :span="24">
           <el-form
-              ref="privacyForm"
+              ref="passwordForm"
+              :rules="rules"
               label-width="100px"
-              :model="privacyForm"
+              :model="passwordForm"
               :disabled="disableForm"
-              style="max-width: 500px; margin: 20px auto"
+              style="max-width: 400px; margin: 20px auto"
           >
-            <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="email">
-              <el-row style="width: 100%">
-                <el-col :span="18">
-                  <el-input
-                      v-model="privacyForm.email"
-                      disabled
-                  />
-                </el-col>
-                <el-col :span="6" style="display: flex; align-items: center; padding-left: 10px">
-                  <el-button
-                      style="width: 100%"
-                      :disabled="countDown > 0"
-                      @click="sendMail"
-                  >{{ countDown > 0 ? `${countDown} s` : '发送' }}
-                  </el-button>
-                </el-col>
-              </el-row>
-            </el-form-item>
-            <el-form-item label="验证码:" prop="captcha">
-              <el-input
-                  v-model="privacyForm.captcha"
-                  placeholder="请输入邮箱验证码"
-              />
-            </el-form-item>
-            <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
+            <el-form-item label="原始密码:" prop="originPwd">
               <el-input
                   type="password"
-                  v-model="privacyForm.password"
-                  placeholder="请输入密码"
+                  v-model="passwordForm.originPwd"
+                  placeholder="请输入原始密码"
+              />
+            </el-form-item>
+            <el-form-item label="新&nbsp;&nbsp;密&nbsp;&nbsp;码:" prop="password">
+              <el-input
+                  type="password"
+                  v-model="passwordForm.password"
+                  placeholder="请输入新密码"
               />
             </el-form-item>
             <el-form-item label="确认密码:" prop="passwordCheck">
               <el-input
                   type="password"
-                  v-model="privacyForm.passwordCheck"
+                  v-model="passwordForm.passwordCheck"
                   placeholder="请再次输入密码"
               />
             </el-form-item>
@@ -54,24 +38,34 @@
 
       <el-row style="margin-top: 20px">
         <el-col :span="24">
-          <el-button
-              type="primary"
-              @click="saveModify"
-              :disabled="disableForm"
-              style="margin-right: 20px"
-          >保存
-          </el-button>
+          <el-popconfirm
+              width="200"
+              title="您确认注销账号吗？"
+              placement="top"
+              cancel-button-text="否"
+              confirm-button-text="是"
+              @confirm="removeAccount"
+          >
+            <template #reference>
+              <el-button
+                  type="danger"
+                  style="margin-right: 20px"
+                  :disabled="disableForm"
+              >注销账号
+              </el-button>
+            </template>
+          </el-popconfirm>
           <el-button
               @click="enableModify"
               :disabled="!disableForm"
               style="margin-right: 20px"
-          >修改
+          >修改信息
           </el-button>
           <el-button
-              type="danger"
+              type="primary"
+              @click="saveModify"
               :disabled="disableForm"
-              @click="enableModify"
-          >注销
+          >保存信息
           </el-button>
         </el-col>
       </el-row>
@@ -81,71 +75,47 @@
 
 <script>
 import {getDetails} from "@/api/userDetailsApi";
-import {isEmail} from "@/util/RegexUtil";
 
 export default {
   data() {
     return {
       disableForm: true,
-      countDown: 0,
-      timer: null,
-      privacyForm: {
-        email: null,
-        captcha: null,
-        inviteCode: null,
+      passwordForm: {
+        originPwd: null,
         password: null,
         passwordCheck: null,
+      },
+      rules: {
+        originPwd: [
+          {required: true, message: '密码不能为空', trigger: 'blur'},
+        ],
+        password: [
+          {required: true, message: '密码不能为空', trigger: 'blur'},
+        ],
+        passwordCheck: [
+          {required: true, message: '密码不能为空', trigger: 'blur'},
+        ]
       }
     }
   },
   mounted() {
     getDetails().then(res => {
-      this.privacyForm = res.data
+      this.passwordForm = res.data
     })
-  },
-  beforeDestroy() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
   },
   methods: {
     enableModify() {
       this.disableForm = false
     },
     saveModify() {
+      this.$message.success('save')
+
       this.disableForm = true
+      this.$refs.passwordForm.clearValidate()
     },
-    sendMail() {
-      this.$refs.privacyForm.validateField('email', (valid) => {
-        if (valid) {
-          if (!isEmail(this.privacyForm.email)) {
-            this.$message.warning('邮箱格式非法，请检查后重试！')
-            return
-          }
-
-          // 按钮倒计时
-          this.$message.success('验证码已发送，请检查收件箱')
-          this.startCountDown()
-        }
-      });
-    },
-    startCountDown() {
-      // 如果倒计时已经开始，则直接返回
-      if (this.countDown > 0) {
-        return;
-      }
-      this.countDown = 60;
-
-      // 启动计时器，每秒减少一秒
-      this.timer = setInterval(() => {
-        if (this.countDown > 0) {
-          this.countDown -= 1;
-        } else {
-          // 倒计时结束时清除计时器
-          clearInterval(this.timer);
-          this.timer = null;
-        }
-      }, 1000);
+    removeAccount() {
+      this.$message.success('remove')
+      this.disableForm = true
     }
   }
 }

@@ -58,7 +58,6 @@
                 <!-- 题目切换 -->
                 <el-row :style="{marginTop: '60px'}">
                   <el-col :span="24">
-                    <el-button type="warning" @click="clickOption('clear')">清空</el-button>
                     <el-button type="primary" @click="changeCurrentIndex('back')">上一题</el-button>
                     <el-button type="primary" @click="changeCurrentIndex('next')">下一题</el-button>
                     <el-popconfirm
@@ -73,6 +72,7 @@
                         <el-button key="submit" type="primary">提&nbsp;&nbsp;交</el-button>
                       </template>
                     </el-popconfirm>
+                    <el-button type="warning" @click="clickOption('clear')">清空</el-button>
                   </el-col>
                 </el-row>
               </el-col>

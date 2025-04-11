@@ -9,7 +9,7 @@ import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.basic.tool.DateTimeTool;
 import xyz.ibudai.dailyword.model.entity.UserDetail;
 import xyz.ibudai.dailyword.model.entity.UserFriend;
-import xyz.ibudai.dailyword.model.vo.UserFriendVo;
+import xyz.ibudai.dailyword.model.vo.friend.UserFriendVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
@@ -55,7 +55,7 @@ public class UserFriendServiceImpl extends ServiceImpl<UserFriendDao, UserFriend
                     .userId(user.getUserId())
                     .userName(user.getUserName())
                     .online(false)
-                    .avatar(avatarUrl)
+                    .avatarUrl(avatarUrl)
                     .lastOnline(DateTimeTool.interval(user.getLastOnlineTime(), nowadays))
                     .build();
             result.add(friendVo);

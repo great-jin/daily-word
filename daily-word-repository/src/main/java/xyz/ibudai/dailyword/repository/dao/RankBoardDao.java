@@ -2,7 +2,7 @@ package xyz.ibudai.dailyword.repository.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import xyz.ibudai.dailyword.model.entity.RankBoard;
-import xyz.ibudai.dailyword.model.vo.RankBoardVo;
+import xyz.ibudai.dailyword.model.vo.board.RankBoardVo;
 
 import java.util.List;
 

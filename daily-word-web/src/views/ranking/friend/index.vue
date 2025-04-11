@@ -32,7 +32,7 @@
             <div style="display: flex; align-items: center; justify-content: center;">
               <el-avatar
                   :size="30"
-                  :src="row.avatar"
+                  :src="row.avatarUrl"
                   fit="cover"
                   style="margin-right: 10px;"
               />

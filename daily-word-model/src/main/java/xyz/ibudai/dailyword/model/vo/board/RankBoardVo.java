@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.vo;
+package xyz.ibudai.dailyword.model.vo.board;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ public class RankBoardVo {
 
     private String index;
 
-    private String avatar;
+    private String avatarUrl;
 
     private String userName;
 

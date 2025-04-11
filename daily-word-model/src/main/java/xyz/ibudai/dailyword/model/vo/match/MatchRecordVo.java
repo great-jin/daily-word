@@ -25,4 +25,6 @@ public class MatchRecordVo {
 
     private LocalDateTime createTime;
 
+    private Boolean finished;
+
 }
