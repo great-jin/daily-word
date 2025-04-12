@@ -36,11 +36,11 @@
             label-width="100px"
             style="margin-top: 20px"
         >
-          <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="mail">
+          <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="email">
             <el-row style="width: 100%">
               <el-col :span="18">
                 <el-input
-                    v-model="registerForm.mail"
+                    v-model="registerForm.email"
                     placeholder="请输入邮箱"
                 />
               </el-col>
@@ -125,7 +125,7 @@ export default {
       timer: null,
       registerForm: {
         username: null,
-        mail: null,
+        email: null,
         captcha: null,
         inviteCode: null,
         password: null,
@@ -139,7 +139,7 @@ export default {
         username: [
           {required: true, message: '用户名不能为空', trigger: 'blur'},
         ],
-        mail: [
+        email: [
           {required: true, message: '邮箱不能为空', trigger: 'blur'},
         ],
         captcha: [
@@ -167,9 +167,9 @@ export default {
       this.dialogVisible = true
     },
     sendMail() {
-      this.$refs.regForm.validateField('mail', (valid) => {
+      this.$refs.regForm.validateField('email', (valid) => {
         if (valid) {
-          if (!isEmail(this.registerForm.mail)) {
+          if (!isEmail(this.registerForm.email)) {
             this.$message.warning('邮箱格式非法，请检查后重试！')
             return
           }
@@ -178,7 +178,7 @@ export default {
           this.startCountDown()
           const params = {
             type: 1,
-            email: this.registerForm.mail
+            email: this.registerForm.email
           }
           sendMail(params).then(res => {
             if (res.code !== 200) {
@@ -198,6 +198,9 @@ export default {
                 break
               case 4:
                 this.$message.error('邮箱已被注册！')
+                break
+              case 7:
+                this.$message.error('验证码无效！')
                 break
             }
           })
@@ -306,7 +309,7 @@ export default {
       const _params = this.registerForm
 
       // 邮箱格式校验
-      if (!isEmail(_params.mail)) {
+      if (!isEmail(_params.email)) {
         this.$message.warning('邮箱格式非法，请检查后重试！')
         return false
       }

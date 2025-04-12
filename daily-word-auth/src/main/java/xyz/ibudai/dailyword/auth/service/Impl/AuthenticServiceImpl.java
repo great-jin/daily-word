@@ -84,12 +84,18 @@ public class AuthenticServiceImpl implements AuthenticService {
                 new QueryWrapper<UserDetail>()
                         .eq("email", address)
         );
-        if (!CollectionUtils.isEmpty(list)) {
+
+        // 不允许邮箱重复注册
+        if (Objects.equals(type, EmailType.Register.getCode())
+                && !CollectionUtils.isEmpty(list)
+        ) {
             return EmailCodeStatus.EMAIL_IN_USE.getStatus();
         }
 
         // 生成并记录验证码
-        String key = UUID.nameUUIDFromBytes((type + address).getBytes()).toString();
+        String key = UUID.nameUUIDFromBytes(
+                (type + address).getBytes()
+        ).toString();
         String mailCode = EMAIL_CODE_MAP.getIfPresent(key);
         if (StringUtils.isBlank(mailCode)) {
             mailCode = CodeTool.generate();
@@ -126,18 +132,16 @@ public class AuthenticServiceImpl implements AuthenticService {
         }
 
         String username = registerVo.getUsername();
-        if (RegexTool.isAlphaNumeric(username)) {
+        if (!RegexTool.isAlphaNumeric(username)) {
             // username illegal
             return RegisterStatus.INVITE_USERNAME.getCode();
         }
         List<AuthUser> list = authUserDao.selectList(
                 new QueryWrapper<AuthUser>()
                         .eq("user_name", username)
-                        .or()
-                        .eq("email", registerVo.getEmail())
         );
         if (!CollectionUtils.isEmpty(list)) {
-            // Username or Email has been used
+            // Username has been used
             return RegisterStatus.NAME_USED.getCode();
         }
 
@@ -196,7 +200,7 @@ public class AuthenticServiceImpl implements AuthenticService {
         // 修改密码
         UpdateWrapper<AuthUser> wrapper = new UpdateWrapper<>();
         wrapper.set("password", dto.getPassword());
-        wrapper.set("id", userDetail.getUserId());
+        wrapper.eq("id", userDetail.getUserId());
         boolean success = authUserDao.update(wrapper) > 0;
         return success
                 ? PasswordStatus.SUCCESS.getCode()

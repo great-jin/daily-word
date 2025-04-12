@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import {translate} from "@/api/wordApi";
+import {translate} from "@/api/taskWordApi";
 
 export default {
   data() {

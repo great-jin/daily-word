@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import {getTaskAnswer} from "@/api/wordApi";
+import {getTaskAnswer} from "@/api/taskWordApi";
 import {speakEn} from "@/util/SpeakUtil";
 
 export default {

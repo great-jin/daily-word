@@ -27,7 +27,7 @@ export function sendMail(params) {
 
 export function register(params) {
     return request({
-        url: '${apiPrefix}/register',
+        url: `${apiPrefix}/register`,
         method: 'post',
         data: params
     })

@@ -105,7 +105,7 @@ import {SIZE_OPTIONS} from "@/dict/rankTypeDict";
 import {getUid} from "@/util/AuthUtil";
 import {getWsUrl} from "@/util/SocketUtils";
 import {Encrypt} from "@/util/EncryptUtil";
-import {startTask} from "@/api/wordApi";
+import {startTask} from "@/api/taskWordApi";
 import {validate} from "@/api/matchApi";
 
 export default {

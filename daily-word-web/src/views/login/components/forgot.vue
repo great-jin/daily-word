@@ -135,6 +135,9 @@ export default {
           case 4:
             this.$message.error('邮箱已被注册！')
             break
+          case 7:
+            this.$message.error('验证码无效！')
+            break
         }
       })
     },
