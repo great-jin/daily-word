@@ -31,7 +31,12 @@ public enum RegisterStatus {
     /**
      * Email code invalid register status.
      */
-    EMAIL_CODE_INVALID(5);
+    EMAIL_CODE_INVALID(5),
+
+    /**
+     * Invite username register status.
+     */
+    INVITE_USERNAME(6);
 
 
     private final Integer code;

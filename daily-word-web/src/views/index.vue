@@ -41,7 +41,7 @@
                   <el-icon>
                     <SwitchButton/>
                   </el-icon>
-                  退 出
+                  退出登录
                 </el-menu-item>
               </el-sub-menu>
             </el-menu>

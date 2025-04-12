@@ -69,7 +69,6 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
         // 是否有进行中任务
         List<MatchRecord> undoneList = this.lambdaQuery()
                 .eq(MatchRecord::getUserId, SecurityUtil.getLoginUser())
-                // TODO 过滤 catalog
                 .eq(MatchRecord::getSeason, SystemConfig.getSeason())
                 .eq(MatchRecord::getFinished, Boolean.FALSE)
                 .list();

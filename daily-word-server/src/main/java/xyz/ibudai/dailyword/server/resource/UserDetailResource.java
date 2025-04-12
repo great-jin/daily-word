@@ -51,9 +51,6 @@ public class UserDetailResource {
      */
     @PostMapping("uploadAvatar")
     public String uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
-        // TODO 2025/4/9 二次校验文件是否合规，是否图片
-
-
         UserDetail user = userDetailService.getById(SecurityUtil.getLoginUser());
         String avatarPath = ossProps.getHome() + File.separator + ossProps.getAvatarDir();
         File avatarFile = new File(avatarPath, user.getAvatar());

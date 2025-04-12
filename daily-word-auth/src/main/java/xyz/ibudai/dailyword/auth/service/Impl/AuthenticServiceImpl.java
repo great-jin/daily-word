@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.auth.util.CodeUtil;
 import xyz.ibudai.dailyword.basic.consts.RegexConst;
+import xyz.ibudai.dailyword.basic.tool.RegexTool;
 import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
@@ -112,21 +113,25 @@ public class AuthenticServiceImpl implements AuthenticService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer register(RegisterVo registerVo) {
-        // TODO 正则二次校验用户名与密码是否合规
-
-
+        String username = registerVo.getUsername();
+        if (RegexTool.isAlphaNumeric(username)) {
+            // username illegal
+            return RegisterStatus.INVITE_USERNAME.getCode();
+        }
         List<AuthUser> list = authUserDao.selectList(
                 new QueryWrapper<AuthUser>()
-                        .eq("user_name", registerVo.getUsername())
+                        .eq("user_name", username)
+                        .or()
+                        .eq("email", registerVo.getEmail())
         );
         if (!CollectionUtils.isEmpty(list)) {
-            // Username has been used
+            // Username or Email has been used
             return RegisterStatus.NAME_USED.getCode();
         }
 
         // 创建登录账号
         AuthUser authUser = AuthUser.initUser();
-        authUser.setUsername(registerVo.getUsername());
+        authUser.setUsername(username);
         authUser.setPassword(registerVo.getPassword());
         boolean userSaved = authUserDao.insert(authUser) > 0;
 

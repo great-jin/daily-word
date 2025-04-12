@@ -49,17 +49,7 @@
           </el-form-item>
         </el-form>
 
-        <el-button
-            type="primary"
-            @click="saveModify"
-            :disabled="disableForm"
-            style="margin: 20px 20px 0 0"
-        >保存信息</el-button>
-        <el-button
-            @click="enableModify"
-            :disabled="!disableForm"
-            style="margin-top: 20px"
-        >修改信息</el-button>
+        <!-- TODO 修改用户名-->
       </el-col>
     </el-row>
   </div>
