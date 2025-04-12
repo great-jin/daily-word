@@ -44,10 +44,9 @@ public class RankHandler extends ChannelAdaptor {
 
 
     private final static Cache<String, Set<Integer>> RANK_POOL = Caffeine.newBuilder()
-            // 五分钟未匹配上失效
+            // 五分钟未匹配则失效
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .initialCapacity(12)
-            .maximumSize(1024)
             .build();
 
 

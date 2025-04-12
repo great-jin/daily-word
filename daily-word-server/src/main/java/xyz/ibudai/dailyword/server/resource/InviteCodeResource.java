@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.ibudai.dailyword.basic.tool.CodeTool;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
-import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
+import xyz.ibudai.dailyword.model.enums.status.InviteCodeStatus;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.service.InviteCodeService;
 

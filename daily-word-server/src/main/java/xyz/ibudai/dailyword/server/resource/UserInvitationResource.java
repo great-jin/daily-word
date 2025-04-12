@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.entity.user.UserInvitation;
-import xyz.ibudai.dailyword.model.enums.InviteProcessStatus;
+import xyz.ibudai.dailyword.model.enums.status.InviteProcessStatus;
 import xyz.ibudai.dailyword.model.enums.InviteType;
 import xyz.ibudai.dailyword.model.vo.friend.FriendInviteVo;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;

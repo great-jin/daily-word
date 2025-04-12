@@ -21,6 +21,7 @@ resources:
     loginUrl: /api/auth/login
     excludeUrls:
       - /api/auth/validaCode
+      - /api/auth/sendMail
       - /api/auth/register
       - /api/auth/forgot
       - /api/server/word/translation

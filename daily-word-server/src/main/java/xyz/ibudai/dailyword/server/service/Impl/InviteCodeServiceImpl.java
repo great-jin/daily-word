@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
-import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
+import xyz.ibudai.dailyword.model.enums.status.InviteCodeStatus;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.service.InviteCodeService;

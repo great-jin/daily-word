@@ -1,17 +1,16 @@
 package xyz.ibudai.dailyword.auth.resource;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.dailyword.model.dto.PasswordDTO;
 import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
-import xyz.ibudai.dailyword.model.entity.user.UserDetail;
-import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
+import xyz.ibudai.dailyword.model.enums.status.InviteCodeStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
@@ -63,12 +62,14 @@ public class AuthenticResource {
     /**
      * Send mail boolean.
      *
-     * @param address the address
+     * @param type  the type
+     * @param email the address
      * @return the boolean
      */
     @GetMapping("sendMail")
-    public Boolean sendMail(@RequestParam("mail") String address) {
-        return authenticService.sendMail(address);
+    public Integer sendMail(@RequestParam("type") Integer type,
+                            @RequestParam("email") String email) {
+        return authenticService.sendMail(type, email);
     }
 
     /**
@@ -85,12 +86,12 @@ public class AuthenticResource {
     /**
      * Forgot boolean.
      *
-     * @param user the user
+     * @param dto the dto
      * @return the boolean
      */
     @PostMapping("forgot")
-    public Boolean forgot(@RequestBody UserDetail user) {
-        return authenticService.forgot(user);
+    public Integer forgot(@RequestBody PasswordDTO dto) {
+        return authenticService.forgot(dto);
     }
 
     /**

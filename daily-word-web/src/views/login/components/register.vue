@@ -112,7 +112,7 @@
 
 <script>
 import {Encrypt} from "@/util/EncryptUtil";
-import {register, validateCode} from "@/api/authUserApi";
+import {register, sendMail, validateCode} from "@/api/authUserApi";
 import {isEmail, isNameValid, isPwdValid} from "@/util/RegexUtil";
 
 export default {
@@ -141,6 +141,9 @@ export default {
         ],
         mail: [
           {required: true, message: '邮箱不能为空', trigger: 'blur'},
+        ],
+        captcha: [
+          {required: true, message: '验证码不能为空', trigger: 'blur'},
         ],
         inviteCode: [
           {required: true, message: '邀请码不能为空', trigger: 'blur'},
@@ -172,8 +175,32 @@ export default {
           }
 
           // 按钮倒计时
-          this.$message.success('验证码已发送，请检查收件箱')
           this.startCountDown()
+          const params = {
+            type: 1,
+            email: this.registerForm.mail
+          }
+          sendMail(params).then(res => {
+            if (res.code !== 200) {
+              this.$message.error('发送失败，请稍后重试！')
+              return
+            }
+
+            switch (res.data) {
+              case 1:
+                this.$message.success('验证码已发送，请检查收件箱')
+                break
+              case 2:
+                this.$message.error('发送失败，请稍后重试！')
+                break
+              case 3:
+                this.$message.error('邮箱格式非法！')
+                break
+              case 4:
+                this.$message.error('邮箱已被注册！')
+                break
+            }
+          })
         }
       });
     },

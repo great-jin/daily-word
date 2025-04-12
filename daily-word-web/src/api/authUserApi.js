@@ -19,8 +19,9 @@ export function validateCode(params) {
 
 export function sendMail(params) {
     return request({
-        url: `${apiPrefix}/sendMail?mail=${params}`,
+        url: `${apiPrefix}/sendMail`,
         method: 'get',
+        params: params
     })
 }
 

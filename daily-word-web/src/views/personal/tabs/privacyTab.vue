@@ -126,21 +126,23 @@ export default {
           password: Encrypt(this.passwordForm.password)
         }
         await changePassword(params).then(res => {
+          if (res.code !== 200) {
+            this.$message.error('修改失败，请稍后重试！')
+            return
+          }
+
           switch (res.data) {
             case 1:
-              this.$message.error('旧密码错误')
+              this.$message.success('修改成功！')
               break
             case 2:
-              this.$message.error('新旧密码不可一致')
-              break
-            case 3:
-              this.$message.success('修改成功')
-              this.disableForm = true
-              this.$refs.passwordForm.clearValidate()
-              this.clearLogin()
+              this.$message.error('修改失败，请稍后重试！')
               break
             case 4:
-              this.$message.error('修改失败，请稍后重试')
+              this.$message.error('旧密码错误！')
+              break
+            case 5:
+              this.$message.error('新旧密码不能相同！')
               break
           }
         })

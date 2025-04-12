@@ -13,6 +13,7 @@ import xyz.ibudai.dailyword.basic.enums.FileType;
 import xyz.ibudai.dailyword.model.dto.PasswordDTO;
 import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
+import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
 import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
@@ -94,18 +95,20 @@ public class UserDetailServiceImpl extends ServiceImpl<UserDetailDao, UserDetail
         String hashPwd = SHAUtil.hash(user.getPassword());
         if (!Objects.equals(hashPwd, dto.getOriginPwd())) {
             // 旧密码错误
-            return 1;
+            return PasswordStatus.PWD_MISMATCH.getCode();
         }
         if (Objects.equals(hashPwd, dto.getPassword())) {
             // 新旧密码一致
-            return 2;
+            return PasswordStatus.PWD_SAME.getCode();
         }
 
         boolean success = authUserService.lambdaUpdate()
                 .set(AuthUser::getPassword, dto.getPassword())
                 .eq(AuthUser::getId, user.getId())
                 .update();
-        return success ? 3 : 4;
+        return success
+                ? PasswordStatus.SUCCESS.getCode()
+                : PasswordStatus.FAILED.getCode() ;
     }
 }
 

@@ -9,7 +9,7 @@ import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.entity.user.UserFriend;
 import xyz.ibudai.dailyword.model.entity.user.UserInvitation;
-import xyz.ibudai.dailyword.model.enums.InviteProcessStatus;
+import xyz.ibudai.dailyword.model.enums.status.InviteProcessStatus;
 import xyz.ibudai.dailyword.model.enums.InviteType;
 import xyz.ibudai.dailyword.model.vo.friend.FriendInviteVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;

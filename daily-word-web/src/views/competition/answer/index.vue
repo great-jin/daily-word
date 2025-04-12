@@ -238,6 +238,9 @@ export default {
         if (this.currentIndex >= this.planData.length - 1) {
           return
         }
+        // 记录当前输入
+        this.storeCurrentInput()
+
         this.currentIndex++
       }
 
@@ -275,12 +278,20 @@ export default {
         return
       }
 
-      // 读取输入
+      // 存储输入内容
+      this.storeCurrentInput()
+
+      // 下一题
+      this.answeredItems[this.currentIndex] = true
+      this.changeCurrentIndex('next')
+    },
+    storeCurrentInput() {
+      // 记录答题内容以回填
       let _data = ''
       this.inputValues.forEach(it => {
         _data += it.value
       })
-      // 记录答题内容以回填
+
       const _index = this.currentIndex
       const item = {
         position: _index,
@@ -289,22 +300,22 @@ export default {
       }
       this.submitRecords = this.submitRecords.filter(it => it.position !== _index)
       this.submitRecords.push(item)
-      // 下一题
-      this.answeredItems[_index] = true
-      this.changeCurrentIndex('next')
     },
     // 回填已输入内容
     setAndRefillData(index) {
+      this.textLength = this.planData[this.currentIndex].wordLength
+
       let word;
       let item = this.submitRecords.find(it => it.position === index)
       if (item !== undefined && item !== null) {
         // 作答过读取内容回填
         word = item.answer
-        this.textLength = word.length
-        this.inputValues = Array.from({length: word.length}, (_, i) => ({value: word[i]}))
+        const inputLength = word.length
+        this.inputValues = Array.from({length: this.textLength}, (_, i) =>  ({
+          value: i < inputLength ? word[i] : ''
+        }))
       } else {
         // 未作答过
-        this.textLength = this.planData[this.currentIndex].wordLength
         this.inputValues = Array.from({length: this.textLength}, () => ({value: ''}));
       }
     },

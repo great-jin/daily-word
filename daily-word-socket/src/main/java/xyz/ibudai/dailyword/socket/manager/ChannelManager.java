@@ -26,13 +26,11 @@ public class ChannelManager {
     private final static Cache<String, Integer> CU_CACHE = Caffeine.newBuilder()
             .expireAfterWrite(5, TimeUnit.MINUTES)
             .initialCapacity(INITIAL_SIZE)
-            .maximumSize(MAX_SIZE)
             .build();
 
     private final static Cache<Protocol, Map<Integer, Channel>> SERVER = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .initialCapacity(INITIAL_SIZE)
-            .maximumSize(MAX_SIZE)
             .build();
 
 

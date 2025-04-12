@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
+import xyz.ibudai.dailyword.model.enums.status.InviteCodeStatus;
 
 import java.time.LocalDate;
 

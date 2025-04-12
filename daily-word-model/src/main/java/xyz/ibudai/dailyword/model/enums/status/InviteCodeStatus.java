@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.enums;
+package xyz.ibudai.dailyword.model.enums.status;
 
 import lombok.Getter;
 
@@ -8,19 +8,10 @@ import lombok.Getter;
 @Getter
 public enum InviteCodeStatus {
 
-    /**
-     * Un use invite code status.
-     */
     UN_USE(1),
 
-    /**
-     * Used invite code status.
-     */
     USED(2),
 
-    /**
-     * Expire invite code status.
-     */
     EXPIRE(3);
 
 

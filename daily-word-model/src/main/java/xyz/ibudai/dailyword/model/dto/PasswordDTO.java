@@ -7,7 +7,7 @@ public class PasswordDTO {
 
     private String email;
 
-    private String code;
+    private String captcha;
 
     private String originPwd;
 

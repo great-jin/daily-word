@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.enums;
+package xyz.ibudai.dailyword.model.enums.status;
 
 import lombok.Getter;
 
