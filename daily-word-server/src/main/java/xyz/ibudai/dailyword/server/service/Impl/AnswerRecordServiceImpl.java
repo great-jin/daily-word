@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
-import xyz.ibudai.dailyword.model.entity.MatchDetail;
+import xyz.ibudai.dailyword.model.entity.match.MatchDetail;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.mongo.AnswerRecord;
 import xyz.ibudai.dailyword.model.mongo.SubjectContent;

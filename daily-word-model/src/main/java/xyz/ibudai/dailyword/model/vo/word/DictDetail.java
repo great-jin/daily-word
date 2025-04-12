@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.vo;
+package xyz.ibudai.dailyword.model.vo.word;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

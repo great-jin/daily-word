@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.ibudai.dailyword.oss.util.OssServer;
-import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.server.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;

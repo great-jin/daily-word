@@ -9,6 +9,7 @@ resources:
   jwt:
     issuer: budai
     secret: ibudai
+    ttlMillis: 3600_000
   # Login verify
   filter:
     excludes:

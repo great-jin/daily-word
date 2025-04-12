@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
 import xyz.ibudai.dailyword.model.dto.AnswerDTO;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
-import xyz.ibudai.dailyword.model.entity.MatchRecord;
+import xyz.ibudai.dailyword.model.entity.match.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;

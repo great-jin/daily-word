@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.ibudai.dailyword.model.entity.UserFriend;
+import xyz.ibudai.dailyword.model.entity.user.UserFriend;
 import xyz.ibudai.dailyword.model.vo.friend.UserFriendVo;
 
 import java.util.List;

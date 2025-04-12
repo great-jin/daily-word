@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.ibudai.dailyword.repository.dao.MatchRecordDao">
 
-    <resultMap type="xyz.ibudai.dailyword.model.entity.MatchRecord" id="MatchRecordMap">
+    <resultMap type="xyz.ibudai.dailyword.model.entity.match.MatchRecord" id="MatchRecordMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="season" column="season" jdbcType="INTEGER"/>

@@ -18,6 +18,7 @@
         我的申请
       </el-button>
 
+      <SearchDialog ref="searchDialog"/>
       <DetailDialog ref="detailDialog"/>
       <RequestDrawer ref="requestDrawer"/>
 
@@ -86,9 +87,11 @@
 import {deleteById, listFriends} from "@/api/userFriendApi"
 import DetailDialog from "./components/detailDialog.vue";
 import RequestDrawer from "./components/requestDrawer.vue";
+import SearchDialog from "./components/searchDialog.vue";
 
 export default {
   components: {
+    SearchDialog,
     DetailDialog,
     RequestDrawer
   },
@@ -111,11 +114,10 @@ export default {
       return rowIndex % 2 === 0 ? "odd-row" : "even-row";
     },
     addFriend() {
-      this.$message.info('功能开发中，敬请期待！')
+      this.$refs.searchDialog.show()
     },
     requestList() {
-      this.$message.info('功能开发中，敬请期待！')
-      // this.$refs.requestDrawer.show(null)
+      this.$refs.requestDrawer.show()
     },
     selectRow(row, column, event) {
       if (column.property === "operate") {

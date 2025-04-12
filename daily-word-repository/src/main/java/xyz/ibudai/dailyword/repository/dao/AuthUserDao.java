@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.repository.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 
 public interface AuthUserDao extends BaseMapper<AuthUser> {
 

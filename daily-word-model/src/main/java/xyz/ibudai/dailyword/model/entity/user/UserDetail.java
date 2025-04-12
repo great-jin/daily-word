@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.entity;
+package xyz.ibudai.dailyword.model.entity.user;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;

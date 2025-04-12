@@ -14,7 +14,7 @@ import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
 import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.model.dto.AuthUserDTO;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
 
 import java.io.IOException;

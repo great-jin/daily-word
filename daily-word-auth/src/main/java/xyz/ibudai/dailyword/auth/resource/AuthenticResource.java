@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
-import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
 

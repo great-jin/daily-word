@@ -12,4 +12,9 @@ public class JwtProps {
     private String secret;
 
     private String issuer;
+
+    /**
+     * 默认过期时间
+     */
+    private Long ttlMillis;
 }

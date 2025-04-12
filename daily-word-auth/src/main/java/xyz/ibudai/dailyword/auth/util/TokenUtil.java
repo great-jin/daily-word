@@ -11,18 +11,12 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TokenUtil {
 
     private final JwtProps jwtProps;
-
-    /**
-     * 默认过期时间
-     */
-    public static final Long JWT_TTL = TimeUnit.HOURS.toMillis(12);
 
 
     /**
@@ -71,7 +65,7 @@ public class TokenUtil {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         if (ttlMillis == null) {
-            ttlMillis = JWT_TTL;
+            ttlMillis = jwtProps.getTtlMillis();
         }
 
         Date expDate = new Date(nowMillis + ttlMillis);

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.*;
 import xyz.ibudai.dailyword.model.config.SystemConfig;
+import xyz.ibudai.dailyword.model.entity.match.MatchRecord;
 
 import java.time.LocalDateTime;
 

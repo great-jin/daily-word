@@ -13,7 +13,7 @@
 
           <el-tooltip
               effect="dark"
-              content="每个用户每个月拥有 6 个邀请码名额"
+              content="每个用户拥有 6 个邀请码名额"
               placement="top"
           >
             <div style="display: flex; align-items: center;">

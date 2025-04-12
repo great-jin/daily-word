@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.repository.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 
 /**
  * (UserDetail)表数据库访问层

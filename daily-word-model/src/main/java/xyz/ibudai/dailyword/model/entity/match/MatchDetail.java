@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.entity;
+package xyz.ibudai.dailyword.model.entity.match;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

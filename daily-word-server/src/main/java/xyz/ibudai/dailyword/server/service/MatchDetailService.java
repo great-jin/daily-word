@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.ibudai.dailyword.model.entity.MatchDetail;
+import xyz.ibudai.dailyword.model.entity.match.MatchDetail;
 
 /**
  * (MatchDetail)表服务接口

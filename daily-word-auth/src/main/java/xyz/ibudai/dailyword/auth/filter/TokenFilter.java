@@ -21,7 +21,7 @@ import xyz.ibudai.dailyword.basic.enums.HttpHeader;
 import xyz.ibudai.dailyword.basic.enums.LoginStatus;
 import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.model.props.FilterProps;
 
 import java.io.IOException;

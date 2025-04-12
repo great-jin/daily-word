@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.entity;
+package xyz.ibudai.dailyword.model.entity.user;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -11,27 +11,29 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 /**
- * (UserFriend)表实体类
+ * (UserInvitation)表实体类
  *
- * @author ibudai
- * @since 2025-03-16 09:26:05
+ * @author makejava
+ * @since 2025-04-12 09:02:23
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("user_friend")
-public class UserFriend extends Model<UserFriend> {
+@TableName("user_invitation")
+public class UserInvitation extends Model<UserInvitation> {
 
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @TableField("user_id")
-    private Integer userId;
+    @TableField("from_user")
+    private Integer fromUser;
 
-    @TableField("friend_id")
-    private Integer friendId;
+    @TableField("target_user")
+    private Integer targetUser;
+
+    @TableField("process_status")
+    private Integer processStatus;
 
     @TableField("create_time")
     private LocalDateTime createTime;
-
 }
 

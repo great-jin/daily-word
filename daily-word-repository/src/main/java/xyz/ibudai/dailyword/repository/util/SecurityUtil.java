@@ -2,7 +2,7 @@ package xyz.ibudai.dailyword.repository.util;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import xyz.ibudai.dailyword.model.entity.AuthUser;
+import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 
 import java.util.Objects;
 

@@ -1,7 +1,10 @@
 package xyz.ibudai.dailyword.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.entity.user.UserDetail;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * (UserDetail)表服务接口
@@ -11,5 +14,12 @@ import xyz.ibudai.dailyword.model.entity.UserDetail;
  */
 public interface UserDetailService extends IService<UserDetail> {
 
+    /**
+     * Group by user id map.
+     *
+     * @param userIds the user ids
+     * @return the map
+     */
+    Map<Integer, UserDetail> groupByUserId(List<Integer> userIds);
 }
 

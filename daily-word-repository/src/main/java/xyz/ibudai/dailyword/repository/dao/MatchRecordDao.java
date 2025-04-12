@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.repository.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import xyz.ibudai.dailyword.model.entity.MatchRecord;
+import xyz.ibudai.dailyword.model.entity.match.MatchRecord;
 import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;
 
 import java.util.List;

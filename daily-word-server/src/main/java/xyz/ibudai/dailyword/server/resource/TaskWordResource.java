@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.*;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
+import xyz.ibudai.dailyword.model.vo.word.DictDetail;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.server.service.TaskWordService;
 
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/server/word")
-public class WordResource {
+public class TaskWordResource {
 
     @Autowired
     private TaskWordService taskWordService;

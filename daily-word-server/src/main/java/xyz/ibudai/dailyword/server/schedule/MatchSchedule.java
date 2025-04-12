@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import xyz.ibudai.dailyword.model.entity.MatchRecord;
+import xyz.ibudai.dailyword.model.entity.match.MatchRecord;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
 
 import java.time.LocalDateTime;

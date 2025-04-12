@@ -1,7 +1,7 @@
 package xyz.ibudai.dailyword.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import xyz.ibudai.dailyword.model.entity.UserDetail;
+import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 
 /**
