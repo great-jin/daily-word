@@ -1,4 +1,4 @@
-import {Decrypt, Encrypt} from "@/util/AES";
+import {Decrypt} from "@/util/EncryptUtil";
 
 const KEY_UID = 'u0'
 const KEY_AUTH = 'u1'

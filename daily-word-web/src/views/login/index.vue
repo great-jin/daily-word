@@ -86,8 +86,7 @@ import RegisterModal from './components/register.vue';
 import ForgotModal from './components/forgot.vue';
 import CompactModal from './components/compact.vue';
 import {login} from "@/api/authUserApi";
-import {Encrypt} from '@/util/AES.js';
-import {SHA256} from "@/util/HashUtil";
+import {Encrypt, SHA256} from '@/util/EncryptUtil.js';
 import {setToken} from "@/util/AuthUtil";
 
 export default {
@@ -119,7 +118,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (!valid) {
           // 表单验证失败
-          this.$message.error('请填写登录信息')
+          this.$message.warning('请填写登录信息')
           return;
         }
 

@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.ibudai.dailyword.model.dto.PasswordDTO;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.server.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
-import java.io.*;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * (UserDetail)表控制层
@@ -48,6 +49,17 @@ public class UserDetailResource {
     @PostMapping("uploadAvatar")
     public String uploadAvatar(@RequestParam("file") MultipartFile file) {
         return userDetailService.uploadAvatar(file);
+    }
+
+    /**
+     * Change password integer.
+     *
+     * @param dto the dto
+     * @return the integer
+     */
+    @PostMapping("changePassword")
+    public Integer changePassword(@RequestBody PasswordDTO dto) throws NoSuchAlgorithmException {
+        return userDetailService.changePassword(dto);
     }
 }
 

@@ -104,7 +104,7 @@ import {MODE_OPTIONS} from "@/dict/rankModeDict";
 import {SIZE_OPTIONS} from "@/dict/rankTypeDict";
 import {getUid} from "@/util/AuthUtil";
 import {getWsUrl} from "@/util/SocketUtils";
-import {Encrypt} from "@/util/AES";
+import {Encrypt} from "@/util/EncryptUtil";
 import {startTask} from "@/api/wordApi";
 import {validate} from "@/api/matchApi";
 

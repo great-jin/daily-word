@@ -2,8 +2,10 @@ package xyz.ibudai.dailyword.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.ibudai.dailyword.model.dto.PasswordDTO;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
@@ -30,5 +32,13 @@ public interface UserDetailService extends IService<UserDetail> {
      * @return the string
      */
     String uploadAvatar(MultipartFile file);
+
+    /**
+     * Change password integer.
+     *
+     * @param dto the dto
+     * @return the integer
+     */
+    Integer changePassword(PasswordDTO dto) throws NoSuchAlgorithmException;
 }
 

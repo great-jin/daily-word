@@ -25,3 +25,21 @@ export const CATALOG_ARRAY = [
         score: 25
     }
 ]
+
+
+export function getCatalog(data) {
+    switch (data) {
+        case 'CET4':
+            return '四级词汇'
+        case 'CET6':
+            return '六级词汇'
+        case 'Graduate':
+            return '考研词汇'
+        case 'GRE':
+            return 'GRE词汇'
+        case 'Oxford':
+            return '牛津词汇'
+        default:
+            return '-'
+    }
+}

@@ -19,3 +19,11 @@ export function uploadAvatar(params) {
         }
     })
 }
+
+export function changePassword(params) {
+    return request({
+        url: `${prefix}/changePassword`,
+        method: 'post',
+        data: params
+    })
+}

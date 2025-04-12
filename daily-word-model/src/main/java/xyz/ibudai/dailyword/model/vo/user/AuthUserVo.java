@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.model.dto;
+package xyz.ibudai.dailyword.model.vo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthUserDTO {
+public class AuthUserVo {
 
     private Integer userId;
 

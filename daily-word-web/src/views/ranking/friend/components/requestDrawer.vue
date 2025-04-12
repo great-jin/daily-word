@@ -8,12 +8,12 @@
       <span style="font-weight: bold; font-size: 18px">申请列表</span>
     </template>
 
-    <el-button-group style="margin-bottom: 20px">
-      <el-button @click="clickTypes('toMe')">待处理申请</el-button>
-      <el-button @click="clickTypes('fromMe')">我的申请</el-button>
-    </el-button-group>
-
     <el-card shadow="hover">
+      <el-button-group style="margin-bottom: 20px">
+        <el-button @click="clickTypes('toMe')">待处理申请</el-button>
+        <el-button @click="clickTypes('fromMe')">我的申请</el-button>
+      </el-button-group>
+
       <div
           v-for="user in userList"
           :key="user.username"

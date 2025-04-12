@@ -111,8 +111,8 @@
 </template>
 
 <script>
+import {Encrypt} from "@/util/EncryptUtil";
 import {register, validateCode} from "@/api/authUserApi";
-import {Encrypt} from "@/util/AES";
 import {isEmail, isNameValid, isPwdValid} from "@/util/RegexUtil";
 
 export default {

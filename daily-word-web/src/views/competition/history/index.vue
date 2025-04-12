@@ -161,6 +161,7 @@ import DetailDrawer from "./detailDrawer.vue";
 import ResultDialog from "./answerDialog.vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import {formatSeconds} from "@/util/CommonUtil";
+import {getCatalog} from "@/dict/catalogDict";
 
 export default {
   components: {
@@ -192,6 +193,7 @@ export default {
         const pageData = res.data
         this.historyData = pageData.list
         this.historyData.forEach(it => {
+          it.catalog = getCatalog(it.catalog)
           it.rankMode = getRankMode(it.rankMode)
           it.rankType = getRankType(it.rankType)
           it.costSecond = formatSeconds(it.costSecond)

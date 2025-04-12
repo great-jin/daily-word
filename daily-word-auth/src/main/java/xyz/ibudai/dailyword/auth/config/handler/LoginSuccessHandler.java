@@ -13,7 +13,7 @@ import xyz.ibudai.dailyword.basic.enums.ContentType;
 import xyz.ibudai.dailyword.basic.encrypt.AESUtil;
 import xyz.ibudai.dailyword.auth.util.TokenUtil;
 import xyz.ibudai.dailyword.model.base.ResponseData;
-import xyz.ibudai.dailyword.model.dto.AuthUserDTO;
+import xyz.ibudai.dailyword.model.vo.user.AuthUserVo;
 import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
 
@@ -34,9 +34,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         AuthUser user = (AuthUser) authentication.getPrincipal();
         String refreshToken;
-        AuthUserDTO userDTO;
+        AuthUserVo userDTO;
         try {
-            userDTO = AuthUserDTO.builder()
+            userDTO = AuthUserVo.builder()
                     .userId(user.getId())
                     .username(user.getUsername())
                     // 密码为 SHA-256 哈希值
@@ -50,7 +50,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         // 更新登录时间
         userDetailDao.updateOnlineTime(user.getId());
 
-        AuthUserDTO userVo = new AuthUserDTO();
+        AuthUserVo userVo = new AuthUserVo();
         try {
             userVo.setKey(AESUtil.encrypt(user.getId().toString()));
             userVo.setRefreshToken(refreshToken);
