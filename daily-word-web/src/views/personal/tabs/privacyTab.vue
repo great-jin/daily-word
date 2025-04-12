@@ -75,6 +75,8 @@
 
 <script>
 import {getDetails} from "@/api/userDetailsApi";
+import {destroyAccount} from "@/api/authUserApi";
+import {clearToken} from "@/util/AuthUtil";
 
 export default {
   data() {
@@ -113,9 +115,16 @@ export default {
       this.disableForm = true
       this.$refs.passwordForm.clearValidate()
     },
-    removeAccount() {
-      this.$message.success('remove')
-      this.disableForm = true
+    async removeAccount() {
+      await destroyAccount().then(res => {
+        if (res.code === 200 && res.data) {
+          this.$message.success('您已注销')
+          this.disableForm = true
+
+          clearToken()
+          this.$router.push('/dictionary');
+        }
+      })
     }
   }
 }

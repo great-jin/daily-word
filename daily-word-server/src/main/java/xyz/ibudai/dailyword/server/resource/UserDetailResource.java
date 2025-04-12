@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
-import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.server.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.io.*;
-import java.nio.file.Files;
 
 /**
  * (UserDetail)表控制层
@@ -24,7 +22,6 @@ import java.nio.file.Files;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserDetailResource {
 
-    private final OssProps ossProps;
     private final OssServer ossServer;
 
     private final UserDetailService userDetailService;
@@ -47,20 +44,10 @@ public class UserDetailResource {
      *
      * @param file the file
      * @return the by id
-     * @throws IOException the io exception
      */
     @PostMapping("uploadAvatar")
-    public String uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
-        UserDetail user = userDetailService.getById(SecurityUtil.getLoginUser());
-        String avatarPath = ossProps.getHome() + File.separator + ossProps.getAvatarDir();
-        File avatarFile = new File(avatarPath, user.getAvatar());
-        try (
-                InputStream in = file.getInputStream();
-                OutputStream out = Files.newOutputStream(avatarFile.toPath())
-        ) {
-            ossServer.compress(in, out);
-            return ossServer.signAvatarUrl(user.getAvatar());
-        }
+    public String uploadAvatar(@RequestParam("file") MultipartFile file) {
+        return userDetailService.uploadAvatar(file);
     }
 }
 

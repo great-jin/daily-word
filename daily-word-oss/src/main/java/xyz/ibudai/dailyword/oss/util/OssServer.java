@@ -2,9 +2,11 @@ package xyz.ibudai.dailyword.oss.util;
 
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
+import xyz.ibudai.dailyword.basic.enums.FileType;
 import xyz.ibudai.dailyword.model.props.OssProps;
 
 import java.io.IOException;
@@ -16,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OssServer {
+
+    private static final String DEFAULT_AVATAR = "cfcd2084-95d5-35ef-a6e7-dff9f98764da.jpeg";
+
 
     private final OssProps ossProps;
 
@@ -34,7 +39,7 @@ public class OssServer {
                 // 压缩质量
                 .outputQuality(ossProps.getQuality())
                 // 输出格式
-                .outputFormat("jpeg")
+                .outputFormat(FileType.JPEG.getType())
                 .toOutputStream(out);
     }
 
@@ -68,6 +73,7 @@ public class OssServer {
      * @return the string
      */
     public String signAvatarUrl(String filePath) {
+        filePath = StringUtils.isBlank(filePath) ? DEFAULT_AVATAR : filePath;
         return signUrl(filePath, ossProps.getAvatarDir(), TimeUnit.HOURS.toMillis(1));
     }
 }

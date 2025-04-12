@@ -1,6 +1,8 @@
 package xyz.ibudai.dailyword.auth.resource;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -11,7 +13,9 @@ import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
+import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
+import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +30,7 @@ public class AuthenticResource {
 
     private final InviteCodeDao inviteCodeDao;
 
+    private final AuthUserDao authUserDao;
     private final AuthenticService authenticService;
 
 
@@ -86,5 +91,18 @@ public class AuthenticResource {
     @PostMapping("forgot")
     public Boolean forgot(@RequestBody UserDetail user) {
         return authenticService.forgot(user);
+    }
+
+    /**
+     * Destroy boolean.
+     *
+     * @return the boolean
+     */
+    @GetMapping("destroy")
+    public Boolean destroy() {
+        UpdateWrapper<AuthUser> wrapper = new UpdateWrapper<>();
+        wrapper.set("is_enabled", false);
+        wrapper.eq("id", SecurityUtil.getLoginUser());
+        return authUserDao.update(wrapper) > 0;
     }
 }

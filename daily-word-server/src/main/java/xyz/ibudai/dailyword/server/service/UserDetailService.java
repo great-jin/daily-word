@@ -1,6 +1,7 @@
 package xyz.ibudai.dailyword.server.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 
 import java.util.List;
@@ -21,5 +22,13 @@ public interface UserDetailService extends IService<UserDetail> {
      * @return the map
      */
     Map<Integer, UserDetail> groupByUserId(List<Integer> userIds);
+
+    /**
+     * Upload avatar string.
+     *
+     * @param file the file
+     * @return the string
+     */
+    String uploadAvatar(MultipartFile file);
 }
 

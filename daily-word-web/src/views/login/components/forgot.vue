@@ -12,7 +12,7 @@
         label-width="100px"
         style="margin-top: 20px"
     >
-      <el-form-item label="邮&nbsp;&nbsp;&nbsp;箱:" prop="mail">
+      <el-form-item label="账号邮箱:" prop="mail">
         <el-row style="width: 100%">
           <el-col :span="18">
             <el-input
@@ -30,17 +30,17 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item label="验证码:" prop="captcha">
+      <el-form-item label="验&nbsp;&nbsp;证&nbsp;&nbsp;码:" prop="captcha">
         <el-input
             v-model="registerForm.captcha"
             placeholder="请输入验证码"
         />
       </el-form-item>
-      <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
+      <el-form-item label="新&nbsp;&nbsp;密&nbsp;&nbsp;码:" prop="password">
         <el-input
             type="password"
             v-model="registerForm.password"
-            placeholder="请输入密码"
+            placeholder="请输入新密码"
         />
       </el-form-item>
       <el-form-item label="确认密码:" prop="passwordCheck">

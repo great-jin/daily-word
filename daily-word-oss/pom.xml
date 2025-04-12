@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-model</artifactId>
+            <artifactId>daily-word-basic</artifactId>
             <version>${project.version}</version>
         </dependency>
 

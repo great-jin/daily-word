@@ -79,12 +79,6 @@ export default {
     })
   },
   methods: {
-    enableModify() {
-      this.disableForm = false
-    },
-    saveModify() {
-      this.disableForm = true
-    },
     async customUpload(data) {
       const file = data.file
       const isImage = file.type.startsWith('image/')

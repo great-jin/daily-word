@@ -39,3 +39,10 @@ export function forgot(params) {
         data: params
     })
 }
+
+export function destroyAccount() {
+    return request({
+        url: '/api/auth/destroy',
+        method: 'get',
+    })
+}
