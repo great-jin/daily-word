@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import xyz.ibudai.dailyword.model.dto.AnswerDTO;
 import xyz.ibudai.dailyword.model.entity.match.MatchRecord;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -40,10 +42,17 @@ public class MatchSchedule {
         // 按对局分组
         Map<Integer, List<MatchRecord>> groupMap = undoneList
                 .stream().collect(Collectors.groupingBy(MatchRecord::getMatchId));
-
-        // TODO 2025/4/3 超时用户默认判负
-        // TODO 2025/4/3 人机挑战直接结束
-
-
+        for (Map.Entry<Integer, List<MatchRecord>> item : groupMap.entrySet()) {
+            try {
+                AnswerDTO answerDTO = new AnswerDTO();
+                answerDTO.setMatchId(item.getKey());
+                answerDTO.setCostTime(0);
+                answerDTO.setScore(0);
+                answerDTO.setContentList(new ArrayList<>());
+                matchRecordService.finishMatch(answerDTO);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
