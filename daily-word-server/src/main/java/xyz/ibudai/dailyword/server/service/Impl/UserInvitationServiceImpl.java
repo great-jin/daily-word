@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.entity.user.UserFriend;
 import xyz.ibudai.dailyword.model.entity.user.UserInvitation;
+import xyz.ibudai.dailyword.model.enums.InviteProcessStatus;
 import xyz.ibudai.dailyword.model.enums.InviteType;
 import xyz.ibudai.dailyword.model.vo.friend.FriendInviteVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
@@ -52,6 +53,7 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
         List<UserInvitation> list = this.lambdaQuery()
                 .eq(UserInvitation::getFromUser, loginUser)
                 .eq(UserInvitation::getTargetUser, userDetail.getUserId())
+                .eq(UserInvitation::getProcessStatus, InviteProcessStatus.Pending.getStatus())
                 .list();
         if (!CollectionUtils.isEmpty(list)) {
             throw new IllegalStateException("您已请求此用户，请勿重复添加");
@@ -74,7 +76,7 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
         LambdaQueryChainWrapper<UserInvitation> wrapper = this.lambdaQuery();
         if (Objects.equals(type, InviteType.toMe)) {
             // 待处理的邀请
-            wrapper.eq(UserInvitation::getProcessStatus, 0);
+            wrapper.eq(UserInvitation::getProcessStatus, InviteProcessStatus.Pending.getStatus());
             wrapper.eq(UserInvitation::getTargetUser, SecurityUtil.getLoginUser());
         } else {
             // 发出的邀请
@@ -118,15 +120,15 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
 
     @Override
     public Boolean handleInvite(Integer userId, Integer status) {
-
         Integer loginUser = SecurityUtil.getLoginUser();
         boolean update = this.lambdaUpdate()
                 .set(UserInvitation::getProcessStatus, status)
                 .eq(UserInvitation::getFromUser, userId)
                 .eq(UserInvitation::getTargetUser, loginUser)
                 .update();
-        if (status.equals(1)) {
-            // 同意邀请
+
+        // 同意邀请
+        if (status.equals(InviteProcessStatus.Ok.getStatus())) {
             UserFriend userFriend = new UserFriend();
             userFriend.setUserId(userId);
             userFriend.setFriendId(loginUser);
