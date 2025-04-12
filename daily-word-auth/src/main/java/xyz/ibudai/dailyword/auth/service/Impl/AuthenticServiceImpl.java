@@ -22,6 +22,7 @@ import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
+import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
 import xyz.ibudai.dailyword.model.enums.RegisterStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
@@ -147,7 +148,7 @@ public class AuthenticServiceImpl implements AuthenticService {
         // 更新邀请码为无效
         inviteCodeDao.update(
                 new UpdateWrapper<InviteCode>()
-                        .set("active", false)
+                        .set("status", InviteCodeStatus.USED.getStatus())
                         .eq("code", registerVo.getInviteCode())
         );
 

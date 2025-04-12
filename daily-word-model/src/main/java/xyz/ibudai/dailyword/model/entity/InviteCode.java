@@ -7,8 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * (InviteCode)表实体类
@@ -30,14 +31,26 @@ public class InviteCode extends Model<InviteCode> {
     @TableField("code")
     private String code;
 
-    @TableField("generate_time")
-    private LocalDateTime generateTime;
+    @TableField("generate_date")
+    private LocalDate generateDate;
 
-    @TableField("expire_day")
-    private Integer expireDay;
+    @TableField("expire_date")
+    private LocalDate expireDate;
 
-    @TableField("active")
-    private Boolean active;
+    @TableField("status")
+    private Integer status;
 
+
+    public static InviteCode init(Integer userId) {
+        LocalDate now = LocalDate.now();
+
+        InviteCode inviteCode = new InviteCode();
+        inviteCode.setUserId(userId);
+        inviteCode.setGenerateDate(now);
+        // 七天过期
+        inviteCode.setExpireDate(now.plusDays(7));
+        inviteCode.setStatus(InviteCodeStatus.UN_USE.getStatus());
+        return inviteCode;
+    }
 }
 

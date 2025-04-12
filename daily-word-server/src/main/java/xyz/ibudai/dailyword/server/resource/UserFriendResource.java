@@ -1,5 +1,6 @@
 package xyz.ibudai.dailyword.server.resource;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.vo.friend.UserFriendVo;
@@ -15,13 +16,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/server/userFriend")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserFriendResource {
 
-    /**
-     * 服务对象
-     */
-    @Autowired
-    private UserFriendService userFriendService;
+    private final UserFriendService userFriendService;
 
 
     /**

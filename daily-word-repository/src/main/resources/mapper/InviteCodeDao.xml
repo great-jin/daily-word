@@ -6,9 +6,9 @@
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="code" column="code" jdbcType="VARCHAR"/>
-        <result property="generateTime" column="generate_time" jdbcType="TIMESTAMP"/>
-        <result property="expireDay" column="expire_day" jdbcType="INTEGER"/>
-        <result property="active" column="active" jdbcType="BOOLEAN"/>
+        <result property="generateDate" column="generate_date" jdbcType="TIMESTAMP"/>
+        <result property="expireDate" column="expire_date" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="BOOLEAN"/>
     </resultMap>
 
 </mapper>

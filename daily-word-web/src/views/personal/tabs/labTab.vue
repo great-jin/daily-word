@@ -18,7 +18,7 @@
           >
             <div style="display: flex; align-items: center;">
               <el-icon style="cursor: pointer;">
-                <QuestionFilled />
+                <QuestionFilled/>
               </el-icon>
             </div>
           </el-tooltip>
@@ -60,13 +60,13 @@
           </el-table-column>
           <el-table-column
               width="160"
-              prop="createTime"
+              prop="generateDate"
               align="center"
               label="生成时间"
           />
           <el-table-column
               width="160"
-              prop="expireTime"
+              prop="expireDate"
               align="center"
               label="过期时间"
           />
@@ -79,11 +79,12 @@
             <template #default="{ row }">
               <el-button
                   type="primary"
-                  @click="reActive(row)"
+                  @click="reActive(row.id)"
                   :disabled="row.status !== 3"
                   link
-              >激活</el-button>
-              <el-button type="primary" @click="removeCode(row)" link>删除</el-button>
+              >激活
+              </el-button>
+              <el-button type="primary" @click="removeCode(row.id)" link>删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -94,44 +95,56 @@
 
 <script>
 
+import {
+  deleteCode,
+  generateCode,
+  listInviteCode,
+  reactiveCode
+} from "@/api/inviteCodeApi";
+
 export default {
   data() {
     return {
       tableData: []
     }
   },
+  mounted() {
+    this.listTable()
+  },
   methods: {
-    generate() {
+    listTable() {
+      listInviteCode().then(res => {
+        this.tableData = res.data
+      })
+    },
+    async generate() {
       if (this.tableData.length >= 6) {
         this.$message.warning('最多生成 6 份邀请码!')
         return
       }
 
-      this.tableData.push({
-        code: this.generateCode(),
-        status: Math.floor(Math.random() * 3) + 1,
-        createTime: '2025-04-02',
-        expireTime: '2025-04-09'
+      await generateCode().then(() => {
+        // 重新刷新
+        this.listTable()
       })
     },
-    reActive(data) {
-      const target = this.tableData.find(item => item.code === data.code);
-      if (target !== null) {
-        target.status = 1
-        this.$message.success('激活成功！')
-      }
+    async reActive(data) {
+      await reactiveCode(data).then(res => {
+        if (res.code === 200 && res.data) {
+          this.$message.success('激活成功')
+          // 重新刷新
+          this.listTable()
+        }
+      })
     },
-    removeCode(data) {
-      this.tableData = this.tableData.filter(it => it.code !== data.code)
-    },
-    generateCode() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let result = '';
-      for (let i = 0; i < 8; i++) {
-        const randomIndex = Math.floor(Math.random() * chars.length);
-        result += chars[randomIndex];
-      }
-      return result;
+    async removeCode(data) {
+      await deleteCode(data).then(res => {
+        if (res.code === 200 && res.data) {
+          this.$message.success('删除成功')
+          // 重新刷新
+          this.listTable()
+        }
+      })
     }
   }
 }

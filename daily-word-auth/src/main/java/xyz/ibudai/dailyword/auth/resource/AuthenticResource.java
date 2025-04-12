@@ -9,9 +9,11 @@ import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
+import xyz.ibudai.dailyword.model.enums.InviteCodeStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -46,7 +48,9 @@ public class AuthenticResource {
     public Boolean validaCode(@RequestParam("inviteCode") String inviteCode) {
         QueryWrapper<InviteCode> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("code", inviteCode);
-        queryWrapper.eq("active", Boolean.TRUE);
+        queryWrapper.eq("status", InviteCodeStatus.UN_USE.getStatus());
+        // 过期时间大于当前日期
+        queryWrapper.ge("expire_date", LocalDateTime.now());
         List<InviteCode> list = inviteCodeDao.selectList(queryWrapper);
         return !CollectionUtils.isEmpty(list);
     }

@@ -1,5 +1,6 @@
 package xyz.ibudai.dailyword.server.resource;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
@@ -16,10 +17,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/server/word")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TaskWordResource {
 
-    @Autowired
-    private TaskWordService taskWordService;
+    private final TaskWordService taskWordService;
 
 
     /**
