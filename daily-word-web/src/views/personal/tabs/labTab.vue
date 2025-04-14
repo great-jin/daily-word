@@ -84,7 +84,12 @@
                   link
               >激活
               </el-button>
-              <el-button type="primary" @click="removeCode(row.id)" link>删除</el-button>
+              <el-button
+                  type="primary"
+                  @click="removeCode(row.id)"
+                  :disabled="row.status === 2"
+                  link
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
