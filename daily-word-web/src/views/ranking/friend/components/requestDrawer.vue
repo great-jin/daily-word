@@ -1,7 +1,7 @@
 <template>
   <el-drawer
       v-model="visible"
-      size="24%"
+      size="30%"
       style="min-height: 400px"
   >
     <template #header>

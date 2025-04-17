@@ -10,10 +10,19 @@
       >
         添加好友
       </el-button>
+
+      <el-badge
+          v-if="requestCount !== 0"
+          :value="requestCount"
+          style="margin-bottom: 20px; float: right"
+      >
+        <el-button type="primary" @click="requestList"> 我的申请</el-button>
+      </el-badge>
       <el-button
           type="primary"
           @click="requestList"
           style="margin-bottom: 20px; float: right"
+          v-else
       >
         我的申请
       </el-button>
@@ -88,6 +97,7 @@ import {deleteById, listFriends} from "@/api/userFriendApi"
 import DetailDialog from "./components/detailDialog.vue";
 import RequestDrawer from "./components/requestDrawer.vue";
 import SearchDialog from "./components/searchDialog.vue";
+import {countRequest} from "@/api/userInviteApi";
 
 export default {
   components: {
@@ -99,15 +109,23 @@ export default {
     return {
       visible: false,
       friendData: [],
+      requestCount: 0
     }
   },
   mounted() {
     this.listTableData()
   },
   methods: {
-    listTableData() {
-      listFriends().then(res => {
-        this.friendData = res.data
+    async listTableData() {
+      await countRequest().then(res => {
+        if (res.code === 200) {
+          this.requestCount = res.data
+        }
+      })
+      await listFriends().then(res => {
+        if (res.code === 200) {
+          this.friendData = res.data
+        }
       })
     },
     tableRowStyle({rowIndex}) {

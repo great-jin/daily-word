@@ -2,6 +2,12 @@ import request from './core/axios';
 
 const apiPrefix = "/api/server/userInvite"
 
+export function countRequest() {
+    return request({
+        url: `${apiPrefix}/count`,
+        method: 'get'
+    })
+}
 export function searchUser(params) {
     return request({
         url: `${apiPrefix}/search?username=${params}`,

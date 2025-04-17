@@ -25,6 +25,15 @@ public class UserInvitationResource {
 
     private final UserInvitationService userInvitationService;
 
+    /**
+     * Count.
+     *
+     * @return the integer
+     */
+    @GetMapping("count")
+    public Integer count() {
+        return this.listReqs(InviteType.toMe).size();
+    }
 
     /**
      * Search friend invite vo.
