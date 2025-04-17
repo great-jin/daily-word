@@ -25,7 +25,9 @@
             align="center"
         >
           <template #default="{ row }">
-            <el-tag type="primary">{{ row.index}}</el-tag>
+            <el-tag type="primary">
+              {{ row.index }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -37,7 +39,16 @@
             prop="score"
             label="积分"
             align="center"
-        />
+        >
+          <template #default="{ row }">
+            <div style="display: flex; align-items: center; justify-content: center;">
+              <el-icon style="margin-right: 4px;">
+                <StarFilled />
+              </el-icon>
+              <span>{{ row.score }}</span>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
   </div>

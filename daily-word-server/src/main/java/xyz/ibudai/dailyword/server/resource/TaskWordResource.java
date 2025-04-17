@@ -8,6 +8,7 @@ import xyz.ibudai.dailyword.model.vo.*;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.DictDetail;
 import xyz.ibudai.dailyword.model.vo.word.Word;
+import xyz.ibudai.dailyword.server.service.MatchRecordService;
 import xyz.ibudai.dailyword.server.service.TaskWordService;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class TaskWordResource {
 
     private final TaskWordService taskWordService;
+    private final MatchRecordService matchRecordService;
 
 
     /**
@@ -65,6 +67,11 @@ public class TaskWordResource {
      */
     @GetMapping("getAnswer")
     public AnswerVo getAnswer(@RequestParam("matchId") Integer matchId) {
+        Boolean finished = matchRecordService.checkTaskFinished(matchId);
+        if (!finished) {
+            throw new IllegalStateException("对局进行中，无法查看答案！");
+        }
+
         return taskWordService.getAnswer(matchId);
     }
 }

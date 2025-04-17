@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,11 +22,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class DicPreHeat implements ApplicationRunner {
 
-    @Value("classpath:dict/Dictionary.json")
-    private Resource dictResource;
+    @Value("${resource.dict}")
+    private String dictPath;
 
-    @Value("classpath:vocabulary")
-    private Resource vocabularyResource;
+    @Value("${resource.vocabulary}")
+    private String vocabularyPath;
+
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -37,19 +40,15 @@ public class DicPreHeat implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         try {
-            this.preheatDict(dictResource);
+            this.preheatDict();
         } catch (Exception e) {
             log.error("Preheat dictionary data failed.", e);
         }
 
-        if (!vocabularyResource.exists()) {
-            log.error("The directory [{}] is not exists", vocabularyResource.getFilename());
-            return;
-        }
-        File file = new File(vocabularyResource.getURI());
+        File file = new File(vocabularyPath);
         File[] vocabularyFiles = file.listFiles();
         if (Objects.isNull(vocabularyFiles)) {
-            log.error("The directory of [{}] is empty", vocabularyResource.getFilename());
+            log.error("The directory of [{}] is empty", vocabularyPath);
             return;
         }
 
@@ -69,21 +68,23 @@ public class DicPreHeat implements ApplicationRunner {
         }
     }
 
-    private void preheatDict(Resource resource) throws Exception {
-        JsonNode node = objectMapper.readTree(resource.getInputStream());
-        for (int i = 0; i < node.size(); i++) {
-            String name = node.get(i)
-                    .get("name")
-                    .asText();
-            name = name.toLowerCase(Locale.ROOT);
-            List<JsonNode> nodeList = CATALOG_MAP.get(name);
-            if (Objects.isNull(nodeList) || nodeList.isEmpty()) {
-                nodeList = new ArrayList<>();
-                nodeList.add(node.get(i));
-                CATALOG_MAP.put(name, nodeList);
-            } else {
-                nodeList.add(node.get(i));
-                CATALOG_MAP.put(name, nodeList);
+    private void preheatDict() throws Exception {
+        try (InputStream inputStream = Files.newInputStream(Paths.get(dictPath));) {
+            JsonNode node = objectMapper.readTree(inputStream);
+            for (int i = 0; i < node.size(); i++) {
+                String name = node.get(i)
+                        .get("name")
+                        .asText();
+                name = name.toLowerCase(Locale.ROOT);
+                List<JsonNode> nodeList = CATALOG_MAP.get(name);
+                if (Objects.isNull(nodeList) || nodeList.isEmpty()) {
+                    nodeList = new ArrayList<>();
+                    nodeList.add(node.get(i));
+                    CATALOG_MAP.put(name, nodeList);
+                } else {
+                    nodeList.add(node.get(i));
+                    CATALOG_MAP.put(name, nodeList);
+                }
             }
         }
     }

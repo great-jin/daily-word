@@ -14,6 +14,7 @@ import xyz.ibudai.dailyword.server.service.InviteCodeService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The type Invite code resource.
@@ -43,8 +44,17 @@ public class InviteCodeResource {
      */
     @GetMapping("generate")
     public Boolean generate() {
+        String code = CodeTool.generate();
+        List<InviteCode> list = inviteCodeService.lambdaQuery()
+                .eq(InviteCode::getCode, code)
+                .list();
+        if (!list.isEmpty()) {
+            // 重复，生成失败
+            return false;
+        }
+
         InviteCode inviteCode = InviteCode.init(SecurityUtil.getLoginUser());
-        inviteCode.setCode(CodeTool.generate());
+        inviteCode.setCode(code);
         return inviteCodeService.save(inviteCode);
     }
 
@@ -56,6 +66,14 @@ public class InviteCodeResource {
      */
     @GetMapping("delete")
     public Boolean deleteCode(@RequestParam("id") Integer id) {
+        InviteCode inviteCode = inviteCodeService.lambdaQuery()
+                .eq(InviteCode::getId, id)
+                .eq(InviteCode::getUserId, SecurityUtil.getLoginUser())
+                .one();
+        if (Objects.equals(inviteCode.getStatus(), InviteCodeStatus.USED.getStatus())) {
+            return false;
+        }
+
         return inviteCodeService.removeById(id);
     }
 

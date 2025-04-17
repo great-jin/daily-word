@@ -121,17 +121,16 @@ export default {
     }
   },
   methods: {
-    show(matchId) {
-      this.visible = true
-
-      this.fillData(matchId)
-    },
-    async fillData(matchId) {
+    async show(matchId) {
       await getTaskAnswer(matchId).then(res => {
-        if (res !== undefined && res !== null) {
-          this.correctData = res.data.answers
-          this.inputData = res.data.submits
+        if (res === undefined || res === null || res.code !== 200) {
+          this.clearData()
+          return
         }
+
+        this.visible = true
+        this.correctData = res.data.answers
+        this.inputData = res.data.submits
       })
 
       for (let i = 1; i <= this.correctData.length; i++) {
@@ -143,6 +142,8 @@ export default {
       this.setActiveWord()
     },
     clearData() {
+      this.visible = false
+
       this.wordIndex = 0
       this.correctData = []
       this.subjectItems = []

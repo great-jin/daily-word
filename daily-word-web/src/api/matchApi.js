@@ -11,7 +11,7 @@ export function validate(params) {
 
 export function checkMatchStatus(params) {
     return request({
-        url: `${apiPrefix}/checkStatus?matchId=${params}`,
+        url: `${apiPrefix}/checkFinished?matchId=${params}`,
         method: 'get'
     })
 }

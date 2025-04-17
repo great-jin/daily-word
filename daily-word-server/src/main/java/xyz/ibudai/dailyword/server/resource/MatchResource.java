@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.dto.AnswerDTO;
-import xyz.ibudai.dailyword.model.entity.match.MatchRecord;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;
@@ -39,13 +38,9 @@ public class MatchResource {
      * @param matchId the match id
      * @return the boolean
      */
-    @GetMapping("checkStatus")
-    public Boolean checkStatus(@RequestParam("matchId") Integer matchId) {
-        MatchRecord matchRecord = matchRecordService.lambdaQuery()
-                .select(MatchRecord::getFinished)
-                .eq(MatchRecord::getMatchId, matchId)
-                .one();
-        return Boolean.TRUE.equals(matchRecord.getFinished());
+    @GetMapping("checkFinished")
+    public Boolean checkFinished(@RequestParam("matchId") Integer matchId) {
+        return matchRecordService.checkTaskFinished(matchId);
     }
 
     /**

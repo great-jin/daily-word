@@ -79,6 +79,16 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
     }
 
     @Override
+    public Boolean checkTaskFinished(Integer matchId) {
+        MatchRecord matchRecord = this.lambdaQuery()
+                .select(MatchRecord::getFinished)
+                .eq(MatchRecord::getUserId, SecurityUtil.getLoginUser())
+                .eq(MatchRecord::getMatchId, matchId)
+                .one();
+        return Boolean.TRUE.equals(matchRecord.getFinished());
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer initRecord(Set<Integer> uIdList, RoomDTO roomDTO) {
         if (CollectionUtils.isEmpty(uIdList)) {

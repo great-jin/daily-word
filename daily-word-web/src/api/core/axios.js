@@ -35,10 +35,23 @@ function request(axiosConfig) {
             return null
         }
         const code = res.data.code
-        if (code !== undefined && code !== null && (code === 203 || code === 403)) {
-            noticeAnClear()
-            router.push('/')
-            return res.data
+        if (code !== undefined && code !== null) {
+            // 未登录返回
+            if (code === 203 || code === 403) {
+                noticeAnClear()
+                router.push('/')
+                return res.data
+            }
+
+            // 失败提示
+            if (code === 500) {
+                ElNotification({
+                    title: '操作失败',
+                    message: res.data.message,
+                    type: 'error'
+                })
+                return res.data
+            }
         }
 
         return res.data
@@ -49,7 +62,7 @@ function request(axiosConfig) {
             message = message.data.message
         }
         ElNotification({
-            title: 'Internal Server Error',
+            title: '操作失败',
             message: message,
             type: 'error'
         })

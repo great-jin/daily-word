@@ -30,6 +30,14 @@ public interface MatchRecordService extends IService<MatchRecord> {
     PageInfo<MatchRecordVo> paging(Integer pageNo, Integer pageSize);
 
     /**
+     * Check task finished boolean.
+     *
+     * @param matchId the match id
+     * @return the boolean
+     */
+    Boolean checkTaskFinished(Integer matchId);
+
+    /**
      * Check available boolean.
      *
      * @param catalogue the catalogue
