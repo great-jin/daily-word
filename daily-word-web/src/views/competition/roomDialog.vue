@@ -122,6 +122,8 @@ export default {
       modeOptions: MODE_OPTIONS,
       batchOptions: SIZE_OPTIONS,
       catalogues: CATALOG_ARRAY,
+      // 连接
+      socket: null,
       // 房间参数
       roomNumValues: ['', '', '', '', '', ''],
       reqParams: {
@@ -151,7 +153,14 @@ export default {
       this.reqParams.roomNumber = null
       this.roomNumValues = ['', '', '', '', '', '']
 
-      this.clearIntervalLoop();
+      // 重置等待计时器
+      this.clearIntervalLoop()
+
+      // 关闭连接
+      if (this.socket !== null) {
+        this.socket.close()
+        this.socket = null
+      }
     },
     changeMode(type, data) {
       let s1, s2
@@ -226,21 +235,22 @@ export default {
       // 匹配连接
       const url = getWsUrl()
       const userId = getUid(false)
-      const socket = new WebSocket(`${url}/rank?key=${userId}`);
-      socket.addEventListener('open', () => {
+      this.socket = new WebSocket(`${url}/rank?key=${userId}`);
+      const _socket = this.socket
+      _socket.addEventListener('open', () => {
         // 发起匹配
-        socket.send(Encrypt(JSON.stringify(this.reqParams)))
+        _socket.send(Encrypt(JSON.stringify(this.reqParams)))
 
         // 五分钟未匹配自动关闭
         let count = 1
         _load.intervalId = setInterval(() => {
           if (count++ > 300) {
-            socket.close()
+            _socket.close()
           }
         }, 1000);
       })
 
-      socket.addEventListener('message', (event) => {
+      _socket.addEventListener('message', (event) => {
         const res = JSON.parse(event.data)
         if (res !== null && res.code === 302) {
           // 匹配成功
@@ -248,14 +258,12 @@ export default {
         }
       })
 
-      socket.addEventListener('close', (event) => {
+      _socket.addEventListener('close', () => {
         this.clearIntervalLoop()
-        console.log('WebSocket 连接已关闭', event.data);
       })
 
-      socket.addEventListener('error', (event) => {
+      _socket.addEventListener('error', () => {
         this.clearIntervalLoop()
-        console.error('WebSocket 错误', event);
         this.$message.info('匹配失败，请重试')
       })
     },
