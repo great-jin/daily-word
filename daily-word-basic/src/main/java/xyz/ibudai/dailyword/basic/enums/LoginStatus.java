@@ -8,17 +8,17 @@ import lombok.Getter;
 @Getter
 public enum LoginStatus {
 
-    NOT_EXIST("Account doesn't exist, please recheck."),
+    NOT_EXIST("用户名不存在"),
 
-    NOT_LOGIN("Please login first."),
+    NOT_LOGIN("请登录后操作."),
 
-    LOCKED("Account has been locked, please contact the administrator."),
+    LOCKED("账号已锁定"),
 
-    BAD_CREDENTIAL("Account credential error, please recheck."),
+    BAD_CREDENTIAL("密码错误，请检查后重试"),
 
-    EXPIRE("Login expired."),
+    EXPIRE("登录过期"),
 
-    NOT_AUTH("Authorization failure, please login and try again.");
+    NOT_AUTH("无访问权限，请登录后操作");
 
 
     private final String msg;
