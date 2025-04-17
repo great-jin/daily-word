@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.model.dto.PasswordDTO;
+import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.server.service.UserDetailService;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 /**
  * (UserDetail)表控制层
@@ -58,8 +61,13 @@ public class UserDetailResource {
      * @return the integer
      */
     @PostMapping("changePassword")
-    public Integer changePassword(@RequestBody PasswordDTO dto) throws NoSuchAlgorithmException {
-        return userDetailService.changePassword(dto);
+    public ResponseData changePassword(@RequestBody PasswordDTO dto) throws NoSuchAlgorithmException {
+        PasswordStatus status = userDetailService.changePassword(dto);
+        if (!Objects.equals(status, PasswordStatus.SUCCESS)) {
+            return ResponseData.failed(status.getMessage());
+        }
+
+        return ResponseData.success(true);
     }
 }
 

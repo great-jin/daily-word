@@ -90,16 +90,16 @@ public class UserDetailServiceImpl extends ServiceImpl<UserDetailDao, UserDetail
     }
 
     @Override
-    public Integer changePassword(PasswordDTO dto) throws NoSuchAlgorithmException {
+    public PasswordStatus changePassword(PasswordDTO dto) throws NoSuchAlgorithmException {
         AuthUser user = authUserService.getById(SecurityUtil.getLoginUser());
         String hashPwd = SHAUtil.hash(user.getPassword());
         if (!Objects.equals(hashPwd, dto.getOriginPwd())) {
             // 旧密码错误
-            return PasswordStatus.PWD_MISMATCH.getCode();
+            return PasswordStatus.PWD_MISMATCH;
         }
         if (Objects.equals(hashPwd, dto.getPassword())) {
             // 新旧密码一致
-            return PasswordStatus.PWD_SAME.getCode();
+            return PasswordStatus.PWD_SAME;
         }
 
         boolean success = authUserService.lambdaUpdate()
@@ -107,8 +107,8 @@ public class UserDetailServiceImpl extends ServiceImpl<UserDetailDao, UserDetail
                 .eq(AuthUser::getId, user.getId())
                 .update();
         return success
-                ? PasswordStatus.SUCCESS.getCode()
-                : PasswordStatus.FAILED.getCode() ;
+                ? PasswordStatus.SUCCESS
+                : PasswordStatus.FAILED;
     }
 }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.ibudai.dailyword.model.dto.PasswordDTO;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
+import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -39,6 +40,6 @@ public interface UserDetailService extends IService<UserDetail> {
      * @param dto the dto
      * @return the integer
      */
-    Integer changePassword(PasswordDTO dto) throws NoSuchAlgorithmException;
+    PasswordStatus changePassword(PasswordDTO dto) throws NoSuchAlgorithmException;
 }
 

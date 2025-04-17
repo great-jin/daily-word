@@ -6,11 +6,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.model.dto.PasswordDTO;
 import xyz.ibudai.dailyword.model.entity.user.AuthUser;
 import xyz.ibudai.dailyword.auth.service.AuthenticService;
 import xyz.ibudai.dailyword.model.entity.InviteCode;
+import xyz.ibudai.dailyword.model.enums.status.EmailCodeStatus;
 import xyz.ibudai.dailyword.model.enums.status.InviteCodeStatus;
+import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
+import xyz.ibudai.dailyword.model.enums.status.RegisterStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
@@ -18,6 +22,7 @@ import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The type Login resource.
@@ -67,9 +72,14 @@ public class AuthenticResource {
      * @return the boolean
      */
     @GetMapping("sendMail")
-    public Integer sendMail(@RequestParam("type") Integer type,
-                            @RequestParam("email") String email) {
-        return authenticService.sendMail(type, email);
+    public ResponseData sendMail(@RequestParam("type") Integer type,
+                                 @RequestParam("email") String email) {
+        EmailCodeStatus status = authenticService.sendMail(type, email);
+        if (!Objects.equals(status, EmailCodeStatus.SUCCESS)) {
+            return ResponseData.failed(status.getMessage());
+        }
+
+        return ResponseData.success(true);
     }
 
     /**
@@ -79,8 +89,13 @@ public class AuthenticResource {
      * @return the boolean
      */
     @PostMapping("register")
-    public Integer register(@RequestBody RegisterVo registerVo) {
-        return authenticService.register(registerVo);
+    public ResponseData register(@RequestBody RegisterVo registerVo) {
+        RegisterStatus status = authenticService.register(registerVo);
+        if (!Objects.equals(status, RegisterStatus.SUCCESS)) {
+            return ResponseData.failed(status.getMessage());
+        }
+
+        return ResponseData.success(true);
     }
 
     /**
@@ -90,8 +105,13 @@ public class AuthenticResource {
      * @return the boolean
      */
     @PostMapping("forgot")
-    public Integer forgot(@RequestBody PasswordDTO dto) {
-        return authenticService.forgot(dto);
+    public ResponseData forgot(@RequestBody PasswordDTO dto) {
+        PasswordStatus status = authenticService.forgot(dto);
+        if (!Objects.equals(status, PasswordStatus.SUCCESS)) {
+            return ResponseData.failed(status.getMessage());
+        }
+
+        return ResponseData.success(true);
     }
 
     /**

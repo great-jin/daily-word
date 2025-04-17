@@ -75,10 +75,10 @@ public class AuthenticServiceImpl implements AuthenticService {
     }
 
     @Override
-    public Integer sendMail(Integer type, String address) {
+    public EmailCodeStatus sendMail(Integer type, String address) {
         Matcher matcher = RegexConst.PATTERN_EMAIL.matcher(address);
         if (!matcher.matches()) {
-            return EmailCodeStatus.EMAIL_INVALID.getStatus();
+            return EmailCodeStatus.EMAIL_INVALID;
         }
         List<UserDetail> list = userDetailDao.selectList(
                 new QueryWrapper<UserDetail>()
@@ -89,7 +89,7 @@ public class AuthenticServiceImpl implements AuthenticService {
         if (Objects.equals(type, EmailType.Register.getCode())
                 && !CollectionUtils.isEmpty(list)
         ) {
-            return EmailCodeStatus.EMAIL_IN_USE.getStatus();
+            return EmailCodeStatus.EMAIL_IN_USE;
         }
 
         // 生成并记录验证码
@@ -116,25 +116,25 @@ public class AuthenticServiceImpl implements AuthenticService {
             log.error("Mail sending failed.", e);
             codeStatus = EmailCodeStatus.FAIL;
         }
-        return codeStatus.getStatus();
+        return codeStatus;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Integer register(RegisterVo registerVo) {
+    public RegisterStatus register(RegisterVo registerVo) {
         String key = UUID.nameUUIDFromBytes(
                 (EmailType.Register.getCode() + registerVo.getEmail()).getBytes()
         ).toString();
         String code = EMAIL_CODE_MAP.getIfPresent(key);
         if (StringUtils.isBlank(code) || !Objects.equals(code, registerVo.getCaptcha())) {
             // 验证码无效
-            return RegisterStatus.CAPTCHA_MISMATCH.getCode();
+            return RegisterStatus.EMAIL_CODE_INVALID;
         }
 
         String username = registerVo.getUsername();
         if (!RegexTool.isAlphaNumeric(username)) {
             // username illegal
-            return RegisterStatus.INVITE_USERNAME.getCode();
+            return RegisterStatus.USERNAME_INVALID;
         }
         List<AuthUser> list = authUserDao.selectList(
                 new QueryWrapper<AuthUser>()
@@ -142,7 +142,7 @@ public class AuthenticServiceImpl implements AuthenticService {
         );
         if (!CollectionUtils.isEmpty(list)) {
             // Username has been used
-            return RegisterStatus.NAME_USED.getCode();
+            return RegisterStatus.NAME_USED;
         }
 
         // 创建登录账号
@@ -168,24 +168,24 @@ public class AuthenticServiceImpl implements AuthenticService {
         );
 
         // 注册成功移除验证码
-        Integer status = userSaved && detailSaved
-                ? RegisterStatus.SUCCESS.getCode()
-                : RegisterStatus.FAILED.getCode();
-        if (status.equals(RegisterStatus.SUCCESS.getCode())) {
+        RegisterStatus status = userSaved && detailSaved
+                ? RegisterStatus.SUCCESS
+                : RegisterStatus.FAILED;
+        if (status.equals(RegisterStatus.SUCCESS)) {
             EMAIL_CODE_MAP.invalidate(key);
         }
         return status;
     }
 
     @Override
-    public Integer forgot(PasswordDTO dto) {
+    public PasswordStatus forgot(PasswordDTO dto) {
         String key = UUID.nameUUIDFromBytes(
                 (EmailType.Forgot.getCode() + dto.getEmail()).getBytes()
         ).toString();
         String code = EMAIL_CODE_MAP.getIfPresent(key);
         if (StringUtils.isBlank(code) || !Objects.equals(code, dto.getCaptcha())) {
             // 验证码无效
-            return PasswordStatus.CAPTCHA_MISMATCH.getCode();
+            return PasswordStatus.CAPTCHA_MISMATCH;
         }
 
         // 检查邮箱注册状态
@@ -194,7 +194,7 @@ public class AuthenticServiceImpl implements AuthenticService {
                         .eq("email", dto.getEmail())
         );
         if (Objects.isNull(userDetail)) {
-            return PasswordStatus.EMAIL_NOT_REGISTER.getCode();
+            return PasswordStatus.EMAIL_NOT_REGISTER;
         }
 
         // 修改密码
@@ -203,7 +203,7 @@ public class AuthenticServiceImpl implements AuthenticService {
         wrapper.eq("id", userDetail.getUserId());
         boolean success = authUserDao.update(wrapper) > 0;
         return success
-                ? PasswordStatus.SUCCESS.getCode()
-                : PasswordStatus.FAILED.getCode();
+                ? PasswordStatus.SUCCESS
+                : PasswordStatus.FAILED;
     }
 }

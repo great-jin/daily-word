@@ -117,27 +117,8 @@ export default {
         email: this.pwdForm.email
       }
       sendMail(params).then(res => {
-        if (res.code !== 200) {
-          this.$message.error('发送失败，请稍后重试！')
-          return
-        }
-
-        switch (res.data) {
-          case 1:
-            this.$message.success('验证码已发送，请检查收件箱')
-            break
-          case 2:
-            this.$message.error('发送失败，请稍后重试！')
-            break
-          case 3:
-            this.$message.error('邮箱格式非法！')
-            break
-          case 4:
-            this.$message.error('邮箱已被注册！')
-            break
-          case 7:
-            this.$message.error('验证码无效！')
-            break
+        if (res.code === 200 && res.data) {
+          this.$message.success('验证码已发送，请检查收件箱')
         }
       })
     },
@@ -170,26 +151,10 @@ export default {
           this.pwdForm.passwordCheck = null
           this.pwdForm.password = Encrypt(this.pwdForm.password)
           forgot(this.pwdForm).then(res => {
-            if (res.code !== 200) {
-              this.$message.error('修改失败，请稍后重试！')
-              this.cancel()
-              return
+            if (res.code === 200 && res.data) {
+              this.$message.success('密码重置成功！')
             }
 
-            switch (res.data) {
-              case 1:
-                this.$message.success('修改成功！')
-                break
-              case 3:
-                this.$message.error('验证码错误！')
-                break
-              case 6:
-                this.$message.error('邮箱未注册！')
-                break
-              default:
-                this.$message.error('修改失败，请稍后重试！')
-                break
-            }
             this.cancel()
           })
         } else {

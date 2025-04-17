@@ -2,6 +2,9 @@ package xyz.ibudai.dailyword.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import xyz.ibudai.dailyword.model.dto.PasswordDTO;
+import xyz.ibudai.dailyword.model.enums.status.EmailCodeStatus;
+import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
+import xyz.ibudai.dailyword.model.enums.status.RegisterStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 
 /**
@@ -19,7 +22,7 @@ public interface AuthenticService extends UserDetailsService {
      * @param address the mail
      * @return the boolean
      */
-    Integer sendMail(Integer type, String address);
+    EmailCodeStatus sendMail(Integer type, String address);
 
     /**
      * Register .
@@ -27,7 +30,7 @@ public interface AuthenticService extends UserDetailsService {
      * @param registerVo the register vo
      * @return the boolean
      */
-    Integer register(RegisterVo registerVo);
+    RegisterStatus register(RegisterVo registerVo);
 
     /**
      * Forgot .
@@ -35,5 +38,5 @@ public interface AuthenticService extends UserDetailsService {
      * @param dto the dto
      * @return the boolean
      */
-    Integer forgot(PasswordDTO dto);
+    PasswordStatus forgot(PasswordDTO dto);
 }

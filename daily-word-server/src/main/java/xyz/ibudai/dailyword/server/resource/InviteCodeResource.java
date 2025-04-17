@@ -2,6 +2,7 @@ package xyz.ibudai.dailyword.server.resource;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,11 +45,18 @@ public class InviteCodeResource {
      */
     @GetMapping("generate")
     public Boolean generate() {
+        List<InviteCode> userCodeList = inviteCodeService.lambdaQuery()
+                .eq(InviteCode::getUserId, SecurityUtil.getLoginUser())
+                .list();
+        if (!CollectionUtils.isEmpty(userCodeList) && userCodeList.size() > 6) {
+            // 限制 6 个邀请码
+            return false;
+        }
         String code = CodeTool.generate();
-        List<InviteCode> list = inviteCodeService.lambdaQuery()
+        List<InviteCode> codeList = inviteCodeService.lambdaQuery()
                 .eq(InviteCode::getCode, code)
                 .list();
-        if (!list.isEmpty()) {
+        if (!CollectionUtils.isEmpty(codeList)) {
             // 重复，生成失败
             return false;
         }

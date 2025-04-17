@@ -181,27 +181,8 @@ export default {
             email: this.registerForm.email
           }
           sendMail(params).then(res => {
-            if (res.code !== 200) {
-              this.$message.error('发送失败，请稍后重试！')
-              return
-            }
-
-            switch (res.data) {
-              case 1:
-                this.$message.success('验证码已发送，请检查收件箱')
-                break
-              case 2:
-                this.$message.error('发送失败，请稍后重试！')
-                break
-              case 3:
-                this.$message.error('邮箱格式非法！')
-                break
-              case 4:
-                this.$message.error('邮箱已被注册！')
-                break
-              case 7:
-                this.$message.error('验证码无效！')
-                break
+            if (res.code === 200 && res.data) {
+              this.$message.success('验证码已发送，请检查收件箱')
             }
           })
         }
@@ -285,16 +266,8 @@ export default {
         this.registerForm.passwordCheck = null
         this.registerForm.password = Encrypt(this.registerForm.password)
         await register(this.registerForm).then(res => {
-          switch (res.data) {
-            case 1:
-              registerSuccess = true
-              break
-            case 3:
-              this.$message.error('用户名已存在！')
-              break
-            default:
-              this.$message.error('注册失败，请稍后重新！')
-              break
+          if (res.code === 200 && res.data) {
+            registerSuccess = true
           }
         })
         if (!registerSuccess) {
