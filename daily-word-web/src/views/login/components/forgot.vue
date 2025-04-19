@@ -105,12 +105,12 @@ export default {
       this.dialogVisible = true
     },
     sendMail() {
-      this.$refs.pwdForm.validateField('email', (valid) => {
-        if (valid) {
-          // 按钮倒计时
-          this.startCountDown()
-        }
-      });
+      if (this.pwdForm.email === '') {
+        this.$message.warning('请先输入邮箱')
+        return
+      }
+
+      // 开始倒计时
       this.startCountDown()
       const params = {
         type: 2,
@@ -119,6 +119,9 @@ export default {
       sendMail(params).then(res => {
         if (res.code === 200 && res.data) {
           this.$message.success('验证码已发送，请检查收件箱')
+        } else {
+          // 发送失败重置计时器
+          clearInterval(this.timer);
         }
       })
     },
@@ -153,9 +156,8 @@ export default {
           forgot(this.pwdForm).then(res => {
             if (res.code === 200 && res.data) {
               this.$message.success('密码重置成功！')
+              this.cancel()
             }
-
-            this.cancel()
           })
         } else {
           this.$message.error('请填写信息后重试')

@@ -16,11 +16,11 @@ public class SecurityUtil {
     public static Integer getLoginUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.isNull(authentication)) {
-            throw new IllegalStateException("Not login");
+            throw new IllegalStateException("尚未登录");
         }
         AuthUser user = (AuthUser) authentication.getPrincipal();
         if (Objects.isNull(user)) {
-            throw new IllegalStateException("Not login");
+            throw new IllegalStateException("尚未登录");
         }
 
         return user.getId();

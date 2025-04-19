@@ -183,6 +183,9 @@ export default {
           sendMail(params).then(res => {
             if (res.code === 200 && res.data) {
               this.$message.success('验证码已发送，请检查收件箱')
+            } else {
+              // 发送失败重置计时器
+              clearInterval(this.timer);
             }
           })
         }

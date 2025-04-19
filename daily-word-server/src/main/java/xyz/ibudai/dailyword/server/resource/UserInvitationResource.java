@@ -3,11 +3,8 @@ package xyz.ibudai.dailyword.server.resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import xyz.ibudai.dailyword.model.entity.user.UserInvitation;
-import xyz.ibudai.dailyword.model.enums.status.InviteProcessStatus;
 import xyz.ibudai.dailyword.model.enums.InviteType;
 import xyz.ibudai.dailyword.model.vo.friend.FriendInviteVo;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.service.UserInvitationService;
 
 import java.util.List;
@@ -15,7 +12,7 @@ import java.util.List;
 /**
  * (UserInvitation)表控制层
  *
- * @author makejava
+ * @author budai
  * @since 2025 -04-12 09:02:23
  */
 @RestController
@@ -65,11 +62,7 @@ public class UserInvitationResource {
      */
     @GetMapping("sendInvite")
     public Boolean sendInvite(@RequestParam("userId") Integer userId) {
-        UserInvitation invitation = new UserInvitation();
-        invitation.setFromUser(SecurityUtil.getLoginUser());
-        invitation.setTargetUser(userId);
-        invitation.setProcessStatus(InviteProcessStatus.Pending.getStatus());
-        return userInvitationService.save(invitation);
+        return userInvitationService.sendInvite(userId);
     }
 
     /**

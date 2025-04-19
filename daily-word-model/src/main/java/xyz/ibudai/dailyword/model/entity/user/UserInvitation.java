@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * (UserInvitation)表实体类
  *
- * @author makejava
+ * @author budai
  * @since 2025-04-12 09:02:23
  */
 @Data

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import xyz.ibudai.dailyword.basic.tool.DateTimeTool;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.entity.user.UserFriend;
 import xyz.ibudai.dailyword.model.entity.user.UserInvitation;
@@ -25,7 +26,7 @@ import java.util.*;
 /**
  * (UserInvitation)表服务实现类
  *
- * @author makejava
+ * @author budai
  * @since 2025-04-12 09:02:23
  */
 @Service
@@ -46,6 +47,25 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
         if (Objects.isNull(userDetail)) {
             throw new IllegalStateException("用户 " + username + " 不存在");
         }
+
+        // 构建 VO
+        FriendInviteVo vo = new FriendInviteVo();
+        vo.setUserId(userDetail.getUserId());
+        vo.setUsername(userDetail.getUserName());
+        vo.setAvatarUrl(ossServer.signAvatarUrl(userDetail.getAvatar()));
+        return vo;
+    }
+
+    @Override
+    public Boolean sendInvite(Integer userId) {
+        UserDetail userDetail = userDetailService.lambdaQuery()
+                .eq(UserDetail::getUserId, userId)
+                .one();
+        if (Objects.isNull(userDetail)) {
+            throw new IllegalStateException("用户不存在");
+        }
+
+        // 合规校验
         Integer loginUser = SecurityUtil.getLoginUser();
         if (Objects.equals(loginUser, userDetail.getUserId())) {
             throw new IllegalStateException("不能添加您自己为好友");
@@ -60,14 +80,15 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
         }
         Set<Integer> friendVos = new HashSet<>(userFriendDao.findLinkUser(SecurityUtil.getLoginUser()));
         if (friendVos.contains(userDetail.getUserId())) {
-            throw new IllegalStateException(username + " 已是您的好友");
+            throw new IllegalStateException(userDetail.getUserName() + " 已是您的好友");
         }
 
-        FriendInviteVo vo = new FriendInviteVo();
-        vo.setUserId(userDetail.getUserId());
-        vo.setUsername(userDetail.getUserName());
-        vo.setAvatarUrl(ossServer.signAvatarUrl(userDetail.getAvatar()));
-        return vo;
+        // 添加申请记录
+        UserInvitation invitation = new UserInvitation();
+        invitation.setFromUser(SecurityUtil.getLoginUser());
+        invitation.setTargetUser(userId);
+        invitation.setProcessStatus(InviteProcessStatus.Pending.getStatus());
+        return this.baseMapper.insert(invitation) > 0;
     }
 
     @Override
@@ -84,6 +105,8 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
         }
         // 查询 7 天内请求
         wrapper.ge(UserInvitation::getCreateTime, LocalDateTime.now().minusDays(7));
+        // 时间倒叙
+        wrapper.orderByDesc(UserInvitation::getCreateTime);
         List<UserInvitation> list = wrapper.list();
         if (CollectionUtils.isEmpty(list)) {
             return new ArrayList<>();
@@ -96,6 +119,7 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
         Map<Integer, UserDetail> userDetailMap = userDetailService.groupByUserId(userIds);
 
         // 构建 VO
+        LocalDateTime nowadays = LocalDateTime.now();
         List<FriendInviteVo> voList = new ArrayList<>();
         for (UserInvitation item : list) {
             UserDetail userDetail;
@@ -112,6 +136,7 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
             vo.setUserId(userDetail.getUserId());
             vo.setUsername(userDetail.getUserName());
             vo.setAvatarUrl(ossServer.signAvatarUrl(userDetail.getAvatar()));
+            vo.setDateInterval(DateTimeTool.interval(item.getCreateTime(), nowadays));
             vo.setProcessStatus(item.getProcessStatus());
             voList.add(vo);
         }

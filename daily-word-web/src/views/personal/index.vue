@@ -1,17 +1,19 @@
 <template>
   <div class="container">
     <el-tabs
+        v-model="activeTab"
         tab-position="left"
         class="tab-container"
+        @tab-click="changeTab"
     >
-      <el-tab-pane label="基本信息">
-        <BasicTab/>
+      <el-tab-pane label="基本信息" name="info">
+        <BasicTab v-if="activeTab === 'info'"/>
       </el-tab-pane>
-      <el-tab-pane label="隐私设置">
-        <PrivateTab/>
+      <el-tab-pane label="隐私设置" name="private">
+        <PrivateTab v-if="activeTab === 'private'"/>
       </el-tab-pane>
-      <el-tab-pane label="实&nbsp;&nbsp;验&nbsp;&nbsp;室">
-        <LabTab/>
+      <el-tab-pane label="实&nbsp;&nbsp;验&nbsp;&nbsp;室" name="lab">
+        <LabTab v-if="activeTab === 'lab'"/>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -27,6 +29,16 @@ export default {
     LabTab,
     BasicTab,
     PrivateTab
+  },
+  data() {
+    return {
+      activeTab: 'info'
+    }
+  },
+  methods: {
+    changeTab(tab) {
+      this.activeTab = tab.paneName
+    }
   }
 }
 </script>

@@ -93,19 +93,18 @@ export default {
 
       // 查询用户
       await searchUser(username).then(res => {
-        if (res.code !== 200) {
-          this.$message.warning(res.message)
-        } else {
+        if (res.code === 200 && res.data !== null) {
           this.userInfo = res.data
         }
       })
     },
     addUser() {
-      sendInvite(this.userInfo.userId).then(res => {
+      const uid = this.userInfo.userId
+      sendInvite(uid).then(res => {
         if (res.code === 200 && res.data) {
           this.$message.success('邀请发送成功')
+          this.closeDialog()
         }
-        this.closeDialog()
       })
     }
   }

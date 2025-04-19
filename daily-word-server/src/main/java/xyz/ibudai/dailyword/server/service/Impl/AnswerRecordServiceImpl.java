@@ -1,6 +1,7 @@
 package xyz.ibudai.dailyword.server.service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
@@ -48,6 +49,18 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
                 count++;
             }
         }
+
+        // 过滤空白输入
+        contentList = contentList.stream()
+                .filter(it -> {
+                    String answer = it.getAnswer();
+                    if (StringUtils.isBlank(answer)) {
+                        return false;
+                    }
+
+                    return StringUtils.isBlank(answer.trim());
+                })
+                .toList();
 
         // 转存 Mongo
         AnswerRecord answerRecord = new AnswerRecord();

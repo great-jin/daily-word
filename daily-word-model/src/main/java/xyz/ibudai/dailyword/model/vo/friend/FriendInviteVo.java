@@ -11,5 +11,11 @@ public class FriendInviteVo {
 
     private String avatarUrl;
 
+    /**
+     * 申请时间间隔
+     */
+    private String dateInterval;
+
     private Integer processStatus;
+
 }

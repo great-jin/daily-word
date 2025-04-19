@@ -20,36 +20,49 @@
           style="margin-bottom: 10px;"
       >
         <el-card shadow="hover">
-          <div style="display: flex; justify-content: center; align-items: center;">
-            <div style="display: flex; align-items: center; margin-right: 80px;">
-              <el-avatar
-                  :src="user.avatarUrl"
-                  size="medium"
-              />
-              <span style="margin-left: 10px;">{{ user.username }}</span>
-            </div>
+          <el-row style="display: flex; justify-content: center; align-items: center;">
+            <el-col :span="8">
+              <div style="display: flex; align-items: center;">
+                <el-avatar
+                    :src="user.avatarUrl"
+                    size="medium"
+                />
+                <span style="margin-left: 10px;">{{ user.username }}</span>
+              </div>
+            </el-col>
 
-            <template v-if="type==='toMe'">
-              <el-button
-                  type="primary"
-                  @click="clickOption('ok', user)"
-                  link
-              >同意
-              </el-button>
-              <el-button
-                  type="danger"
-                  @click="clickOption('reject', user)"
-                  link
-              >拒绝
-              </el-button>
-            </template>
+            <el-col :span="7">
+              <span>{{ user.dateInterval }}</span>
+            </el-col>
 
-            <template v-else>
-              <el-tag :type="user.processStatus === 2 ? 'danger' : 'info'">
-                {{ user.processStatus === 2 ? '已拒绝' : user.processStatus === 0 ? '待同意' : '已同意' }}
-              </el-tag>
-            </template>
-          </div>
+            <el-col :span="7">
+              <!-- 我的待处理 -->
+              <template v-if="type==='toMe'">
+                <el-button
+                    type="primary"
+                    @click="clickOption('ok', user)"
+                    link
+                >同意
+                </el-button>
+                <el-button
+                    type="danger"
+                    @click="clickOption('reject', user)"
+                    link
+                >拒绝
+                </el-button>
+              </template>
+
+              <!-- 我的申请 -->
+              <template v-else>
+                <el-tag v-if="user.processStatus === 2" type='danger'>
+                  {{ '已拒绝' }}
+                </el-tag>
+                <el-tag v-else :type="user.processStatus === 0 ? 'warning' : 'primary'">
+                  {{ user.processStatus === 0 ? '待同意' : '已同意' }}
+                </el-tag>
+              </template>
+            </el-col>
+          </el-row>
         </el-card>
       </div>
     </el-card>

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * (UserInvitation)表服务接口
  *
- * @author makejava
+ * @author budai
  * @since 2025 -04-12 09:02:23
  */
 public interface UserInvitationService extends IService<UserInvitation> {
@@ -22,6 +22,13 @@ public interface UserInvitationService extends IService<UserInvitation> {
      * @return the friend invite vo
      */
     FriendInviteVo search(String username);
+
+    /**
+     * Send invite.
+     *
+     * @param userId the user id
+     */
+    Boolean sendInvite(Integer userId);
 
     /**
      * List from me reqs list.
