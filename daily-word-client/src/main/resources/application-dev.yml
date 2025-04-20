@@ -53,7 +53,7 @@ mybatis-plus:
 # 文件配置
 files:
   host: http://localhost:${server.port}${server.servlet.context-path}/api/oss
-  secret: ibudai
+  secret: dailyword@2025
   home: /Workspace/files
   avatarDir: avatar
   scale: 0.5

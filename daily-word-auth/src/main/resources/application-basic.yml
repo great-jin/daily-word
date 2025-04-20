@@ -8,7 +8,7 @@ resources:
   # JWT config
   jwt:
     issuer: budai
-    secret: ibudai@123456
+    secret: dailyword@2025
     ttlHours: 12
   # Login verify
   filter:

@@ -2,6 +2,7 @@ package xyz.ibudai.dailyword.auth.util;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.dailyword.model.props.JwtProps;
@@ -58,7 +59,12 @@ public class TokenUtil {
      * 生成加密后的秘钥
      */
     private SecretKey generalKey() {
-        byte[] encodedKey = Base64.getDecoder().decode(jwtProps.getSecret());
+        String secret = jwtProps.getSecret();
+        if (StringUtils.isBlank(secret)) {
+            throw new IllegalStateException("secret is blank");
+        }
+
+        byte[] encodedKey = Base64.getEncoder().encode(secret.getBytes());
         return new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
     }
 
