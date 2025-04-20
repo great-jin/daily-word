@@ -61,6 +61,7 @@ files:
 
 
 # 字典文件
-resource:
-  dict: /Workspace/files/dict/Dictionary.json
-  vocabulary: /Workspace/files/vocabulary
+dictionary:
+  file:
+    dictionaryPath: /Workspace/files/dict/Dictionary.json
+    vocabularyPath: /Workspace/files/vocabulary

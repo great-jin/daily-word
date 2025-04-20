@@ -1,12 +1,14 @@
-package xyz.ibudai.dailyword.server.cache;
+package xyz.ibudai.dailyword.server.tool;
 
+import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
+import xyz.ibudai.dailyword.server.cache.DictionaryCache;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DictTool {
+public class DictionaryTool {
 
     /**
      * Extract list.
@@ -31,9 +33,13 @@ public class DictTool {
      * @return the list
      */
     public static List<TaskWordDTO> extract(Catalogue catalogue, Set<Integer> offsets) {
-        Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
+        Collection<TaskWordDTO> collection = DictionaryCache.VOCABULARY
                 .get(catalogue)
                 .values();
+        if (CollectionUtils.isEmpty(collection)) {
+            return Collections.emptyList();
+        }
+
         List<TaskWordDTO> taskList = new ArrayList<>();
         for (TaskWordDTO item : collection) {
             if (Objects.equals(taskList.size(), offsets.size())) {

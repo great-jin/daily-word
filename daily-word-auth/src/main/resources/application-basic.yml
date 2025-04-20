@@ -8,8 +8,8 @@ resources:
   # JWT config
   jwt:
     issuer: budai
-    secret: ibudai
-    ttlMillis: 3600_000
+    secret: ibudai@123456
+    ttlHours: 12
   # Login verify
   filter:
     excludes:

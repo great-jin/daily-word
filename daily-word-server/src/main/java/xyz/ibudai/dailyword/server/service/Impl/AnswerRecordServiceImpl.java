@@ -12,7 +12,7 @@ import xyz.ibudai.dailyword.model.mongo.SubjectContent;
 import xyz.ibudai.dailyword.repository.dao.MatchDetailDao;
 import xyz.ibudai.dailyword.repository.mongo.MongoRepository;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
-import xyz.ibudai.dailyword.server.cache.DictTool;
+import xyz.ibudai.dailyword.server.tool.DictionaryTool;
 import xyz.ibudai.dailyword.server.service.AnswerRecordService;
 
 import java.util.*;
@@ -36,7 +36,7 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
         // 查询答案
         MatchDetail matchDetail = matchDetailDao.selectById(matchId);
         Catalogue catalogue = Catalogue.valueOf(matchDetail.getCatalog());
-        List<TaskWordDTO> answers = DictTool.extract(catalogue, matchDetail.getWordIndies());
+        List<TaskWordDTO> answers = DictionaryTool.extract(catalogue, matchDetail.getWordIndies());
 
         // 内容匹配
         int count = 0;

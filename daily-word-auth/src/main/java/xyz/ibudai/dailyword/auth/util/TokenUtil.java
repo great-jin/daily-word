@@ -11,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -65,7 +66,7 @@ public class TokenUtil {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         if (ttlMillis == null) {
-            ttlMillis = jwtProps.getTtlMillis();
+            ttlMillis = TimeUnit.HOURS.toMillis(jwtProps.getTtlHours());
         }
 
         Date expDate = new Date(nowMillis + ttlMillis);

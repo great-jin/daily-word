@@ -4,7 +4,6 @@ import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.*;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
-import xyz.ibudai.dailyword.model.vo.word.DictDetail;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 
 import java.util.*;
@@ -13,13 +12,6 @@ import java.util.*;
  * The type Word service.
  */
 public interface TaskWordService {
-
-    /**
-     * Gets dict detail.
-     *
-     * @return the dict detail
-     */
-    List<DictDetail> getDictDetail();
 
     /**
      * Translation word.

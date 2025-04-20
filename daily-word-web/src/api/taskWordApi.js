@@ -9,13 +9,6 @@ export function translate(params) {
     })
 }
 
-export function getDictDetail() {
-    return request({
-        url: `${apiPrefix}/getDictDetail`,
-        method: 'get'
-    })
-}
-
 export function startTask(params) {
     return request({
         url: `${apiPrefix}/startTask`,

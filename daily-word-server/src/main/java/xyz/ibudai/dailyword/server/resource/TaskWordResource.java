@@ -6,12 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.*;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
-import xyz.ibudai.dailyword.model.vo.word.DictDetail;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
 import xyz.ibudai.dailyword.server.service.TaskWordService;
-
-import java.util.List;
 
 /**
  * The type Word resource.
@@ -23,17 +20,6 @@ public class TaskWordResource {
 
     private final TaskWordService taskWordService;
     private final MatchRecordService matchRecordService;
-
-
-    /**
-     * Gets dict detail.
-     *
-     * @return the dict detail
-     */
-    @GetMapping("getDictDetail")
-    public List<DictDetail> getDictDetail() {
-        return taskWordService.getDictDetail();
-    }
 
     /**
      * Translation word.

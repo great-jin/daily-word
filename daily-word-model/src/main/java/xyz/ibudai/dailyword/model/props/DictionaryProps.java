@@ -6,15 +6,16 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "resources.jwt")
-public class JwtProps {
-
-    private String secret;
-
-    private String issuer;
+@ConfigurationProperties(prefix = "dictionary.file")
+public class DictionaryProps {
 
     /**
-     * 默认过期时间
+     * 词典路径
      */
-    private Long ttlHours;
+    private String dictionaryPath;
+
+    /**
+     * 词汇本路径
+     */
+    private String vocabularyPath;
 }

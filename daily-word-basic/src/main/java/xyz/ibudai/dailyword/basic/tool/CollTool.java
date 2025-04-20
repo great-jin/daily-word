@@ -19,9 +19,9 @@ public class CollTool {
     /**
      * Find batch list.
      *
-     * @param <T>       the type parameter
-     * @param list      the list
-     * @param batchSize the batch size
+     * @param <T>        the type parameter
+     * @param collection the list
+     * @param batchSize  the batch size
      * @return the list
      */
     public static <T> List<T> findBatch(Collection<T> collection, int batchSize) {

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import xyz.ibudai.dailyword.basic.tool.CollTool;
 import xyz.ibudai.dailyword.model.dto.RoomDTO;
 import xyz.ibudai.dailyword.model.entity.match.MatchDetail;
@@ -13,16 +14,15 @@ import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.mongo.AnswerRecord;
 import xyz.ibudai.dailyword.model.mongo.SubjectContent;
 import xyz.ibudai.dailyword.model.vo.AnswerVo;
-import xyz.ibudai.dailyword.model.vo.word.DictDetail;
 import xyz.ibudai.dailyword.model.dto.TaskWordDTO;
 import xyz.ibudai.dailyword.model.vo.match.MatchVo;
 import xyz.ibudai.dailyword.model.vo.word.Word;
 import xyz.ibudai.dailyword.model.vo.word.WordDescribe;
 import xyz.ibudai.dailyword.repository.dao.MatchDetailDao;
 import xyz.ibudai.dailyword.repository.mongo.MongoRepository;
-import xyz.ibudai.dailyword.server.cache.DictTool;
+import xyz.ibudai.dailyword.server.tool.DictionaryTool;
 import xyz.ibudai.dailyword.repository.util.SecurityUtil;
-import xyz.ibudai.dailyword.server.cache.DicPreHeat;
+import xyz.ibudai.dailyword.server.cache.DictionaryCache;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
 import xyz.ibudai.dailyword.server.service.TaskWordService;
 
@@ -39,20 +39,9 @@ public class TaskWordServiceImpl implements TaskWordService {
     private final MatchRecordService matchRecordService;
 
 
-    public List<DictDetail> getDictDetail() {
-        List<DictDetail> detailList = new ArrayList<>();
-        for (Map.Entry<Catalogue, Map<Integer, TaskWordDTO>> Catalogue : DicPreHeat.DICT_CACHE.entrySet()) {
-            Catalogue catalogue = Catalogue.getKey();
-            int wordCount = Catalogue.getValue().size();
-            DictDetail detail = new DictDetail(catalogue, wordCount);
-            detailList.add(detail);
-        }
-        return detailList;
-    }
-
     public Word translation(String target) {
         String targetLowCase = target.toLowerCase(Locale.ROOT);
-        List<JsonNode> nodeList = DicPreHeat.CATALOG_MAP.get(targetLowCase);
+        List<JsonNode> nodeList = DictionaryCache.WORDS.get(targetLowCase);
         if (Objects.isNull(nodeList)) {
             return Word.notFound(target);
         }
@@ -107,11 +96,12 @@ public class TaskWordServiceImpl implements TaskWordService {
         if (Objects.isNull(size) || size <= 0) {
             size = 20;
         }
+        Collection<TaskWordDTO> collection = DictionaryCache.VOCABULARY.get(catalogue).values();
+        if (CollectionUtils.isEmpty(collection)) {
+            return Collections.emptyList();
+        }
 
-        Collection<TaskWordDTO> collection = DicPreHeat.DICT_CACHE
-                .get(catalogue)
-                .values();
-        List<TaskWordDTO> extract = DictTool.extract(catalogue, CollTool.randoms(collection, size));
+        List<TaskWordDTO> extract = DictionaryTool.extract(catalogue, CollTool.randoms(collection, size));
         for (TaskWordDTO item : extract) {
             item.setWordLength(item.getValue().length());
         }
@@ -127,7 +117,7 @@ public class TaskWordServiceImpl implements TaskWordService {
 
         // 答案
         Catalogue catalogue = Catalogue.valueOf(matchDetail.getCatalog());
-        List<TaskWordDTO> answers = DictTool.extract(catalogue, matchDetail.getWordIndies());
+        List<TaskWordDTO> answers = DictionaryTool.extract(catalogue, matchDetail.getWordIndies());
 
         // 用户提交
         Map<String, Object> condition = new HashMap<>();
