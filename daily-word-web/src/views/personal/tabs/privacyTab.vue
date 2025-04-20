@@ -78,7 +78,7 @@ import {changePassword, getDetails} from "@/api/userDetailsApi";
 import {destroyAccount} from "@/api/authUserApi";
 import {clearToken} from "@/util/AuthUtil";
 import {Encrypt, SHA256} from "@/util/EncryptUtil";
-import {isPwdValid} from "@/util/RegexUtil";
+import {isPwdLegal} from "@/util/RegexUtil";
 
 export default {
   data() {
@@ -117,13 +117,18 @@ export default {
           this.$message.warning('请填写信息后重试')
           return
         }
-        if (!this.passwordValidate()) {
+
+        // 密码合规校验
+        const _formData = this.passwordForm
+        const message = isPwdLegal(_formData.password, _formData.passwordCheck)
+        if (message !== null && message !== '') {
+          this.$message.warning(message)
           return
         }
 
         const params = {
-          originPwd: SHA256(Encrypt(this.passwordForm.originPwd)),
-          password: Encrypt(this.passwordForm.password)
+          originPwd: SHA256(Encrypt(_formData.originPwd)),
+          password: Encrypt(_formData.password)
         }
         await changePassword(params).then(res => {
           if (res.code === 200 && res.data) {
@@ -131,24 +136,6 @@ export default {
           }
         })
       })
-    },
-    passwordValidate() {
-      const _params = this.passwordForm
-
-      const pwd = _params.password
-      if (pwd !== _params.passwordCheck) {
-        this.$message.warning('两次密码不一致，请检查后重试！')
-        return false
-      }
-      if (pwd.length < 6 || pwd.length > 50) {
-        this.$message.warning('密码长度需大于 6 位且小于 50 位!')
-        return false
-      }
-      if (!isPwdValid(pwd)) {
-        this.$message.warning('密码只允许数字与字母，特殊符号仅支持 (. ! #) 三者')
-        return false
-      }
-      return true
     },
     async removeAccount() {
       await destroyAccount().then(res => {

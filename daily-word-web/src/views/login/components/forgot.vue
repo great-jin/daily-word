@@ -62,7 +62,7 @@
 
 <script>
 import {forgot, sendMail} from "@/api/authUserApi";
-import {isPwdValid} from "@/util/RegexUtil";
+import {isEmail, isPwdLegal} from "@/util/RegexUtil";
 import {Encrypt} from "@/util/EncryptUtil";
 
 export default {
@@ -105,8 +105,13 @@ export default {
       this.dialogVisible = true
     },
     sendMail() {
-      if (this.pwdForm.email === '') {
-        this.$message.warning('请先输入邮箱')
+      const _email = this.pwdForm.email
+      if (_email === null || _email === '') {
+        this.$message.warning('请先输入邮箱！')
+        return
+      }
+      if (!isEmail(_email)) {
+        this.$message.warning('邮箱格式非法！')
         return
       }
 
@@ -114,7 +119,7 @@ export default {
       this.startCountDown()
       const params = {
         type: 2,
-        email: this.pwdForm.email
+        email: _email
       }
       sendMail(params).then(res => {
         if (res.code === 200 && res.data) {
@@ -146,14 +151,19 @@ export default {
     submit() {
       this.$refs.pwdForm.validate(valid => {
         if (valid) {
-          if (!this.passwordValidate()) {
+          const _formData = this.pwdForm
+
+          // 密码合规校验
+          const message = isPwdLegal(_formData.password, _formData.passwordCheck)
+          if (message !== null && message !== '') {
+            this.$message.warning(message)
             return
           }
 
           // 忘记密码
-          this.pwdForm.passwordCheck = null
-          this.pwdForm.password = Encrypt(this.pwdForm.password)
-          forgot(this.pwdForm).then(res => {
+          _formData.passwordCheck = null
+          _formData.password = Encrypt(_formData.password)
+          forgot(_formData).then(res => {
             if (res.code === 200 && res.data) {
               this.$message.success('密码重置成功！')
               this.cancel()
@@ -169,24 +179,6 @@ export default {
       this.pwdForm = {}
       this.$refs.pwdForm.clearValidate()
       clearInterval(this.timer);
-    },
-    passwordValidate() {
-      const _params = this.pwdForm
-
-      const pwd = _params.password
-      if (pwd !== _params.passwordCheck) {
-        this.$message.warning('两次密码不一致，请检查后重试！')
-        return false
-      }
-      if (pwd.length < 6 || pwd.length > 50) {
-        this.$message.warning('密码长度需大于 6 位且小于 50 位!')
-        return false
-      }
-      if (!isPwdValid(pwd)) {
-        this.$message.warning('密码只允许数字与字母，特殊符号仅支持 (. ! #) 三者')
-        return false
-      }
-      return true
     }
   }
 }

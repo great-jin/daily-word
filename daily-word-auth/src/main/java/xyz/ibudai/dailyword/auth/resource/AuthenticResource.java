@@ -74,9 +74,16 @@ public class AuthenticResource {
     @GetMapping("sendMail")
     public ResponseData sendMail(@RequestParam("type") Integer type,
                                  @RequestParam("email") String email) {
-        EmailCodeStatus status = authenticService.sendMail(type, email);
-        if (!Objects.equals(status, EmailCodeStatus.SUCCESS)) {
-            return ResponseData.failed(status.getMessage());
+        EmailCodeStatus validateStatus = authenticService.validateEmail(type, email);
+        if (!Objects.equals(validateStatus, EmailCodeStatus.SUCCESS)) {
+            // 不满足发送条件
+            return ResponseData.failed(validateStatus.getMessage());
+        }
+
+        EmailCodeStatus sendStatus = authenticService.sendMail(type, email);
+        if (!Objects.equals(sendStatus, EmailCodeStatus.SUCCESS)) {
+            // 发送未成功
+            return ResponseData.failed(sendStatus.getMessage());
         }
 
         return ResponseData.success(true);

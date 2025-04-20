@@ -16,6 +16,15 @@ import xyz.ibudai.dailyword.model.vo.RegisterVo;
 public interface AuthenticService extends UserDetailsService {
 
     /**
+     * Validate email
+     *
+     * @param type    the type
+     * @param address the address
+     * @return the email code status
+     */
+    EmailCodeStatus validateEmail(Integer type, String address);
+
+    /**
      * Send mail boolean.
      *
      * @param type    the type

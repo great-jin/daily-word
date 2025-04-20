@@ -33,6 +33,8 @@ import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
 import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -50,10 +52,22 @@ import java.util.regex.Matcher;
 @RequiredArgsConstructor
 public class AuthenticServiceImpl implements AuthenticService {
 
+    /**
+     * 缓存邮件验证码
+     */
     private final static Cache<String, String> EMAIL_CODE_MAP = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
-            .initialCapacity(100)
+            .initialCapacity(16)
             .build();
+
+    /**
+     * 记录上次发送时间
+     */
+    private final static Cache<String, LocalDateTime> EMAIL_TIME_MAP = Caffeine.newBuilder()
+            .expireAfterWrite(60, TimeUnit.SECONDS)
+            .initialCapacity(16)
+            .build();
+
 
     @Value("${spring.mail.username}")
     private String emailFrom;
@@ -75,32 +89,53 @@ public class AuthenticServiceImpl implements AuthenticService {
     }
 
     @Override
-    public EmailCodeStatus sendMail(Integer type, String address) {
+    public EmailCodeStatus validateEmail(Integer type, String address) {
         Matcher matcher = RegexConst.PATTERN_EMAIL.matcher(address);
         if (!matcher.matches()) {
             return EmailCodeStatus.EMAIL_INVALID;
         }
-        List<UserDetail> list = userDetailDao.selectList(
-                new QueryWrapper<UserDetail>()
-                        .eq("email", address)
-        );
+
+        QueryWrapper<UserDetail> wrapper = new QueryWrapper<>();
+        wrapper.eq("email", address);
+        boolean emailInUse = Objects.nonNull(userDetailDao.selectOne(wrapper));
 
         // 不允许邮箱重复注册
-        if (Objects.equals(type, EmailType.Register.getCode())
-                && !CollectionUtils.isEmpty(list)
-        ) {
+        if (emailInUse && Objects.equals(type, EmailType.Register.getCode())) {
             return EmailCodeStatus.EMAIL_IN_USE;
         }
 
-        // 生成并记录验证码
-        String key = UUID.nameUUIDFromBytes(
-                (type + address).getBytes()
-        ).toString();
-        String mailCode = EMAIL_CODE_MAP.getIfPresent(key);
-        if (StringUtils.isBlank(mailCode)) {
-            mailCode = CodeTool.generate();
-            EMAIL_CODE_MAP.put(key, mailCode);
+        // 忘记密码需匹配邮箱
+        if (!emailInUse && Objects.equals(type, EmailType.Forgot.getCode())) {
+            return EmailCodeStatus.EMAIL_NOT_REGISTER;
         }
+
+        return EmailCodeStatus.SUCCESS;
+    }
+
+    @Override
+    public EmailCodeStatus sendMail(Integer type, String address) {
+        String emailKey = UUID.nameUUIDFromBytes((type + address).getBytes()).toString();
+
+        // 拦截短频尝试
+        LocalDateTime latestSendTime = EMAIL_TIME_MAP.getIfPresent(emailKey);
+        if (Objects.nonNull(latestSendTime)) {
+            long between = Math.abs(
+                    Duration.between(latestSendTime, LocalDateTime.now())
+                            .toMinutes()
+            );
+            if (between <= 60) {
+                // 60 秒内不允许重复发送
+                return EmailCodeStatus.REQ_TO_MANY;
+            }
+        }
+
+        // 生成并记录验证码
+        if (StringUtils.isNotBlank(EMAIL_CODE_MAP.getIfPresent(emailKey))) {
+            // 旧值存在则废除
+            EMAIL_CODE_MAP.invalidate(emailKey);
+        }
+        String mailCode = CodeTool.generate();
+        EMAIL_CODE_MAP.put(emailKey, mailCode);
 
         // 发送验证码
         EmailCodeStatus codeStatus;
@@ -112,6 +147,9 @@ public class AuthenticServiceImpl implements AuthenticService {
             message.setText("您的注册验证码为：" + mailCode + ", 10 分钟内有效");
             mailSender.send(message);
             codeStatus = EmailCodeStatus.SUCCESS;
+
+            // 成功记录发送时间
+            EMAIL_TIME_MAP.put(emailKey, LocalDateTime.now());
         } catch (Exception e) {
             log.error("Mail sending failed.", e);
             codeStatus = EmailCodeStatus.FAIL;
@@ -173,6 +211,7 @@ public class AuthenticServiceImpl implements AuthenticService {
                 : RegisterStatus.FAILED;
         if (status.equals(RegisterStatus.SUCCESS)) {
             EMAIL_CODE_MAP.invalidate(key);
+            EMAIL_TIME_MAP.invalidate(key);
         }
         return status;
     }

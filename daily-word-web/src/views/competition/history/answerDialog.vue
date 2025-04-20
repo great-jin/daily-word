@@ -9,11 +9,11 @@
       <el-col :span="17" class="container">
         <!-- 单词翻译 -->
         <el-row
-            v-if="correctData.length > 0"
+            v-if="taskData.answers.length > 0"
             :style="{marginTop: '90px'}"
         >
           <el-col :span="24">
-            <div v-for="item in correctData[wordIndex].translation" style="text-align: center">
+            <div v-for="item in taskData.answers[wordIndex].translation" style="text-align: center">
               <strong>
                 <span style="width: 100%; font-size: 16px">{{ item }}</span>
               </strong>
@@ -28,9 +28,9 @@
               正确答案: &nbsp;&nbsp;
               <el-input
                   ref="inputRefs"
-                  v-for="(item, index) in wordValues"
+                  v-for="(item, index) in correctWord"
                   :key="index"
-                  v-model="wordValues[index].value"
+                  v-model="correctWord[index].value"
                   :maxlength="1"
                   class="input-word"
                   disabled
@@ -43,9 +43,9 @@
               您的作答: &nbsp;&nbsp;
               <el-input
                   ref="inputRefs"
-                  v-for="(item, index) in inputValues"
+                  v-for="(item, index) in submitWord"
                   :key="index"
-                  v-model="inputValues[index].value"
+                  v-model="submitWord[index].value"
                   :maxlength="1"
                   class="input-word"
                   disabled
@@ -58,7 +58,7 @@
           <el-col :span="24">
             <el-row>
               <el-col :span="24" style="text-align: center;">
-                <span>{{ wordIndex + 1 }} / {{ correctData.length }}</span>
+                <span>{{ wordIndex + 1 }} / {{ taskData.answers.length }}</span>
               </el-col>
             </el-row>
 
@@ -103,7 +103,6 @@
 </template>
 
 <script>
-import {getTaskAnswer} from "@/api/taskWordApi";
 import {speakEn} from "@/util/SpeakUtil";
 
 export default {
@@ -111,33 +110,33 @@ export default {
   data() {
     return {
       visible: false,
-      correctData: [],
-      inputData: [],
+      taskData: {
+        // 正确答案
+        answers: [],
+        // 提交答案
+        submits: [],
+      },
+      // 单词
       wordIndex: 0,
-      wordValues: [],
-      inputValues: [],
+      correctWord: [],
+      submitWord: [],
+      // 题目统计
       subjectItems: [],
       answeredItems: []
     }
   },
   methods: {
-    async show(matchId) {
-      await getTaskAnswer(matchId).then(res => {
-        if (res === undefined || res === null || res.code !== 200) {
-          this.clearData()
-          return
-        }
+    show(data) {
+      this.visible = true
 
-        this.visible = true
-        this.correctData = res.data.answers
-        this.inputData = res.data.submits
-      })
-
-      for (let i = 1; i <= this.correctData.length; i++) {
+      this.taskData = data
+      for (let i = 1; i <= this.taskData.answers.length; i++) {
         this.subjectItems.push(`第 ${i} 题`)
-        this.answeredItems[i - 1] = this.correctData[i - 1].correct === true
+        // 是否答对
+        this.answeredItems[i - 1] = this.taskData.answers[i - 1].correct === true
       }
 
+      // 默认选中第一项
       this.wordIndex = 0
       this.setActiveWord()
     },
@@ -145,11 +144,11 @@ export default {
       this.visible = false
 
       this.wordIndex = 0
-      this.correctData = []
+      this.taskData.answers = []
       this.subjectItems = []
     },
     read() {
-      speakEn(this.correctData[this.wordIndex].value)
+      speakEn(this.taskData.answers[this.wordIndex].value)
     },
     changeIndex(type) {
       if (type === 'back') {
@@ -161,7 +160,7 @@ export default {
         this.wordIndex--
       } else {
         // 下一题
-        if (this.wordIndex >= this.correctData.length - 1) {
+        if (this.wordIndex >= this.taskData.answers.length - 1) {
           return
         }
         this.wordIndex++
@@ -175,20 +174,28 @@ export default {
       this.setActiveWord()
     },
     setActiveWord() {
-      const item = this.correctData[this.wordIndex]
-      this.wordValues = item.value.split('').map(char => ({value: char}));
+      const item = this.taskData.answers[this.wordIndex]
+      this.correctWord = item.value.split('').map(char => ({value: char}))
 
       // 用户输入内容
       let inputWord = ''
-      const inputItem = this.inputData.find(it => it.offset === item.offset)
-      if (inputItem !== undefined && inputItem !== null) {
+      const inputItem = this.taskData.submits.find(it => it.offset === item.offset)
+      if (inputItem !== undefined && inputItem !== null && inputItem !== '') {
         inputWord = inputItem.answer
+
+        // 输入长度补齐到原单词长度
+        const wordMinus = item.value.length - inputWord.length
+        if (wordMinus > 0) {
+          for (let i = 0; i < wordMinus; i++) {
+            inputWord += ' '
+          }
+        }
       } else {
         for (let i = 0; i < item.value.length; i++) {
           inputWord += ' '
         }
       }
-      this.inputValues = inputWord.split('').map(char => ({value: char}));
+      this.submitWord = inputWord.split('').map(char => ({value: char}));
     }
   }
 }

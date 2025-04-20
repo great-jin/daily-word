@@ -8,21 +8,22 @@ import lombok.Getter;
 @Getter
 public enum EmailCodeStatus {
 
-    SUCCESS(1, "成功"),
+    SUCCESS("成功"),
 
-    FAIL(2, "发送失败"),
+    FAIL("发送失败"),
 
-    EMAIL_INVALID(3, "邮箱格式非法"),
+    EMAIL_INVALID("邮箱格式非法"),
 
-    EMAIL_IN_USE(4, "邮箱已被注册");
+    EMAIL_IN_USE("邮箱已被注册"),
 
+    EMAIL_NOT_REGISTER("邮箱未注册"),
 
-    private final Integer status;
+    REQ_TO_MANY("发送过于频率，请稍后重试");
+
 
     private final String message;
 
-    EmailCodeStatus(Integer status, String message) {
-        this.status = status;
+    EmailCodeStatus(String message) {
         this.message = message;
     }
 }

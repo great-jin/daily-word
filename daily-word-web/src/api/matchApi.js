@@ -9,13 +9,6 @@ export function validate(params) {
     })
 }
 
-export function checkMatchStatus(params) {
-    return request({
-        url: `${apiPrefix}/checkFinished?matchId=${params}`,
-        method: 'get'
-    })
-}
-
 export function submitTask(params) {
     return request({
         url: `${apiPrefix}/submit`,

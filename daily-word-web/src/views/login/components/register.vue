@@ -113,7 +113,7 @@
 <script>
 import {Encrypt} from "@/util/EncryptUtil";
 import {register, sendMail, validateCode} from "@/api/authUserApi";
-import {isEmail, isNameValid, isPwdValid} from "@/util/RegexUtil";
+import {isEmail, isNameValid, isPwdLegal} from "@/util/RegexUtil";
 
 export default {
   data() {
@@ -296,18 +296,10 @@ export default {
         return false
       }
 
-      // 密码格式校验
-      const pwd = _params.password
-      if (pwd !== _params.passwordCheck) {
-        this.$message.warning('两次密码不一致，请检查后重试！')
-        return false
-      }
-      if (pwd.length < 6 || pwd.length > 50) {
-        this.$message.warning('密码长度需大于 6 位且小于 50 位!')
-        return false
-      }
-      if (!isPwdValid(pwd)) {
-        this.$message.warning('密码只允许数字与字母，特殊符号仅支持 (. ! #) 三者')
+      // 密码合规校验
+      const message = isPwdLegal(_params.password, _params.passwordCheck)
+      if (message !== null && message !== '') {
+        this.$message.warning(message)
         return false
       }
       return true

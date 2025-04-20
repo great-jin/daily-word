@@ -5,25 +5,22 @@ import lombok.Getter;
 @Getter
 public enum PasswordStatus {
 
-    SUCCESS(1, "成功"),
+    SUCCESS("成功"),
 
-    FAILED(2, "失败"),
+    FAILED("失败"),
 
-    CAPTCHA_MISMATCH(3, "验证码无效"),
+    CAPTCHA_MISMATCH("验证码无效"),
 
-    PWD_MISMATCH(4, "密码错误"),
+    PWD_MISMATCH("密码错误"),
 
-    PWD_SAME(5, "新旧密码不可相同"),
+    PWD_SAME("新旧密码不可相同"),
 
-    EMAIL_NOT_REGISTER(6, "邮箱尚未注册");
+    EMAIL_NOT_REGISTER("邮箱尚未注册");
 
-
-    private final Integer code;
 
     private final String message;
 
-    PasswordStatus(Integer code, String message) {
-        this.code = code;
+    PasswordStatus(String message) {
         this.message = message;
     }
 }

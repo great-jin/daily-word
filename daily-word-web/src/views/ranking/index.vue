@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20" class="container">
+  <el-row :gutter="14" class="container">
     <el-col :span="14" class="board-col">
       <div class="title-header">
         <el-tooltip
@@ -71,7 +71,7 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  padding: 0 10px;
+  padding-left: 10px;
 }
 
 .title-header {

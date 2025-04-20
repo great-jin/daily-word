@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20" class="container">
+  <el-row :gutter="14" class="container">
     <el-col :span="14">
       <!-- 基本信息 -->
       <el-row :gutter="12" style="padding-bottom: 10px">
@@ -100,6 +100,7 @@ import {TYPE_OPTIONS} from "@/dict/rankTypeDict";
 import RoomDialog from "./roomDialog.vue";
 import HistoryTable from "./history/index.vue";
 import {getUserRank} from "@/api/rankBoardApi";
+import {getToken} from "@/util/AuthUtil";
 
 export default {
   inject: ['reload'],
@@ -121,6 +122,10 @@ export default {
     }
   },
   mounted() {
+    if (getToken()[0] === '') {
+      return
+    }
+
     getUserRank().then(res => {
       this.cardData = res.data
     })
