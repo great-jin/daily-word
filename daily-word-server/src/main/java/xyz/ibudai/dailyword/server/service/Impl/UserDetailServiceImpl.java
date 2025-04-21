@@ -17,7 +17,7 @@ import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
 import xyz.ibudai.dailyword.model.props.OssProps;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.service.AuthUserService;
 import xyz.ibudai.dailyword.server.service.UserDetailService;
 

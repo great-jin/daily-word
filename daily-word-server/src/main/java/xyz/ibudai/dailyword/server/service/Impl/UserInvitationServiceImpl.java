@@ -16,7 +16,7 @@ import xyz.ibudai.dailyword.model.vo.friend.FriendInviteVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.UserFriendDao;
 import xyz.ibudai.dailyword.repository.dao.UserInvitationDao;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.service.UserDetailService;
 import xyz.ibudai.dailyword.server.service.UserInvitationService;
 

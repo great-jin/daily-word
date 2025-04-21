@@ -21,7 +21,7 @@ import xyz.ibudai.dailyword.model.vo.word.WordDescribe;
 import xyz.ibudai.dailyword.repository.dao.MatchDetailDao;
 import xyz.ibudai.dailyword.repository.mongo.MongoRepository;
 import xyz.ibudai.dailyword.server.tool.DictionaryTool;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.cache.DictionaryCache;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
 import xyz.ibudai.dailyword.server.service.TaskWordService;

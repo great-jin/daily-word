@@ -9,7 +9,7 @@ import xyz.ibudai.dailyword.model.enums.Catalogue;
 import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;
 import xyz.ibudai.dailyword.server.service.MatchRecordService;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 
 import java.util.*;
 

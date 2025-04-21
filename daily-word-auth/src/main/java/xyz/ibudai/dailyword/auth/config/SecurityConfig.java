@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import xyz.ibudai.dailyword.auth.config.handler.AuthExceptionHandler;
@@ -80,6 +81,9 @@ public class SecurityConfig {
                     // 默认无定义资源都需认证
                     auth.anyRequest().authenticated();
                 })
+                // 无状态会话
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> {
                     // 配置登录接口

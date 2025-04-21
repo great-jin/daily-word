@@ -11,7 +11,7 @@ import xyz.ibudai.dailyword.model.mongo.AnswerRecord;
 import xyz.ibudai.dailyword.model.mongo.SubjectContent;
 import xyz.ibudai.dailyword.repository.dao.MatchDetailDao;
 import xyz.ibudai.dailyword.repository.mongo.MongoRepository;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.tool.DictionaryTool;
 import xyz.ibudai.dailyword.server.service.AnswerRecordService;
 

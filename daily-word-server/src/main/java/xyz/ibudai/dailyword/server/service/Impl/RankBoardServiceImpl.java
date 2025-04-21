@@ -16,7 +16,7 @@ import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.model.vo.board.RankBoardVo;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.repository.dao.RankBoardDao;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.service.AuthUserService;
 import xyz.ibudai.dailyword.server.service.MatchDetailService;
 import xyz.ibudai.dailyword.server.service.RankBoardService;

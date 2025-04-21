@@ -18,7 +18,7 @@ import xyz.ibudai.dailyword.model.enums.status.RegisterStatus;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;

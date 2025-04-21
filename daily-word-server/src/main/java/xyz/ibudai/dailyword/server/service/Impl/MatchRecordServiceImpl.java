@@ -22,7 +22,7 @@ import xyz.ibudai.dailyword.model.vo.match.MatchDetailVo;
 import xyz.ibudai.dailyword.model.vo.match.MatchRecordVo;
 import xyz.ibudai.dailyword.repository.dao.MatchRecordDao;
 import xyz.ibudai.dailyword.server.service.MatchDetailService;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 import xyz.ibudai.dailyword.server.service.*;
 
 import java.time.LocalDateTime;

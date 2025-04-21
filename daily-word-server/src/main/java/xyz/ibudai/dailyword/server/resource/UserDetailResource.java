@@ -10,7 +10,7 @@ import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
 import xyz.ibudai.dailyword.oss.util.OssServer;
 import xyz.ibudai.dailyword.model.entity.user.UserDetail;
 import xyz.ibudai.dailyword.server.service.UserDetailService;
-import xyz.ibudai.dailyword.repository.util.SecurityUtil;
+import xyz.ibudai.dailyword.auth.util.SecurityUtil;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
