@@ -158,9 +158,7 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+    this.resetTimer()
   },
   methods: {
     show() {
@@ -185,7 +183,7 @@ export default {
               this.$message.success('验证码已发送，请检查收件箱')
             } else {
               // 发送失败重置计时器
-              clearInterval(this.timer);
+              this.resetTimer()
             }
           })
         }
@@ -204,8 +202,7 @@ export default {
           this.countDown -= 1;
         } else {
           // 倒计时结束时清除计时器
-          clearInterval(this.timer);
-          this.timer = null;
+          this.resetTimer()
         }
       }, 1000);
     },
@@ -303,6 +300,14 @@ export default {
         return false
       }
       return true
+    },
+    resetTimer() {
+      this.countDown = 0
+
+      if (this.timer !== null) {
+        clearInterval(this.timer)
+      }
+      this.timer = null
     }
   }
 }
