@@ -20,9 +20,10 @@
                 class="home-menu"
             >
               <el-menu-item index="dictionary" class="head-banner" >字典查询</el-menu-item>
+              <el-menu-item index="aiTranslate" class="head-banner">AI翻译</el-menu-item>
               <el-menu-item index="competition" class="head-banner">知识竞赛</el-menu-item>
               <el-menu-item index="ranking" class="head-banner">好友排行</el-menu-item>
-              <el-sub-menu index="personal" class="setting-menu">
+              <el-sub-menu index="personal">
                 <template #title>
                   <div style="font-weight: bold; font-size: 16px;">
                     <el-icon size="22">
@@ -97,21 +98,24 @@ export default {
     handleSelect(tab) {
       switch (tab) {
         case 'dictionary':
-          this.activeMenu = 'dictionary';
-          this.$router.push('/dictionary');
+          this.activeMenu = 'dictionary'
+          this.$router.push('/dictionary')
+          break
+        case 'aiTranslate':
+          this.$router.push('/aiTranslate')
           break
         case 'competition':
-          this.$router.push('/competition');
+          this.$router.push('/competition')
           break
         case 'ranking':
-          this.$router.push('/rank');
+          this.$router.push('/rank')
           break
         case 'personal':
-          this.$router.push('/personal');
+          this.$router.push('/personal')
           break
         case 'quit':
           clearToken()
-          this.$router.push('/logout');
+          this.$router.push('/logout')
           break
       }
     }
@@ -160,7 +164,7 @@ export default {
   min-width: 120px !important;
 }
 
-.el-menu--horizontal > .el-menu-item:nth-child(3) {
+.el-menu--horizontal > .el-menu-item:nth-child(4) {
   margin-right: auto;
 }
 </style>

@@ -2,6 +2,7 @@ import HomeView from "@/views/index.vue";
 import LoginView from "@/views/login/index.vue";
 import LogoutView from "@/views/logout/index.vue";
 import DictionaryView from "@/views/dictionary/index.vue";
+import AiTranslation from "@/views/translate/index.vue";
 import CompetitionView from "@/views/competition/index.vue";
 import RankView from "@/views/ranking/index.vue";
 import AnswerView from "@/views/competition/answer/index.vue";
@@ -24,6 +25,10 @@ export const pathArray = [
                 path: '/dictionary',
                 name: 'Dictionary',
                 component: DictionaryView
+            }, {
+                path: '/aiTranslate',
+                name: 'AiTranslation',
+                component: AiTranslation
             }, {
                 path: '/competition',
                 name: 'Competition',
