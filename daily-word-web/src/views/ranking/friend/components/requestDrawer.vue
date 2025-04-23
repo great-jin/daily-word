@@ -2,6 +2,7 @@
   <el-drawer
       v-model="visible"
       size="30%"
+      @close="closeDrawer"
       style="min-height: 400px"
   >
     <template #header>
@@ -10,8 +11,16 @@
 
     <el-card shadow="hover">
       <el-button-group style="margin-bottom: 20px">
-        <el-button @click="clickTypes('toMe')">待处理申请</el-button>
-        <el-button @click="clickTypes('fromMe')">我的申请</el-button>
+        <el-button
+            :type="type === 'toMe' ? 'primary' : 'default'"
+            @click="clickTypes('toMe')"
+        >待处理申请
+        </el-button>
+        <el-button
+            :type="type === 'fromMe' ? 'primary' : 'default'"
+            @click="clickTypes('fromMe')"
+        >我的申请
+        </el-button>
       </el-button-group>
 
       <div
@@ -86,6 +95,11 @@ export default {
       this.visible = true
 
       this.clickTypes('toMe')
+    },
+    closeDrawer() {
+      this.visible = false
+      this.type = 'toMe'
+      this.userList = []
     },
     clickTypes(type) {
       this.type = type

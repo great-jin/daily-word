@@ -15,7 +15,7 @@
           <el-col :span="24">
             <div v-for="item in taskData.answers[wordIndex].translation" style="text-align: center">
               <strong>
-                <span style="width: 100%; font-size: 16px">{{ item }}</span>
+                <span class="translate-content">{{ item }}</span>
               </strong>
             </div>
           </el-col>
@@ -209,6 +209,13 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.translate-content {
+  width: 100%;
+  margin-top:5px;
+  display: inline-block;
+  font-size: 16px;
 }
 
 .input-word {
