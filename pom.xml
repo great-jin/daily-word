@@ -18,6 +18,7 @@
         <module>daily-word-model</module>
         <module>daily-word-basic</module>
         <module>daily-word-oss</module>
+        <module>daily-word-engine</module>
         <module>daily-word-repository</module>
         <module>daily-word-auth</module>
         <module>daily-word-server</module>

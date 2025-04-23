@@ -9,32 +9,18 @@
         <relativePath>../daily-word-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>daily-word-server</artifactId>
+    <artifactId>daily-word-engine</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-auth</artifactId>
+            <artifactId>daily-word-basic</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-repository</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-engine</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

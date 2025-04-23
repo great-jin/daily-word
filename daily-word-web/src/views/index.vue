@@ -20,7 +20,7 @@
                 class="home-menu"
             >
               <el-menu-item index="dictionary" class="head-banner" >字典查询</el-menu-item>
-              <el-menu-item index="aiTranslate" class="head-banner">AI翻译</el-menu-item>
+              <el-menu-item index="aiTranslate" class="head-banner">AI 翻译</el-menu-item>
               <el-menu-item index="competition" class="head-banner">知识竞赛</el-menu-item>
               <el-menu-item index="ranking" class="head-banner">好友排行</el-menu-item>
               <el-sub-menu index="personal">

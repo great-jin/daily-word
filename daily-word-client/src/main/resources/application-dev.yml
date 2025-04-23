@@ -65,3 +65,10 @@ dictionary:
   file:
     dictionaryPath: /Workspace/files/dict/Dictionary.json
     vocabularyPath: /Workspace/files/vocabulary
+
+
+# 翻译引擎
+engine:
+  url: http://127.0.0.1:8080/translate
+  connTimeout: 10
+  readTimeout: 10
