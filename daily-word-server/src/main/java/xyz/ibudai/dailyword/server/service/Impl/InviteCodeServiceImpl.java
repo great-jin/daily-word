@@ -12,6 +12,7 @@ import xyz.ibudai.dailyword.server.service.InviteCodeService;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -34,6 +35,12 @@ public class InviteCodeServiceImpl extends ServiceImpl<InviteCodeDao, InviteCode
         Set<Integer> expireIds = new HashSet<>();
         LocalDate now = LocalDate.now();
         for (InviteCode item : list) {
+            if (Objects.equals(item.getStatus(), InviteCodeStatus.USED.getStatus())) {
+                // 已激活不处理
+                continue;
+            }
+
+            // 处理过期
             if (now.isAfter(item.getExpireDate())) {
                 expireIds.add(item.getId());
                 item.setStatus(InviteCodeStatus.EXPIRE.getStatus());
