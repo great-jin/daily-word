@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.dailyword.engine.model.RequestDTO;
 import xyz.ibudai.dailyword.engine.model.ResponseDTO;
-import xyz.ibudai.dailyword.engine.request.EngineClient;
+import xyz.ibudai.dailyword.engine.EngineClient;
 import xyz.ibudai.dailyword.model.base.ResponseData;
 
 import java.util.Objects;

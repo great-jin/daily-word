@@ -69,6 +69,8 @@ dictionary:
 
 # 翻译引擎
 engine:
-  url: http://127.0.0.1:8080/translate
-  connTimeout: 10
-  readTimeout: 10
+  host: http://127.0.0.1:8080
+  opus: ${engine.host}/opus/translate
+  nllb: ${engine.host}/nllb/translate
+  connTimeout: 5
+  readTimeout: 5

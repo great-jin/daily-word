@@ -26,8 +26,8 @@ export const pathArray = [
                 name: 'Dictionary',
                 component: DictionaryView
             }, {
-                path: '/aiTranslate',
-                name: 'AiTranslation',
+                path: '/translate',
+                name: 'translate',
                 component: AiTranslation
             }, {
                 path: '/competition',

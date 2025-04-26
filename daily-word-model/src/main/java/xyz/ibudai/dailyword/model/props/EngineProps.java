@@ -9,7 +9,11 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "engine")
 public class EngineProps {
 
-    private String url;
+    private String host;
+
+    private String opus;
+
+    private String nllb;
 
     private Long connTimeout;
 

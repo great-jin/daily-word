@@ -18,12 +18,23 @@ const WHITE_LIST = [
 
 router.beforeEach((to, from, next) => {
     if (WHITE_LIST.includes(to.path)) {
+        // 白名单放行
         next()
         return
     }
 
     // 状态判断
     const loginInfo = getToken()
+    if (loginInfo === null || loginInfo.length !== 2) {
+        ElNotification({
+            title: '尚未登录',
+            message: '此功能需登录后访问',
+            type: 'warning'
+        })
+        next('/login')
+    }
+
+    // 登录信息提取
     const containAuth = !(loginInfo[0] == null || loginInfo[0] === '')
     const containToken = !(loginInfo[1] == null || loginInfo[1] === '')
     const isLogin = containAuth && containToken
