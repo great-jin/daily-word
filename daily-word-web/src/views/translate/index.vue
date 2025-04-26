@@ -1,8 +1,8 @@
 <template>
-  <el-row :gutter="20">
+  <el-row :gutter="20" style="height: 100%">
     <!-- 原文输入 -->
-    <el-col :span="12">
-      <el-card>
+    <el-col :span="12" style="height: 100%">
+      <el-card style="height: 100%">
         <template #header>
           <div class="card-head">原文</div>
         </template>
@@ -24,6 +24,7 @@
             <el-select
                 v-model="reqInfo.model"
                 placeholder="选择模型"
+                @change="changeMode"
                 style="width: 120px; float: right"
             >
               <el-option label="OPUS" value="OPUS"/>
@@ -48,8 +49,8 @@
     </el-col>
 
     <!-- 翻译结果 -->
-    <el-col :span="12">
-      <el-card>
+    <el-col :span="12" style="height: 100%">
+      <el-card style="height: 100%">
         <template #header>
           <span class="card-head">翻译结果</span>
         </template>
@@ -59,16 +60,17 @@
             <el-select
                 v-model="reqInfo.targetType"
                 placeholder="选择语种"
+                @change="changeLanguage"
                 style="width: 120px; float: left"
             >
               <el-option label="英文" value="en"/>
               <el-option label="中文" value="zh"/>
+              <el-option label="法语" value="fr"/>
+              <el-option label="德语" value="de"/>
               <el-option label="日语" value="ja"/>
               <el-option label="韩语" value="ko"/>
-              <el-option label="德语" value="de"/>
-              <el-option label="法语" value="fr"/>
             </el-select>
-            
+
             <el-button
                 type="primary"
                 @click="read"
@@ -142,6 +144,22 @@ export default {
 
         this.resultText = res.data
       })
+    },
+    changeMode(data) {
+      if (this.reqInfo.text === '') {
+        return
+      }
+
+      this.reqInfo.model = data
+      this.translate()
+    },
+    changeLanguage(data) {
+      if (this.reqInfo.text === '') {
+        return
+      }
+
+      this.reqInfo.targetType = data
+      this.translate()
     },
     clear() {
       this.reqInfo.text = ''
