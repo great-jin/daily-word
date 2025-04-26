@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.dailyword.auth.cache.LoginCache;
+import xyz.ibudai.dailyword.auth.config.SecurityConfig;
 import xyz.ibudai.dailyword.model.base.ResponseData;
 import xyz.ibudai.dailyword.model.dto.PasswordDTO;
 import xyz.ibudai.dailyword.model.entity.user.AuthUser;
@@ -45,6 +47,14 @@ public class AuthenticResource {
      */
     @PostMapping("login")
     public void login(AuthUser user) {
+    }
+
+    /**
+     * 用户登出
+     */
+    @PostMapping("logout")
+    public void logout() {
+        LoginCache.logout(SecurityUtil.getLoginUser());
     }
 
     /**

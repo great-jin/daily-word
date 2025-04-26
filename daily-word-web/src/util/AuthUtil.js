@@ -2,12 +2,14 @@ import {Decrypt} from "@/util/EncryptUtil";
 
 const KEY_UID = 'u0'
 const KEY_AUTH = 'u1'
-const KEY_TOKEN = 'u2'
+const KEY_JWT = 'u2'
+const KEY_VERIFY = 'u3'
 
 export function setToken(data) {
     localStorage.setItem(KEY_UID, data.key)
     localStorage.setItem(KEY_AUTH, data.authentic)
-    localStorage.setItem(KEY_TOKEN, data.refreshToken)
+    localStorage.setItem(KEY_JWT, data.refreshToken)
+    localStorage.setItem(KEY_VERIFY, data.verifyToken)
 }
 
 export function getUid(needDecode) {
@@ -20,7 +22,7 @@ export function getUid(needDecode) {
 }
 
 export function getToken() {
-    let token = localStorage.getItem(KEY_TOKEN)
+    let token = localStorage.getItem(KEY_JWT)
     if (token === undefined || token === null) {
         token = ''
     }
@@ -33,8 +35,25 @@ export function getToken() {
     return [token, auth]
 }
 
+export function setRequestHeader(config) {
+    // 请求添加默认请求头
+    const token = getToken()
+    if (token[0] !== '') {
+        config.headers['Token'] = token[0]
+    }
+    if (token[1] !== '') {
+        config.headers['Authorization'] = token[1]
+    }
+
+    let verifyToken = localStorage.getItem(KEY_VERIFY)
+    if (verifyToken !== undefined && verifyToken !== null) {
+        config.headers['verify-token'] = verifyToken
+    }
+    return config
+}
+
 export function clearToken() {
     localStorage.removeItem(KEY_UID)
     localStorage.removeItem(KEY_AUTH)
-    localStorage.removeItem(KEY_TOKEN)
+    localStorage.removeItem(KEY_JWT)
 }

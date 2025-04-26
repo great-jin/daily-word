@@ -16,7 +16,12 @@ public enum HttpHeader {
     /**
      * Authentic http header.
      */
-    AUTHENTIC("auth", "auth");
+    AUTHENTIC("auth", "auth"),
+
+    /**
+     * Verify http header.
+     */
+    VERIFY("verify-token", "verify");
 
 
     private final String frontend;

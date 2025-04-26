@@ -10,6 +10,13 @@ export function login(params) {
     })
 }
 
+export function logout() {
+    return request({
+        url: `${apiPrefix}/logout`,
+        method: 'post',
+    })
+}
+
 export function validateCode(params) {
     return request({
         url: `${apiPrefix}/validaCode?inviteCode=${params}`,

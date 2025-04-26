@@ -18,7 +18,9 @@ public enum LoginStatus {
 
     EXPIRE("登录过期"),
 
-    NOT_AUTH("无访问权限，请登录后操作");
+    NOT_AUTH("无访问权限，请登录后操作"),
+
+    RE_LOGIN("已在其它页面登录，退出账号");
 
 
     private final String msg;

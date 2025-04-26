@@ -82,8 +82,7 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                 })
                 // 无状态会话
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> {
                     // 配置登录接口

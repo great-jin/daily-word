@@ -11,18 +11,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AuthUserVo {
 
-    private Integer userId;
-
+    /**
+     * The value of userId after AES encryption
+     */
     private String key;
 
-    private String username;
-
-    private String password;
-
-    private String role;
-
+    /**
+     * The value for Spring Security
+     */
     private String authentic;
 
+    /**
+     * The value for re login verify
+     */
+    private String verifyToken;
+
+    /**
+     * The value for JWT Verify
+     */
     private String refreshToken;
 
 }

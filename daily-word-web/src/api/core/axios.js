@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {ElNotification} from 'element-plus';
 import router from '@/router/index'
-import {getToken, clearToken} from "@/util/AuthUtil";
+import {setRequestHeader, clearToken} from "@/util/AuthUtil";
 
 function request(axiosConfig) {
     const service = axios.create(
@@ -14,15 +14,7 @@ function request(axiosConfig) {
     );
 
     service.interceptors.request.use(config => {
-        // 请求添加默认请求头
-        const token = getToken()
-        if (token[0] !== '') {
-            config.headers['Token'] = token[0]
-        }
-        if (token[1] !== '') {
-            config.headers['Authorization'] = token[1]
-        }
-        return config
+        return setRequestHeader(config)
     }, err => {
         console.log('request error', err);
     })
@@ -37,7 +29,7 @@ function request(axiosConfig) {
         const code = res.data.code
         if (code !== undefined && code !== null) {
             // 未登录返回
-            if (code === 203 || code === 403) {
+            if (code === 203 || code === 401 || code === 403) {
                 noticeAnClear()
                 router.push('/')
                 return res.data
