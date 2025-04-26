@@ -252,9 +252,17 @@ export default {
 
       _socket.addEventListener('message', (event) => {
         const res = JSON.parse(event.data)
-        if (res !== null && res.code === 302) {
-          // 匹配成功
-          this.toAnswerPage(res.data)
+        if (res !== null) {
+          // 消息处理
+          switch (res.code) {
+            case 300:
+              this.$message.warning('存在未完结匹配，请刷新后重试')
+              break
+            case 302:
+              // 匹配成功
+              this.toAnswerPage(res.data)
+              break
+          }
         }
       })
 

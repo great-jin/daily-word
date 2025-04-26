@@ -91,7 +91,7 @@ public class RankHandler extends ChannelAdaptor {
         if (users.contains(uid)) {
             // 同一用户重复提交
             log.info("user {} already submit", uid);
-            super.response(channel, RANK_MATCHING);
+            super.response(channel, MATCH_REPEAT);
             return;
         }
         users.add(uid);

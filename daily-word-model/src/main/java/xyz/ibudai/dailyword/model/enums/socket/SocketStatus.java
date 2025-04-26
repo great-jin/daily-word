@@ -9,17 +9,22 @@ import lombok.Getter;
 public enum SocketStatus {
 
     /**
-     * Rank matching socket status.
+     * Match repeat.
+     */
+    MATCH_REPEAT(300),
+
+    /**
+     * In matching.
      */
     RANK_MATCHING(301),
 
     /**
-     * Rank matched socket status.
+     * Match success.
      */
     RANK_MATCHED(302),
 
     /**
-     * Rank not matched socket status.
+     * Match fail.
      */
     RANK_NOT_MATCHED(303);
 
