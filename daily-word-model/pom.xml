@@ -10,12 +10,6 @@
     </parent>
 
     <artifactId>daily-word-model</artifactId>
+    <description>The module for enums and bean class.</description>
 
-    <dependencies>
-        <!-- 分页 -->
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-        </dependency>
-    </dependencies>
 </project>

@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.socket.adaptor.handler;
+package xyz.ibudai.dailyword.server.socket;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

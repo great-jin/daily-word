@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.socket.adaptor.handler;
+package xyz.ibudai.dailyword.server.socket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

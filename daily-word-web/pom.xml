@@ -10,5 +10,6 @@
 
     <artifactId>daily-word-web</artifactId>
     <packaging>pom</packaging>
+    <description>The module of vue frontend.</description>
 
 </project>

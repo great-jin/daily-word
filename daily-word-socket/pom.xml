@@ -10,11 +10,12 @@
     </parent>
 
     <artifactId>daily-word-socket</artifactId>
+    <description>The module for websocket.</description>
 
     <dependencies>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-server</artifactId>
+            <artifactId>daily-word-basic</artifactId>
             <version>${project.version}</version>
         </dependency>
 

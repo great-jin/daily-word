@@ -6,6 +6,8 @@ public class BeanConst {
 
         public static final String RANK = "rankHandler";
 
+        public static final String LOGIN = "loginHandler";
+
         public static final String FRIEND = "friendHandler";
 
         public static final String DEFAULT = "defaultHandler";

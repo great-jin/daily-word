@@ -17,7 +17,6 @@
             prop="rankType"
             label="匹配方式"
             align="center"
-            fixed="left"
         />
         <el-table-column
             width="120"
@@ -64,10 +63,30 @@
           </template>
         </el-table-column>
         <el-table-column
-            width="120"
+            prop="createTime"
+            label="对局时间"
+            align="center"
+            width="180"
+        />
+        <el-table-column
+            width="100"
+            prop="finished"
+            label="对局状态"
+            align="center"
+            fixed="right"
+        >
+          <template #default="{ row }">
+            <el-tag :type="row.finished ? 'info' : 'warning'">
+              {{ row.finished ? '结束' : '进行中' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+            width="100"
             prop="result"
             label="胜负"
             align="center"
+            fixed="right"
         >
           <template #default="{ row }">
             <el-tag v-if="row.score === null" type="warning">
@@ -78,25 +97,6 @@
             </span>
             <el-tag v-else :type="row.score > 0 ? 'success' : 'danger'">
               {{ row.score > 0 ? '胜利' : '失败' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-            prop="createTime"
-            label="对局时间"
-            align="center"
-            width="180"
-        />
-        <el-table-column
-            width="120"
-            prop="finished"
-            label="对局状态"
-            align="center"
-            fixed="right"
-        >
-          <template #default="{ row }">
-            <el-tag :type="row.finished ? 'info' : 'warning'">
-              {{ row.finished ? '结束' : '进行中' }}
             </el-tag>
           </template>
         </el-table-column>

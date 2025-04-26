@@ -10,11 +10,12 @@
     </parent>
 
     <artifactId>daily-word-auth</artifactId>
+    <description>The module for Spring Security management.</description>
 
     <dependencies>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-basic</artifactId>
+            <artifactId>daily-word-socket</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

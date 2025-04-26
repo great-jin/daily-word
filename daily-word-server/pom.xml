@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>daily-word-server</artifactId>
+    <description>The module for business processing.</description>
 
     <dependencies>
         <dependency>
@@ -20,6 +21,11 @@
         <dependency>
             <groupId>xyz.ibudai</groupId>
             <artifactId>daily-word-repository</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.ibudai</groupId>
+            <artifactId>daily-word-socket</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>daily-word-client</artifactId>
+    <description>The program base starter.</description>
 
     <properties>
         <skip-main-class>false</skip-main-class>
@@ -18,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>xyz.ibudai</groupId>
-            <artifactId>daily-word-socket</artifactId>
+            <artifactId>daily-word-server</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

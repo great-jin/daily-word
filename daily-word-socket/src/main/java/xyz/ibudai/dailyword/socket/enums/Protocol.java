@@ -11,11 +11,14 @@ public enum Protocol {
 
     PREFIX("/dailyWord"),
 
+    DEFAULT("/default"),
+
+    LOGIN("/login"),
+
     RANK("/rank"),
 
-    FRIEND("/friend"),
+    FRIEND("/friend");
 
-    DEFAULT("/default");
 
     private final String uri;
 

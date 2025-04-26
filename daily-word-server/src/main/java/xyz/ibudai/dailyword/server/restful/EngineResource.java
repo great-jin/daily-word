@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.server.resource;
+package xyz.ibudai.dailyword.server.restful;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package xyz.ibudai.dailyword.server.resource;
+package xyz.ibudai.dailyword.server.restful;
 
 import com.github.pagehelper.PageInfo;
 import lombok.RequiredArgsConstructor;

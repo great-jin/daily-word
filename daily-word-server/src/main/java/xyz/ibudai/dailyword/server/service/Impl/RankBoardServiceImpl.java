@@ -59,6 +59,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
 
         int score = 0, win = 0, lost = 0;
         for (RankBoard item : list) {
+            // 计算用户所有排行榜下的数据
             score += item.getScore();
             win += item.getMatchWin();
             lost += item.getMatchLost();
@@ -130,7 +131,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
         Map<Integer, String> userMap = authUserService.groupByIds(recordMap.keySet());
         // 查询用户排行榜
         List<RankBoard> userRankList = this.lambdaQuery()
-                .eq(RankBoard::getScore, SystemConfig.getSeason())
+                .eq(RankBoard::getSeason, SystemConfig.getSeason())
                 .eq(RankBoard::getCatalog, catalog)
                 .in(RankBoard::getUserId, recordMap.keySet())
                 .list();
