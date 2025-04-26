@@ -103,8 +103,8 @@ public class UserInvitationServiceImpl extends ServiceImpl<UserInvitationDao, Us
             // 发出的邀请
             wrapper.eq(UserInvitation::getFromUser, SecurityUtil.getLoginUser());
         }
-        // 查询 7 天内请求
-        wrapper.ge(UserInvitation::getCreateTime, LocalDateTime.now().minusDays(7));
+        // 查询 30 天内请求
+        wrapper.ge(UserInvitation::getCreateTime, LocalDateTime.now().minusDays(30));
         // 时间倒叙
         wrapper.orderByDesc(UserInvitation::getCreateTime);
         List<UserInvitation> list = wrapper.list();

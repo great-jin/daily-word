@@ -24,6 +24,6 @@ public class DefaultHandler extends ChannelAdaptor {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
-        log.info("FriendHandler::channelRead, msg: {}", frame.text());
+        log.info("DefaultHandler::channelRead, msg: {}", frame.text());
     }
 }

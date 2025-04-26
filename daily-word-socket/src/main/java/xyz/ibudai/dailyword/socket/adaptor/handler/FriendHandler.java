@@ -24,9 +24,6 @@ public class FriendHandler extends ChannelAdaptor {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
-        String msg = "FriendHandler received: " + frame.text();
-
-        // 发送响应消息
-        ctx.channel().writeAndFlush(new TextWebSocketFrame(msg));
+        log.info("FriendHandler::channelRead, msg: {}", frame.text());
     }
 }
