@@ -28,7 +28,7 @@ public class MatchSchedule {
     /**
      * 半小时执行一次，手动提交二小时内未完结任务
      */
-    @Scheduled(fixedRate = 30, timeUnit = TimeUnit.MINUTES)
+//    @Scheduled(fixedRate = 30, timeUnit = TimeUnit.MINUTES)
     public void manualSubmitMatch() {
         LocalDateTime twoHourEarly = LocalDateTime.now().minusHours(2L);
         List<MatchRecord> undoneList = matchRecordService.lambdaQuery()

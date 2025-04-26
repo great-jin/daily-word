@@ -111,7 +111,7 @@
             <el-button
                 type="primary"
                 @click="showDetail(row)"
-                :disabled="row.rankMode === '-'"
+                :disabled="row.rankMode === '-' || !row.finished"
                 link
             >详情
             </el-button>

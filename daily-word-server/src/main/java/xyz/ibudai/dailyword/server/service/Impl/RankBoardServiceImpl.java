@@ -149,6 +149,7 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
 
             newUserIds.add(uid);
             rankBoard = RankBoard.initByRecord(matchRecord);
+            rankBoard.setCatalog(catalog);
             rankBoard.setUserName(userMap.get(uid));
             newRankBoardList.add(rankBoard);
         }

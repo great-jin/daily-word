@@ -56,6 +56,33 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
                 SecurityUtil.getLoginUser(),
                 SystemConfig.getSeason()
         );
+        if (CollectionUtils.isEmpty(dataList)) {
+            return new PageInfo<>(Collections.emptyList());
+        }
+
+        // 查询对局其它用户进度
+        Set<Integer> matchIds = dataList.stream()
+                .map(MatchRecordVo::getMatchId)
+                .collect(Collectors.toSet());
+        List<MatchRecord> matchList = this.lambdaQuery()
+                .in(MatchRecord::getMatchId, matchIds)
+                .list();
+        Map<Integer, List<MatchRecord>> matchMaps = matchList.stream()
+                .collect(Collectors.groupingBy(MatchRecord::getMatchId));
+
+        // 状态匹配
+        for (MatchRecordVo item : dataList) {
+            List<MatchRecord> matchRecords = matchMaps.get(item.getMatchId());
+            if (CollectionUtils.isEmpty(matchRecords)) {
+                item.setFinished(true);
+                continue;
+            }
+
+            // 所有人结束才结束
+            boolean allFinish = matchRecords.stream()
+                    .allMatch(MatchRecord::getFinished);
+            item.setFinished(allFinish);
+        }
         return new PageInfo<>(dataList);
     }
 
@@ -80,12 +107,13 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
 
     @Override
     public Boolean checkTaskFinished(Integer matchId) {
-        MatchRecord matchRecord = this.lambdaQuery()
+        List<MatchRecord> matchRecords = this.lambdaQuery()
                 .select(MatchRecord::getFinished)
-                .eq(MatchRecord::getUserId, SecurityUtil.getLoginUser())
                 .eq(MatchRecord::getMatchId, matchId)
-                .one();
-        return Boolean.TRUE.equals(matchRecord.getFinished());
+                .list();
+
+        // 所有人完成才记为完成
+        return matchRecords.stream().allMatch(MatchRecord::getFinished);
     }
 
     @Override
@@ -203,7 +231,7 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
                 // 根据答对数量降序
                 .max(Comparator.comparingInt(MatchRecord::getCorrectCount)
                         // 数量一致取时间最小值
-                        .thenComparingInt(MatchRecord::getCostSecond))
+                        .thenComparingInt(MatchRecord::getCostSecond).reversed())
                 .orElse(null);
         Integer score = answerDTO.getScore();
         for (MatchRecord item : otherRecords) {
