@@ -1,7 +1,7 @@
 <template>
   <el-dialog
       v-model="dialogVisible"
-      width="30%"
+      width="36%"
       title="账号注册"
       :show-close="false"
       align-center

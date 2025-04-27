@@ -4,12 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,14 @@ import xyz.ibudai.dailyword.model.enums.status.EmailCodeStatus;
 import xyz.ibudai.dailyword.model.enums.status.InviteCodeStatus;
 import xyz.ibudai.dailyword.model.enums.status.PasswordStatus;
 import xyz.ibudai.dailyword.model.enums.status.RegisterStatus;
+import xyz.ibudai.dailyword.model.props.TemplateProps;
 import xyz.ibudai.dailyword.model.vo.RegisterVo;
 import xyz.ibudai.dailyword.repository.dao.AuthUserDao;
 import xyz.ibudai.dailyword.repository.dao.InviteCodeDao;
 import xyz.ibudai.dailyword.repository.dao.UserDetailDao;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,6 +55,9 @@ import java.util.regex.Matcher;
 @Service
 @RequiredArgsConstructor
 public class AuthenticServiceImpl implements AuthenticService {
+
+    private static final String PLACE_HOLDER_OPERATE = "aaaaaa";
+    private static final String PLACE_HOLDER_CODE = "bbbbbb";
 
     /**
      * 缓存邮件验证码
@@ -71,6 +78,8 @@ public class AuthenticServiceImpl implements AuthenticService {
 
     @Value("${spring.mail.username}")
     private String emailFrom;
+
+    private final TemplateProps templateProps;
 
     private final JavaMailSender mailSender;
 
@@ -137,15 +146,29 @@ public class AuthenticServiceImpl implements AuthenticService {
         String mailCode = CodeTool.generate();
         EMAIL_CODE_MAP.put(emailKey, mailCode);
 
+        EmailType emailType = EmailType.getByType(type);
+        if (Objects.isNull(emailType)) {
+            log.error("The email type of {} illegal.", type);
+            return EmailCodeStatus.FAIL;
+        }
+
         // 发送验证码
         EmailCodeStatus codeStatus;
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(emailFrom);
-            message.setTo(address);
-            message.setSubject("Daily Word 邮箱验证码");
-            message.setText("您的注册验证码为：" + mailCode + ", 10 分钟内有效");
-            mailSender.send(message);
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setFrom(emailFrom);
+            helper.setTo(address);
+            helper.setSubject("Daily Word 邮箱验证码");
+
+            // 解析处理模板
+            String template = Files.readString(Paths.get(templateProps.getEmail()));
+            template = template.replace(PLACE_HOLDER_OPERATE, emailType.getMode());
+            template = template.replace(PLACE_HOLDER_CODE, mailCode);
+            helper.setText(template, true);
+
+            // 发件邮件
+            mailSender.send(mimeMessage);
             codeStatus = EmailCodeStatus.SUCCESS;
 
             // 成功记录发送时间

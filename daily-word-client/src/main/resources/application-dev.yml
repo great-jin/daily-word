@@ -42,6 +42,11 @@ spring:
           starttls.required: true
 
 
+# 模板文件
+template:
+  email: /Workspace/files/email.html
+
+
 # 绑定 MyBatis
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
