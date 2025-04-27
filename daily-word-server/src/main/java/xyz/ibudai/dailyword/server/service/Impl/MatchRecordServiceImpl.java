@@ -229,9 +229,9 @@ public class MatchRecordServiceImpl extends ServiceImpl<MatchRecordDao, MatchRec
         otherRecords.add(userRecord);
         MatchRecord winner = otherRecords.stream()
                 // 根据答对数量降序
-                .max(Comparator.comparingInt(MatchRecord::getCorrectCount)
+                .min(Comparator.comparingInt(MatchRecord::getCorrectCount)
                         // 数量一致取时间最小值
-                        .thenComparingInt(MatchRecord::getCostSecond).reversed())
+                        .thenComparingInt(MatchRecord::getCostSecond))
                 .orElse(null);
         Integer score = answerDTO.getScore();
         for (MatchRecord item : otherRecords) {

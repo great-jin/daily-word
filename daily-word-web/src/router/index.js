@@ -1,6 +1,6 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {pathArray} from "@/router/component";
-import {getToken} from "@/util/AuthUtil";
+import {getToken, isUseLogin} from "@/util/AuthUtil";
 import {ElNotification} from "element-plus";
 
 const routes = pathArray
@@ -16,6 +16,14 @@ const WHITE_LIST = [
     '/dictionary'
 ]
 
+function notify(){
+    ElNotification({
+        title: '尚未登录',
+        message: '此功能需登录后访问',
+        type: 'warning'
+    })
+}
+
 router.beforeEach((to, from, next) => {
     if (WHITE_LIST.includes(to.path)) {
         // 白名单放行
@@ -25,21 +33,15 @@ router.beforeEach((to, from, next) => {
 
     // 状态判断
     const loginInfo = getToken()
-    if (loginInfo === null || loginInfo.length !== 2) {
-        ElNotification({
-            title: '尚未登录',
-            message: '此功能需登录后访问',
-            type: 'warning'
-        })
+    if (loginInfo === null || loginInfo.length === 0) {
+        notify()
         next('/login')
+        return
     }
 
-    // 登录信息提取
-    const containAuth = !(loginInfo[0] == null || loginInfo[0] === '')
-    const containToken = !(loginInfo[1] == null || loginInfo[1] === '')
-    const isLogin = containAuth && containToken
+    const isLogin = isUseLogin()
     if (to.path === '/login') {
-        // 已登录则回主页，未登录放行
+        // 已登录用户访问登录页重定向首页
         isLogin ? next('/') : next()
         return
     }
@@ -48,11 +50,7 @@ router.beforeEach((to, from, next) => {
     if (isLogin) {
         next()
     } else {
-        ElNotification({
-            title: '尚未登录',
-            message: '此功能需登录后访问',
-            type: 'warning'
-        })
+        notify()
         next('/login')
     }
 })

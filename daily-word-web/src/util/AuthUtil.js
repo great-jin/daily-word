@@ -52,6 +52,18 @@ export function setRequestHeader(config) {
     return config
 }
 
+export function isUseLogin() {
+    const token = getToken()
+    if (token === null || token.length === 0) {
+        return false
+    }
+
+    const hasAuth = !(token[0] == null || token[0] === '')
+    const hasJwt = !(token[1] == null || token[1] === '')
+
+    return hasAuth && hasJwt
+}
+
 export function clearToken() {
     localStorage.removeItem(KEY_UID)
     localStorage.removeItem(KEY_AUTH)

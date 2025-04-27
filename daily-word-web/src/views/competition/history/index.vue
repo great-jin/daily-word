@@ -92,9 +92,13 @@
             <el-tag v-if="row.score === null" type="warning">
               {{ '进行中' }}
             </el-tag>
-            <span v-else-if="row.score === 0" type="info">
-              {{ '-' }}
-            </span>
+            <el-tag v-else-if="row.score === 0 && row.rankType === '单人挑战'" type="info">
+              {{ '/' }}
+            </el-tag>
+            <el-tag v-else-if="row.score === 0 && row.rankType !== '单人挑战'" type="danger">
+              <!--  超时默认判负 -->
+              {{ '失败' }}
+            </el-tag>
             <el-tag v-else :type="row.score > 0 ? 'success' : 'danger'">
               {{ row.score > 0 ? '胜利' : '失败' }}
             </el-tag>
@@ -200,7 +204,7 @@ export default {
           it.rankType = getRankType(it.rankType)
           it.costSecond = formatSeconds(it.costSecond)
           it.createTime = it.createTime == null
-              ? '-'
+              ? '/'
               : it.createTime.replace('T', ' ')
         })
         this.pagination.total = pageData.total

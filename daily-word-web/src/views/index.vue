@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {clearToken} from "@/util/AuthUtil";
+import {clearToken, isUseLogin} from "@/util/AuthUtil";
 import {logout} from "@/api/authUserApi";
 
 export default {
@@ -115,12 +115,18 @@ export default {
           this.$router.push('/personal')
           break
         case 'quit':
-          logout().catch(() => {})
-              .finally(() => {
-                    clearToken()
-                    this.$router.push('/logout')
-                  }
-              )
+          if (isUseLogin()) {
+            logout().catch(() => {
+            })
+                .finally(() => {
+                      clearToken()
+                      this.$router.push('/logout')
+                    }
+                )
+          } else {
+            // 未登录则返回首页
+            this.$router.push('/dictionary')
+          }
           break
       }
     }

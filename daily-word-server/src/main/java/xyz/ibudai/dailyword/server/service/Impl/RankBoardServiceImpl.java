@@ -170,6 +170,8 @@ public class RankBoardServiceImpl extends ServiceImpl<RankBoardDao, RankBoard> i
             if (score > 0) {
                 item.setMatchWin(item.getMatchWin() + 1);
             } else {
+                // score = 0: 挂机默认判负
+                // score < 0: 对局结果为负
                 item.setMatchLost(item.getMatchLost() + 1);
             }
             item.setUpdateTime(LocalDateTime.now());
