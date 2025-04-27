@@ -4,7 +4,6 @@
       width="30%"
       title="用户协议"
       style="--el-dialog-padding-primary: 15px;"
-      :center="true"
   >
     <div class="user-agreement-content">
       <p>欢迎使用我们的服务。</p>

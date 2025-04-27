@@ -4,7 +4,7 @@
       width="30%"
       title="账号注册"
       :show-close="false"
-      center
+      align-center
   >
     <el-steps
         :active="active"

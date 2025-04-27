@@ -4,7 +4,7 @@
       width="30%"
       title="忘记密码"
       style="--el-dialog-padding-primary: 10px 40px 10px 10px;"
-      center
+      align-center
   >
     <el-form
         ref="pwdForm"

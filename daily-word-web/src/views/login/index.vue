@@ -1,83 +1,89 @@
 <template>
-  <div>
-    <el-container class="login-container">
-      <el-aside class="login-aside">
-        <img
-            class="aside-bg"
-            src="../../assets/mountain.jpg"
-        />
-      </el-aside>
-
-      <el-main class="login-main">
-        <div class="center-container">
-          <h2 style="text-align: center; color: lightskyblue">
-            Welcome to Daily Word!
+  <div class="login-container">
+    <el-row style="margin: 0 auto">
+      <el-col :span="24">
+        <el-form
+            ref="loginForm"
+            :rules="rules"
+            :model="loginForm"
+            class="login-form"
+        >
+          <h2 class="form-logo">
+            Daily Word
           </h2>
-          <br/>
 
-          <el-form
-              ref="loginForm"
-              :rules="rules"
-              :model="loginForm"
-              label-width="80px"
-          >
-            <el-form-item label="账&nbsp;&nbsp;&nbsp;号:" prop="username">
-              <el-input
-                  v-model="loginForm.username"
-                  placeholder="请输入账号"
-              />
-            </el-form-item>
-            <el-form-item label="密&nbsp;&nbsp;&nbsp;码:" prop="password">
-              <el-input
-                  type="password"
-                  v-model="loginForm.password"
-                  placeholder="请输入密码"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                  type="primary"
-                  style="width: 100%"
-                  @click="doLogin"
-              >登录
-              </el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-row type="flex" justify="space-between" style="width: 100%">
-                <el-col :span="8">
-                  <el-button
-                      type="text"
-                      @click="clickOption('register')"
-                      style="float: left; z-index: 0"
-                  >注册
-                  </el-button>
-                </el-col>
-                <el-col :span="8" style="display: flex; align-items: center;">
-                  <el-checkbox
-                      v-model="radioValue"
-                      @click="clickOption('compact')"
-                  >用户协议
-                  </el-checkbox>
-                </el-col>
-                <el-col :span="8">
-                  <el-button
-                      type="text"
-                      @click="clickOption('forgot')"
-                      style="float: right; z-index: 0"
-                  >忘记密码
-                  </el-button>
-                </el-col>
-              </el-row>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-main>
+          <el-form-item prop="username">
+            <el-input
+                v-model="loginForm.username"
+                placeholder="请输入用户名"
+            >
+              <template #prepend>
+                <el-icon>
+                  <User/>
+                </el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+                type="password"
+                v-model="loginForm.password"
+                placeholder="请输入密码"
+            >
+              <template #prepend>
+                <el-icon>
+                  <Lock/>
+                </el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
 
-      <!-- 注册弹窗 -->
-      <RegisterModal ref="registerModal"/>
-      <CompactModal ref="compactModal"/>
-      <ForgotModal ref="forgotModal"/>
-    </el-container>
+          <el-form-item>
+            <el-button
+                type="warning"
+                style="width: 100%; margin-top: 6px;"
+                @click="doLogin"
+            >登录
+            </el-button>
+          </el-form-item>
+
+          <el-form-item>
+            <el-row style="width: 100%">
+              <el-col :span="8">
+                <el-button
+                    type="warning"
+                    @click="clickOption('forgot')"
+                    style="float: left; z-index: 0; line-height: 26px"
+                    link
+                >忘记密码
+                </el-button>
+              </el-col>
+              <el-col :span="8" style="text-align: center;">
+                <el-checkbox
+                    v-model="radioValue"
+                    @click="clickOption('compact')"
+                >用户协议
+                </el-checkbox>
+              </el-col>
+              <el-col :span="8">
+                <el-button
+                    type="warning"
+                    @click="clickOption('register')"
+                    style="float: right; z-index: 0; line-height: 26px"
+                    link
+                >账号注册
+                </el-button>
+              </el-col>
+            </el-row>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
+    <!-- 注册弹窗 -->
+    <RegisterModal ref="registerModal"/>
+    <CompactModal ref="compactModal"/>
+    <ForgotModal ref="forgotModal"/>
   </div>
 </template>
 
@@ -176,31 +182,23 @@ export default {
 <style scoped>
 .login-container {
   height: 100vh;
+  background: url("@/assets/mountain.jpg") no-repeat;
 }
 
-.login-aside {
-  width: 66.666%; /* 占屏幕2/3 */
-  position: relative;
-  overflow: hidden;
+.login-form {
+  width: 20%;
+  min-width: 320px;
+  margin: 14% auto;
+  padding: 10px 20px 1px 20px;
+  background: white;
+  border-radius: 25px;
 }
 
-.aside-bg {
+.form-logo{
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* 图片填充整个容器，保持纵横比不变 */
-  object-position: center; /* 图片在容器中居中显示 */
-}
-
-.login-main {
-  width: 33.333%; /* 占屏幕1/3 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%; /* 让 el-main 高度充满父容器，这样 Flex 布局才会生效 */
-}
-
-.center-container {
-  max-width: 400px; /* 可根据实际情况调整容器最大宽度 */
-  width: 100%;
+  margin-bottom: 40px;
+  display: inline-block;
+  text-align: center;
+  color: lightskyblue;
 }
 </style>
