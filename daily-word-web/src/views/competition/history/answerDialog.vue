@@ -6,7 +6,7 @@
       @close="clearData"
   >
     <el-row>
-      <el-col :span="17" class="container">
+      <el-col :span="16" class="container">
         <!-- 单词翻译 -->
         <el-row
             v-if="taskData.answers.length > 0"
@@ -74,7 +74,7 @@
       </el-col>
 
       <!-- 题数展示 -->
-      <el-col :span="7">
+      <el-col :span="8">
         <div class="word-container">
           <el-row :gutter="20">
             <el-col

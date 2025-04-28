@@ -6,7 +6,14 @@
   >
     <el-card>
       <template #header>
-        <span style="font-weight: bold; font-size: 18px">对局详情</span>
+        <span style="font-weight: bold; font-size: 16px">
+          <el-tag
+              v-if="record.rankType !== '单人挑战'"
+              :type="record.score > 0 ? 'success' : 'danger'"
+          >
+            {{ record.score > 0 ? '对局胜利' : '对局失败' }}
+          </el-tag>
+        </span>
       </template>
 
       <el-row>
@@ -40,8 +47,7 @@
       <template #header>
         <div class="card-header">
           <span style="font-weight: bold">
-            用户名: &nbsp;
-            <el-tag type="primary">{{ item.userName }}</el-tag>
+            {{ item.userName }}
           </span>
         </div>
       </template>

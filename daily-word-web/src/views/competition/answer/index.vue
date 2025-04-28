@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;">
     <el-row style="height: 100%;">
-      <el-col :span="18" class="container">
+      <el-col :span="16" class="container">
         <el-row :style="{marginTop: '120px'}">
           <el-col :span="24">
             <div
@@ -79,7 +79,7 @@
         </el-row>
       </el-col>
 
-      <el-col :span="6">
+      <el-col :span="8">
         <div class="word-container">
           <el-row :gutter="20">
             <el-col :span="11" v-for="(item, index) in subjectItems" :key="index">

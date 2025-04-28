@@ -16,6 +16,6 @@ export function getRankMode(data) {
         case 'CUSTOM':
             return '自定义房间'
         default:
-            return '/'
+            return '-'
     }
 }

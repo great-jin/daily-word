@@ -70,19 +70,6 @@
         />
         <el-table-column
             width="100"
-            prop="finished"
-            label="对局状态"
-            align="center"
-            fixed="right"
-        >
-          <template #default="{ row }">
-            <el-tag :type="row.finished ? 'info' : 'warning'">
-              {{ row.finished ? '结束' : '进行中' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-            width="100"
             prop="result"
             label="胜负"
             align="center"
@@ -93,7 +80,7 @@
               {{ '进行中' }}
             </el-tag>
             <el-tag v-else-if="row.score === 0 && row.rankType === '单人挑战'" type="info">
-              {{ '/' }}
+              {{ '-' }}
             </el-tag>
             <el-tag v-else-if="row.score === 0 && row.rankType !== '单人挑战'" type="danger">
               <!--  超时默认判负 -->
@@ -101,6 +88,19 @@
             </el-tag>
             <el-tag v-else :type="row.score > 0 ? 'success' : 'danger'">
               {{ row.score > 0 ? '胜利' : '失败' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+            width="100"
+            prop="finished"
+            label="对局状态"
+            align="center"
+            fixed="right"
+        >
+          <template #default="{ row }">
+            <el-tag :type="row.finished ? 'info' : 'warning'">
+              {{ row.finished ? '结束' : '进行中' }}
             </el-tag>
           </template>
         </el-table-column>
@@ -204,7 +204,7 @@ export default {
           it.rankType = getRankType(it.rankType)
           it.costSecond = formatSeconds(it.costSecond)
           it.createTime = it.createTime == null
-              ? '/'
+              ? '-'
               : it.createTime.replace('T', ' ')
         })
         this.pagination.total = pageData.total

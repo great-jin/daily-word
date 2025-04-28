@@ -159,7 +159,7 @@ public class AuthenticServiceImpl implements AuthenticService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             helper.setFrom(emailFrom);
             helper.setTo(address);
-            helper.setSubject("Daily Word 邮箱验证码");
+            helper.setSubject("Daily Word 验证码");
 
             // 解析处理模板
             String template = Files.readString(Paths.get(templateProps.getEmail()));

@@ -13,13 +13,11 @@
           placeholder="请输入搜索内容"
           class="search-input"
           @keyup.enter="translateWord"
-      />
-
-      <el-button
-          @click="randomizePosition"
-          :style="buttonStyle"
-      >{{ randomCount === 0 ? `翻  译` : buttonInfo }}
-      </el-button>
+      >
+        <template #prefix>
+          <el-icon><Search /></el-icon>
+        </template>
+      </el-input>
     </div>
 
     <div style="text-align: center;">
@@ -76,30 +74,6 @@ export default {
         }
       })
     },
-    randomizePosition() {
-      if (this.searchText === '') {
-        this.$message.warning('请先输入单词')
-        return
-      }
-      const randomInt = Math.floor(Math.random() * 101)
-      if (this.randomCount === 0 && randomInt !== 56) {
-        this.translateWord()
-        return
-      }
-
-      if (this.randomCount >= 3) {
-        this.clearCount()
-        this.translateWord()
-        return;
-      }
-      this.buttonInfo = '我在这'
-      this.randomCount++
-      this.buttonStyle = {
-        ...this.buttonStyle,
-        top:  Math.floor(Math.random() * (window.innerHeight - 65)) + 'px',
-        left: Math.floor(Math.random() * (window.innerWidth - 65)) + 'px'
-      }
-    },
     clearCount() {
       this.buttonStyle = {
         ...this.buttonStyle,
@@ -124,7 +98,7 @@ export default {
   flex-direction: column; /* 列表布局 */
   justify-content: center;
   align-items: center;
-  height: 35vh; /* 让容器占据整个视窗高度 */
+  height: 32vh; /* 让容器占据整个视窗高度 */
 }
 
 .search-logo {
