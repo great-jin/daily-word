@@ -33,7 +33,7 @@
                         <directory>src/main/resources</directory>
                         <excludes>
                             <exclude>application-auth.yml</exclude>
-                            <exclude>application-dev.yml</exclude>
+                            <exclude>application-prod.yml</exclude>
                         </excludes>
                     </resource>
                 </resources>

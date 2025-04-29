@@ -1,0 +1,81 @@
+server:
+  port: 9056
+  servlet:
+    context-path: /dailyWord
+
+
+websocket:
+  port: 9057
+
+
+spring:
+  # Mongo 数据库
+  data:
+    mongodb:
+      uri: mongodb://root:123456@192.168.0.21:27017/daily_word?authSource=admin
+  # MySQL 数据库
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.0.21:3306/daily_word?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+    # 阿里连接池配置
+    druid:
+      initial-size: 5
+      max-active: 30
+      min-idle: 5
+      max-wait: 10000
+      # SQL防火墙
+      filters: stat, wall
+  # 邮件配置, For register send mail
+  mail:
+    host: smtp.163.com
+    port: 465
+    username: 123456@163.com
+    password: 123456
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+          starttls.required: true
+
+
+# 模板文件
+template:
+  email: /Workspace/files/email.html
+
+
+# 绑定 MyBatis
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: xyz.ibudai.dailyword.repository.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+# 文件配置
+files:
+  host: http://localhost:${server.port}${server.servlet.context-path}/api/oss
+  secret: dailyword@2025
+  home: /Workspace/files
+  avatarDir: avatar
+  scale: 0.5
+  quality: 0.5
+
+
+# 字典文件
+dictionary:
+  file:
+    dictionaryPath: /Workspace/files/dict/Dictionary.json
+    vocabularyPath: /Workspace/files/vocabulary
+
+
+# 翻译引擎
+engine:
+  host: http://127.0.0.1:8080
+  opus: ${engine.host}/opus/translate
+  nllb: ${engine.host}/nllb/translate
+  connTimeout: 5
+  readTimeout: 5
