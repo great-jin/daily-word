@@ -58,7 +58,7 @@ public class AnswerRecordServiceImpl implements AnswerRecordService {
                         return false;
                     }
 
-                    return StringUtils.isBlank(answer.trim());
+                    return StringUtils.isNotBlank(answer.trim());
                 })
                 .toList();
 

@@ -16,26 +16,27 @@
           </el-col>
         </el-row>
 
-        <el-row>
-          <el-col :span="24">
-            <el-input
-                ref="inputRefs"
-                v-for="(input, index) in inputValues"
-                :key="index"
-                v-model="inputValues[index].value"
-                :maxlength="1"
-                @input="handleInput(index)"
-                @keydown="handleKeyDown(index)"
-                @keyup.enter="handleAnswer()"
-                class="input-word"
-            />
-          </el-col>
-        </el-row>
 
         <el-row>
           <el-col :span="24">
-            <!-- 题数下标 -->
             <el-row>
+              <el-col :span="24">
+                <el-input
+                    ref="inputRefs"
+                    v-for="(input, index) in inputValues"
+                    :key="index"
+                    v-model="inputValues[index].value"
+                    :maxlength="1"
+                    @input="handleInput(index)"
+                    @keydown="handleKeyDown(index)"
+                    @keyup.enter="handleAnswer()"
+                    class="input-word"
+                />
+              </el-col>
+            </el-row>
+
+            <!-- 题数下标 -->
+            <el-row style="margin-top: 40px">
               <el-col :span="24">
                 <span>{{ currentIndex + 1 }} / {{ planData.length }}</span>
               </el-col>

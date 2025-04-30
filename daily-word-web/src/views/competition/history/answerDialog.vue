@@ -10,10 +10,13 @@
         <!-- 单词翻译 -->
         <el-row
             v-if="taskData.answers.length > 0"
-            :style="{marginTop: '90px'}"
+            :style="{marginTop: 'auto'}"
         >
           <el-col :span="24">
-            <div v-for="item in taskData.answers[wordIndex].translation" style="text-align: center">
+            <div
+                v-for="item in taskData.answers[wordIndex].translation"
+                style="text-align: center"
+            >
               <strong>
                 <span class="translate-content">{{ item }}</span>
               </strong>
@@ -21,9 +24,9 @@
           </el-col>
         </el-row>
 
-        <!-- 单词内容 -->
-        <div :style="{marginTop: '40px'}">
-          <el-row>
+        <div :style="{marginTop: 'auto'}">
+          <!-- 答案内容 -->
+          <el-row style="margin-top: 10px">
             <el-col :span="24">
               正确答案: &nbsp;&nbsp;
               <el-input
@@ -37,7 +40,6 @@
               />
             </el-col>
           </el-row>
-
           <el-row style="margin-top: 20px">
             <el-col :span="24">
               您的作答: &nbsp;&nbsp;
@@ -52,25 +54,21 @@
               />
             </el-col>
           </el-row>
+
+          <el-row style="margin-top: 30px">
+            <el-col :span="24" style="text-align: center;">
+              <span>{{ wordIndex + 1 }} / {{ taskData.answers.length }}</span>
+            </el-col>
+          </el-row>
+
+          <el-row :style="{marginTop: '40px'}">
+            <el-col :span="24">
+              <el-button type="primary" @click="changeIndex('back')">上一题</el-button>
+              <el-button @click="read">朗&nbsp;&nbsp;读</el-button>
+              <el-button type="primary" @click="changeIndex('next')">下一题</el-button>
+            </el-col>
+          </el-row>
         </div>
-
-        <el-row :style="{marginTop: 'auto'}">
-          <el-col :span="24">
-            <el-row>
-              <el-col :span="24" style="text-align: center;">
-                <span>{{ wordIndex + 1 }} / {{ taskData.answers.length }}</span>
-              </el-col>
-            </el-row>
-
-            <el-row :style="{marginTop: '40px'}">
-              <el-col :span="24">
-                <el-button type="primary" @click="changeIndex('back')">上一题</el-button>
-                <el-button @click="read">朗&nbsp;&nbsp;读</el-button>
-                <el-button type="primary" @click="changeIndex('next')">下一题</el-button>
-              </el-col>
-            </el-row>
-          </el-col>
-        </el-row>
       </el-col>
 
       <!-- 题数展示 -->
@@ -213,7 +211,7 @@ export default {
 
 .translate-content {
   width: 100%;
-  margin-top:5px;
+  margin-top: 5px;
   display: inline-block;
   font-size: 16px;
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "files")
+@ConfigurationProperties(prefix = "oss")
 public class OssProps {
 
     private String host;

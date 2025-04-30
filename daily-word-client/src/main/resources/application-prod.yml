@@ -56,7 +56,7 @@ mybatis-plus:
 
 
 # 文件配置
-files:
+oss:
   host: http://localhost:${server.port}${server.servlet.context-path}/api/oss
   secret: dailyword@2025
   home: /Workspace/files
