@@ -16,8 +16,24 @@
 
 
 
+## 二、效果展示
+「每日一词」应用效果图如下：
+<table border="0" style="border: none;">
+    <tr>
+      <td><img src="/document/img/1.png"></td>
+      <td><img src="/document/img/2.png"></td>
+      <td><img src="/document/img/3.png"></td>
+    </tr>
+    <tr>
+      <td><img src="/document/img/4.png"></td>
+      <td><img src="/document/img/5.png"></td>
+      <td><img src="/document/img/6.png"></td>
+    </tr>
+</table>
 
-## 二、架构说明
+
+
+## 三、架构说明
 「每日一词」基于 `Spring Boot 3.x` 以及 `Vue(Element-Plus)` 开发设计，经典 `RESTFUL` 模式的前后端分离系统。
 
 系统核心功能包含下述四大模块：
@@ -51,8 +67,7 @@
 
 
 
-
-## 三、部署手册
+## 四、部署手册
 ### 1. 环境准备
 如果你想自行部署，在开始前需要准备下述环境配置：
 
@@ -63,7 +78,6 @@
 - MongoDB 数据库
 
 在准备完 `MySQL` 之后，需要执行对应的初始化脚本，脚本内容位于 `document/sql`，在 `DML.sql` 中包含默认管理员账号：`Budai/123`。
-
 
 
 ### 2. 本地启动
