@@ -1,14 +1,9 @@
 <template>
   <div>
     <el-container>
-      <el-header>
+      <el-header style="width: 100%">
         <el-row style="height: 100%; width: 100%">
-          <!-- Logo -->
-          <el-col :span="4" @click="handleSelect('dictionary')">
-            <h1 style="color: white">Daily Word</h1>
-          </el-col>
-
-          <el-col :span="20">
+          <el-col :span="24">
             <el-menu
                 mode="horizontal"
                 :ellipsis="false"
@@ -19,10 +14,24 @@
                 active-text-color="#ffd04b"
                 class="home-menu"
             >
-              <el-menu-item index="dictionary" class="head-banner">字典查询</el-menu-item>
-              <el-menu-item index="translate" class="head-banner">AI 翻译</el-menu-item>
-              <el-menu-item index="competition" class="head-banner">知识竞赛</el-menu-item>
-              <el-menu-item index="ranking" class="head-banner">好友排行</el-menu-item>
+              <el-menu-item
+                  class="head-banner"
+                  style="font-weight: bold; font-size: 16px; background: #72C1F2"
+              >
+                <h2 style="color: white; line-height: 100%;">
+                  Daily Word
+                </h2>
+              </el-menu-item>
+
+              <el-menu-item
+                  v-for="item in menus"
+                  :index="item.index"
+                  class="head-banner"
+                  style="font-weight: bold; font-size: 16px"
+              >
+                {{ item.name }}
+              </el-menu-item>
+
               <el-sub-menu index="personal">
                 <template #title>
                   <div style="font-weight: bold; font-size: 16px;">
@@ -83,7 +92,22 @@ export default {
   data() {
     return {
       isRouterAlive: true,
-      activeMenu: 'dictionary'
+      activeMenu: 'dictionary',
+      menus: [
+        {
+          index: 'dictionary',
+          name: '字典查询'
+        }, {
+          index: 'translate',
+          name: '实时翻译'
+        }, {
+          index: 'competition',
+          name: '知识竞赛'
+        }, {
+          index: 'ranking',
+          name: '好友排行'
+        }
+      ]
     }
   },
   mounted() {
@@ -175,7 +199,7 @@ export default {
   min-width: 120px !important;
 }
 
-.el-menu--horizontal > .el-menu-item:nth-child(4) {
+.el-menu--horizontal > .el-menu-item:nth-child(5) {
   margin-right: auto;
 }
 </style>
